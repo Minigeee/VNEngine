@@ -27,12 +27,31 @@ public:
 	}
 };
 
+Uint8 gResourceKey[] =
+{
+	0x37,
+	0x77,
+	0x21,
+	0x7A,
+	0x24,
+	0x43,
+	0x26,
+	0x46,
+	0x29,
+	0x4A,
+	0x40,
+	0x4E,
+	0x63,
+	0x52,
+	0x66,
+	0x55
+};
+
 int main()
 {
-	ResourceFolder::SetPath(".");
-	ResourceMgr<A>::AddLocation("test.txt", "Test");
-	A* test = ResourceMgr<A>::Get("Test");
-	ResourceMgr<A>::Free("Test");
+	ResourceFolder::SetPath("Assets");
+	ResourceFolder::SetKey(gResourceKey);
+	ResourceFolder::Pack("resources.assets");
 
 	EngineParams params;
 	params.mWindowWidth = 1280;

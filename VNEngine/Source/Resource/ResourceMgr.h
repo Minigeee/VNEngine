@@ -46,6 +46,12 @@ public:
 	static void SetPath(const sf::String& path);
 
 	/// <summary>
+	/// Set resource key used to encrypt / decrypt resource folder
+	/// </summary>
+	/// <param name="key">Pointer to 16 byte key (128 bits)</param>
+	static void SetKey(const Uint8* key);
+
+	/// <summary>
 	/// Open and load file from resource folder and return pointer to to beggining of data, this memory has to be freed after use.
 	/// It also returns the size of the data that was loaded
 	/// </summary>
@@ -53,6 +59,13 @@ public:
 	/// <param name="size">Refernce to int to retrieve data size</param>
 	/// <returns>Pointer to loaded data</returns>
 	static Uint8* Open(const sf::String& fname, Uint32& size);
+
+	/// <summary>
+	/// Pack current directory into packed folder with options for encryption
+	/// </summary>
+	/// <param name="dst">Output file</param>
+	/// <param name="key">Pointer to key buffer</param>
+	static void Pack(const sf::String& dst);
 
 private:
 	static Uint8* OpenPacked(const sf::String& fname, Uint32& size);
@@ -68,6 +81,11 @@ private:
 	/// File pointer for packed folder
 	/// </summary>
 	static FILE* sPackedFolder;
+
+	/// <summary>
+	/// Pointer to encryption key used to decrypt packed folder
+	/// </summary>
+	static const Uint8* sResourceKey;
 };
 
 // ============================================================================
