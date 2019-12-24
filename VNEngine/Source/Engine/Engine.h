@@ -18,12 +18,12 @@ struct EngineParams
 	EngineParams();
 
 	/// <summary>
-	/// Initial width of the game window, 
+	/// Initial width of the game window
 	/// </summary>
 	int mWindowWidth;
 
 	/// <summary>
-	/// Initial height of the game window, 
+	/// Initial height of the game window
 	/// </summary>
 	int mWindowHeight;
 
