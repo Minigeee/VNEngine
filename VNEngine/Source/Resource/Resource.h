@@ -1,6 +1,8 @@
 #ifndef LOADABLE_H
 #define LOADABLE_H
 
+#include <Core/DataTypes.h>
+
 #include <SFML/System.hpp>
 
 // ============================================================================
@@ -25,7 +27,7 @@ public:
 	/// Load resource from memory
 	/// </summary>
 	/// <returns>True if loaded without errors</returns>
-	virtual bool Load(Uint8* data) = 0;
+	virtual bool Load(Uint8* data, Uint32 size) = 0;
 
 	/// <summary>
 	/// Set file to load from
@@ -45,7 +47,7 @@ public:
 	/// <returns>File name</returns>
 	const sf::String& GetFileName() const;
 
-private:
+protected:
 	/// <summary>
 	/// The file to load resource from
 	/// </summary>

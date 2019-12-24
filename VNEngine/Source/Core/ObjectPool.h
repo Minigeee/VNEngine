@@ -1,8 +1,8 @@
 #ifndef OBJECT_POOL_H
 #define OBJECT_POOL_H
 
-#include <Engine/DataTypes.h>
-#include <Engine/Allocate.h>
+#include <Core/DataTypes.h>
+#include <Core/Allocate.h>
 
 #include <vector>
 

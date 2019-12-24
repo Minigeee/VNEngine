@@ -6,20 +6,33 @@
 
 #include <iostream>
 
-class A : public Resource
+class A : public Loadable
 {
 public:
+	bool Load(Uint8* data, Uint32 size) override
+	{
+		std::cout << (char*)data << "\n";
+		free(data);
+
+		mIsLoaded = true;
+
+		return true;
+	}
+
 	void Free() override
 	{
 		std::cout << "Free Resource\n";
+
+		mIsLoaded = false;
 	}
 };
 
 int main()
 {
-	A* test = ResourceMgr<A>::Create("Test");
+	ResourceFolder::SetPath(".");
+	ResourceMgr<A>::AddLocation("test.txt", "Test");
+	A* test = ResourceMgr<A>::Get("Test");
 	ResourceMgr<A>::Free("Test");
-	int a = 0;
 
 	EngineParams params;
 	params.mWindowWidth = 1280;

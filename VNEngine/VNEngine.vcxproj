@@ -82,7 +82,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)extlibs\include\;$(ProjectDir)Source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>SFML_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SFML_STATIC;_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -111,7 +111,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)extlibs\include\;$(ProjectDir)Source\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>SFML_STATIC;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SFML_STATIC;_CRT_SECURE_NO_WARNINGS;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -138,24 +138,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Engine\Allocate.cpp" />
+    <ClCompile Include="Source\Core\Allocate.cpp" />
     <ClCompile Include="Source\Engine\Engine.cpp" />
+    <ClCompile Include="Source\Engine\ResourceMgr.cpp" />
     <ClCompile Include="Source\Main.cpp" />
     <ClCompile Include="Source\Resource\Resource.cpp" />
-    <ClCompile Include="Source\Resource\XmlAttribute.cpp" />
-    <ClCompile Include="Source\Resource\XmlDocument.cpp" />
-    <ClCompile Include="Source\Resource\XmlNode.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Source\Engine\Allocate.h" />
-    <ClInclude Include="Source\Engine\DataTypes.h" />
+    <ClInclude Include="Source\Core\Allocate.h" />
+    <ClInclude Include="Source\Core\DataTypes.h" />
+    <ClInclude Include="Source\Core\Macros.h" />
+    <ClInclude Include="Source\Core\ObjectPool.h" />
     <ClInclude Include="Source\Engine\Engine.h" />
-    <ClInclude Include="Source\Engine\ObjectPool.h" />
     <ClInclude Include="Source\Resource\Resource.h" />
     <ClInclude Include="Source\Resource\ResourceMgr.h" />
-    <ClInclude Include="Source\Resource\XmlAttribute.h" />
-    <ClInclude Include="Source\Resource\XmlDocument.h" />
-    <ClInclude Include="Source\Resource\XmlNode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
