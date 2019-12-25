@@ -10,6 +10,7 @@
 
 #include <unordered_map>
 #include <unordered_set>
+#include <aes.hpp>
 
 // ============================================================================
 
@@ -83,7 +84,12 @@ private:
 	static FILE* sPackedFolder;
 
 	/// <summary>
-	/// Pointer to encryption key used to decrypt packed folder
+	/// Maps file names to file offsets in a packed folder
+	/// </summary>
+	static std::unordered_map<std::basic_string<Uint32>, Uint32> sPackedFolderMap;
+
+	/// <summary>
+	/// Keep a pointer to encryption key
 	/// </summary>
 	static const Uint8* sResourceKey;
 };

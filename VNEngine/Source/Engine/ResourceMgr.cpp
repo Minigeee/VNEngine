@@ -9,7 +9,6 @@
 #endif
 #endif
 #include <tinydir.h>
-#include <aes.hpp>
 #include <zlib.h>
 
 #include <vector>
@@ -19,7 +18,28 @@
 
 sf::String ResourceFolder::sResourcePath = "";
 FILE* ResourceFolder::sPackedFolder = 0;
+std::unordered_map<std::basic_string<Uint32>, Uint32> ResourceFolder::sPackedFolderMap;
 const Uint8* ResourceFolder::sResourceKey = 0;
+
+Uint8 gIV[] =
+{
+	0x00,
+	0x01,
+	0x02,
+	0x03,
+	0x04,
+	0x05,
+	0x06,
+	0x07,
+	0x08,
+	0x09,
+	0x0a,
+	0x0b,
+	0x0c,
+	0x0d,
+	0x0e,
+	0x0f
+};
 
 // ============================================================================
 
@@ -31,7 +51,39 @@ void ResourceFolder::SetPath(const sf::String& path)
 	sPackedFolder = FOPEN(path, "rb");
 	if (sPackedFolder)
 	{
-		/* TODO : Implement packed folder */
+		Uint32 fnameSize = 0;
+
+		// Read file name string size
+		// This read is used to determine when file is over
+		while (fread(&fnameSize, sizeof(Uint32), 1, sPackedFolder))
+		{
+			// Read string
+			Uint32* fnameData = (Uint32*)malloc((fnameSize + 1) * sizeof(Uint32));
+			fread(fnameData, sizeof(Uint32), fnameSize, sPackedFolder);
+			fnameData[fnameSize] = 0;
+			sf::String fname(fnameData);
+			// Free string data
+			free(fnameData);
+
+			// Map file name to file offset
+			Uint32 fpos = (Uint32)ftell(sPackedFolder);
+			sPackedFolderMap[fname.toUtf32()] = fpos;
+
+			// Read to info bytes
+			Uint16 temp;
+			fread(&temp, 2, 1, sPackedFolder);
+
+			// Get file sizes
+			Uint32 u_size = 0, c_size = 0;
+			fread(&u_size, sizeof(Uint32), 1, sPackedFolder);
+			fread(&c_size, sizeof(Uint32), 1, sPackedFolder);
+			// Pad size
+			if (c_size % 16 != 0)
+				c_size += 16 - c_size % 16;
+
+			// Seek next file
+			fseek(sPackedFolder, c_size, SEEK_CUR);
+		}
 	}
 }
 
@@ -79,8 +131,63 @@ Uint8* ResourceFolder::OpenNormal(const sf::String& path, Uint32& size)
 
 Uint8* ResourceFolder::OpenPacked(const sf::String& path, Uint32& size)
 {
-	/* TODO : Implement packed folder */
-	return 0;
+	// Get file offset
+	auto it = sPackedFolderMap.find(path.toUtf32());
+	if (it == sPackedFolderMap.end()) return 0;
+	Uint32 offset = it->second;
+
+
+	// Go to offset
+	fseek(sPackedFolder, offset, SEEK_SET);
+
+	// Read compression / encryption info
+	bool isCompressed, isEncrypted;
+	fread(&isCompressed, sizeof(bool), 1, sPackedFolder);
+	fread(&isEncrypted, sizeof(bool), 1, sPackedFolder);
+
+	// Read file sizes
+	Uint32 u_size, c_size;
+	fread(&u_size, sizeof(Uint32), 1, sPackedFolder);
+	fread(&c_size, sizeof(Uint32), 1, sPackedFolder);
+	// Pad compression size
+	Uint32 c_size_p = c_size;
+	if (c_size_p % 16 != 0)
+		c_size_p += 16 - c_size_p % 16;
+
+	// Allocate and read data
+	Uint8* c_data = (Uint8*)malloc(c_size_p);
+	fread(c_data, c_size_p, 1, sPackedFolder);
+
+
+	// Decrypt
+	if (isEncrypted)
+	{
+		AES_ctx context;
+		AES_init_ctx_iv(&context, sResourceKey, gIV);
+		AES_CBC_decrypt_buffer(&context, c_data, c_size_p);
+	}
+
+
+	// Decompress
+	Uint8* u_data = c_data;
+	if (isCompressed)
+	{
+		u_data = (Uint8*)malloc(u_size);
+		int result = uncompress(u_data, (uLongf*)&u_size, c_data, c_size);
+
+		if (result < 0)
+			return 0;
+	}
+
+
+	// Free compressed data if necessary
+	if (u_data != c_data)
+		free(c_data);
+
+
+	// Return values
+	size = u_size;
+	return u_data;
 }
 
 // ============================================================================
@@ -144,11 +251,6 @@ void ResourceFolder::Pack(const sf::String& dst)
 		packed = FOPEN(dst, "ab");
 	if (!packed) return;
 
-	// Start encryption context if key is provided
-	AES_ctx encryptContext;
-	if (sResourceKey)
-		AES_init_ctx(&encryptContext, sResourceKey);
-
 
 	for (Uint32 i = 0; i < files.size(); ++i)
 	{
@@ -157,68 +259,85 @@ void ResourceFolder::Pack(const sf::String& dst)
 
 		// Get file size
 		fseek(f, 0, SEEK_END);
-		Uint32 size = (Uint32)ftell(f);
+		Uint32 fsize = (Uint32)ftell(f);
 		fseek(f, 0, SEEK_SET);
 
-		if (!size) continue;
+		if (!fsize) continue;
 
-		// Allocate space and read data, make sure buffer is padded to multiple of 16 in case this is encrypted
-		Uint32 paddedSize = size + (16 - size % 16);
-		Uint8* data = (Uint8*)malloc(paddedSize);
-		fread(data, size, 1, f);
+
+		// Calculate uncompressed sizes
+		Uint32 u_size = fsize;
+		Uint32 u_size_p = u_size;
+		if (u_size_p % 16 != 0)
+			u_size_p += 16 - u_size_p % 16;
+
+		// Create buffer using padded size
+		Uint8* u_data = (Uint8*)malloc(u_size_p);
+		// Read data using unpadded size
+		fread(u_data, u_size, 1, f);
 
 		// Close file
 		fclose(f);
 
-		// Make sure compressed buffer is padded to multiple of 16
-		Uint32 compressedSize = (Uint32)(size * 1.1) + 12;
-		compressedSize += 16 - compressedSize % 16;
-		// Allocate space for compressed data
-		Uint8* compressedData = (Uint8*)malloc(compressedSize);
 
-		// Compress
-		compress(compressedData, (uLongf*)&compressedSize, data, size);
+		// Calculate compressed size, compressed size is not certain yet, so don't calculate padded size yet
+		Uint32 c_size = (Uint32)(u_size * 1.1) + 12;
 
-		// Choose which data to use based on size
-		Uint8* writeData = compressedData;
-		Uint32 writeSize = compressedSize;
-		if (size < compressedSize)
+		// Create buffer for compressed data
+		Uint8* c_data = (Uint8*)malloc(c_size);
+		// Compress data
+		compress(c_data, (uLongf*)&c_size, u_data, u_size);
+
+		// Calculate compressed padded buffer size
+		Uint32 c_size_p = c_size;
+		if (c_size_p % 16 != 0)
+			c_size_p += 16 - c_size_p % 16;
+
+
+		// Determine which data to use based on their sizes
+		Uint8* f_data = c_data;
+		Uint32 f_u_size = u_size;
+		Uint32 f_c_size = c_size;
+		Uint32 f_c_size_p = c_size_p;
+		if (f_c_size >= f_u_size)
 		{
-			writeData = data;
-			writeSize = sResourceKey ? paddedSize : size;
+			// Use uncompressed data if it is smaller than compressed version
+			f_data = u_data;
+			f_c_size = u_size;
+			f_c_size_p = u_size_p;
 		}
 
-		// Encrypt if key is provided
+
+		// Encrypt data if key is provided
 		if (sResourceKey)
 		{
-			if (writeSize % 16 != 0)
-				writeSize += 16 - writeSize % 16;
-			AES_CBC_encrypt_buffer(&encryptContext, writeData, writeSize);
+			AES_ctx context;
+			AES_init_ctx_iv(&context, sResourceKey, gIV);
+			AES_CBC_encrypt_buffer(&context, f_data, f_c_size_p);
 		}
 
 
-		// Write file name relative to resource folder
+		// Write filename
 		sf::String fname(files[i].substring(dirLen));
-		Uint32 fnameSize = fname.getSize();
-		std::wstring test(fname);
+		Uint32 fnameLen = fname.getSize();
+		fwrite(&fnameLen, sizeof(Uint32), 1, packed);
+		fwrite(fname.getData(), sizeof(Uint32), fnameLen, packed);
 
-		fwrite(&fnameSize, sizeof(Uint32), 1, packed);
-		fwrite(fname.getData(), sizeof(Uint32), fnameSize, packed);
-
-		// Write booleans for encryption / compression info
-		bool isCompressed = writeData == compressedData;
+		// Write compression / encryption info
+		bool isCompressed = f_data == c_data;
 		bool isEncrypted = sResourceKey ? true : false;
 		fwrite(&isCompressed, sizeof(bool), 1, packed);
 		fwrite(&isEncrypted, sizeof(bool), 1, packed);
 
-		// Write data size, then the data
-		fwrite(&writeSize, sizeof(Uint32), 1, packed);
-		fwrite(writeData, writeSize, 1, packed);
+		// Write data
+		fwrite(&f_u_size, sizeof(Uint32), 1, packed);
+		fwrite(&f_c_size, sizeof(Uint32), 1, packed);
+		fwrite(f_data, f_c_size_p, 1, packed);
 
 
 		// Free data
-		free(data);
-		free(compressedData);
+		free(u_data);
+		free(c_data);
 	}
 
 	// Close packed folder

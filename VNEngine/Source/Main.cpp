@@ -49,9 +49,20 @@ Uint8 gResourceKey[] =
 
 int main()
 {
-	ResourceFolder::SetPath("Assets");
 	ResourceFolder::SetKey(gResourceKey);
-	ResourceFolder::Pack("resources.assets");
+
+	if (false)
+	{
+		ResourceFolder::SetPath("TestAssets");
+		ResourceFolder::Pack("resources.assets");
+	}
+	else
+	{
+		ResourceFolder::SetPath("resources.assets");
+
+		ResourceMgr<A>::AddLocation("Shaders/Default.frag", "Test");
+		A* test = ResourceMgr<A>::Get("Test");
+	}
 
 	EngineParams params;
 	params.mWindowWidth = 1280;
