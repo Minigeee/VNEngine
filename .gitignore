@@ -359,6 +359,9 @@ MigrationBackup/
 !extlibs/lib/*
 !extlibs/lib/*/*
 !extlibs/lib/*/*/*
+extlibs/bin/*/*/*.exe
+extlibs/bin/*/*/*.ilk
+extlibs/bin/*/*/*.tmp
 
 TestAssets/
 
