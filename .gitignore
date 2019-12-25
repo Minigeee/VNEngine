@@ -350,10 +350,16 @@ healthchecksdb
 MigrationBackup/
 
 # Exclusions
+!extlibs/
 !extlibs/bin/
-!extlibs/bin/Debug/
-!extlibs/bin/Release/
-!extlibs/lib/Debug/
-!extlibs/lib/Release/
+!extlibs/bin/*
+!extlibs/bin/*/*
+!extlibs/bin/*/*/*
+!extlibs/lib/
+!extlibs/lib/*
+!extlibs/lib/*/*
+!extlibs/lib/*/*/*
+
+TestAssets/
 
 *.bak

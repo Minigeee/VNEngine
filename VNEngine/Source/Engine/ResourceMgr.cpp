@@ -200,6 +200,7 @@ void ResourceFolder::Pack(const sf::String& dst)
 		// Write file name relative to resource folder
 		sf::String fname(files[i].substring(dirLen));
 		Uint32 fnameSize = fname.getSize();
+		std::wstring test(fname);
 
 		fwrite(&fnameSize, sizeof(Uint32), 1, packed);
 		fwrite(fname.getData(), sizeof(Uint32), fnameSize, packed);
