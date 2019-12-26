@@ -30,13 +30,13 @@
     <ClCompile Include="Source\Engine\Engine.cpp">
       <Filter>Source\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Main.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Core\Allocate.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Resource.cpp">
+      <Filter>Source\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Scene.cpp">
       <Filter>Source\Engine</Filter>
     </ClCompile>
   </ItemGroup>

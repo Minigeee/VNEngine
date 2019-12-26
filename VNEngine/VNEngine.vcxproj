@@ -26,13 +26,13 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -70,10 +70,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)extlibs\bin\win32\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)extlibs\lib\win32\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)extlibs\bin\win32\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)extlibs\lib\win32\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -141,7 +141,7 @@
     <ClCompile Include="Source\Core\Allocate.cpp" />
     <ClCompile Include="Source\Engine\Engine.cpp" />
     <ClCompile Include="Source\Engine\Resource.cpp" />
-    <ClCompile Include="Source\Main.cpp" />
+    <ClCompile Include="Source\Engine\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\Allocate.h" />
