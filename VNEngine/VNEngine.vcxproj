@@ -140,9 +140,8 @@
   <ItemGroup>
     <ClCompile Include="Source\Core\Allocate.cpp" />
     <ClCompile Include="Source\Engine\Engine.cpp" />
-    <ClCompile Include="Source\Engine\ResourceMgr.cpp" />
+    <ClCompile Include="Source\Engine\Resource.cpp" />
     <ClCompile Include="Source\Main.cpp" />
-    <ClCompile Include="Source\Resource\Resource.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\Allocate.h" />
@@ -150,9 +149,8 @@
     <ClInclude Include="Source\Core\Macros.h" />
     <ClInclude Include="Source\Core\ObjectPool.h" />
     <ClInclude Include="Source\Engine\Engine.h" />
+    <ClInclude Include="Source\Engine\Resource.h" />
     <ClInclude Include="Source\Engine\Scene.h" />
-    <ClInclude Include="Source\Resource\Resource.h" />
-    <ClInclude Include="Source\Resource\ResourceMgr.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

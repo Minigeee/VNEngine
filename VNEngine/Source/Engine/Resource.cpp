@@ -1,4 +1,4 @@
-#include <Resource/ResourceMgr.h>
+#include <Engine/Resource.h>
 
 #ifdef _WIN32
 #ifndef UNICODE
@@ -344,6 +344,15 @@ void ResourceFolder::pack(const sf::String& dst)
 
 	// Close packed folder
 	fclose(packed);
+}
+
+// ============================================================================
+// ============================================================================
+
+ResourceInfo::ResourceInfo() :
+	mResource		(0)
+{
+
 }
 
 // ============================================================================

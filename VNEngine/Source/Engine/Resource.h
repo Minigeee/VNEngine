@@ -4,9 +4,8 @@
 #include <Core/ObjectPool.h>
 #include <Core/Macros.h>
 
-#include <Resource/Resource.h>
-
 #include <SFML/System.hpp>
+#include <SFML/Graphics.hpp>
 
 #include <unordered_map>
 #include <unordered_set>
@@ -30,11 +29,27 @@
 #define FOPEN(fname, mode) fopen(fname.toAnsiString().c_str(), mode)
 #endif
 
-// ============================================================================
-
 namespace vne
 {
 
+// ============================================================================
+
+struct ResourceInfo
+{
+	ResourceInfo();
+
+	/// <summary>
+	/// Pointer to resource object
+	/// </summary>
+	void* mResource;
+
+	/// <summary>
+	/// File name of resource to load. Empty if resource was created instead of loaded
+	/// </summary>
+	sf::String mFileName;
+};
+
+// ============================================================================
 
 /// <summary>
 /// Handles opening files if using normal files system.
@@ -104,7 +119,7 @@ private:
 /// Handles the lifetime of resources
 /// </summary>
 template <typename T>
-class ResourceMgr
+class Resource
 {
 public:
 	/// <summary>
@@ -115,18 +130,17 @@ public:
 	/// <returns>A pointer to the new object</returns>
 	static T* create(const sf::String& name)
 	{
-		// Check if resource with same name exists
-		auto it = sResourceMap.find(name.toUtf32());
-		if (it != sResourceMap.end())
-			return it->second;
+		// Get resource info
+		ResourceInfo& info = sResourceMap[name.toUtf32()];
+		
+		// Return object if it exists
+		if (info.mResource)
+			return (T*)info.mResource;
 
-		// Create resource
-		T* object = sResourcePool.New();
+		// Create object from pool
+		info.mResource = sResourcePool.create();
 
-		// Add to resource map
-		sResourceMap[name.toUtf32()] = object;
-
-		return object;
+		return (T*)info.mResource;
 	}
 
 	/// <summary>
@@ -136,12 +150,12 @@ public:
 	/// <param name="name">Name to assign the resource</param>
 	static void addLocation(const sf::String& path, const sf::String& name)
 	{
-		// Create resource
-		T* object = create(name);
-		if (!object) return;
+		// Get resource info
+		ResourceInfo& info = sResourceMap[name.toUtf32()];
 
-		// Set file name
-		object->setFileName(path);
+		// Only set file name if object doesn't exist
+		if (!info.mResource)
+			info.mFileName = path;
 	}
 
 	/// <summary>
@@ -153,19 +167,24 @@ public:
 	/// <returns>Pointer to resource</returns>
 	static T* get(const sf::String& name)
 	{
-		// If resource doesn't exist, return
-		auto it = sResourceMap.find(name.toUtf32());
-		if (it == sResourceMap.end()) return 0;
-		T* object = it->second;
+		// Get resource info
+		ResourceInfo& info = sResourceMap[name.toUtf32()];
 
-		// Load object if not loaded
-		if (std::is_base_of<Loadable, T>::value && !object->isLoaded())
+		// If there is a file name and resource hasn't been created yet, load file
+		if (info.mFileName.getSize() && !info.mResource)
 		{
-			if (!load(object))
+			info.mResource = sResourcePool.create();
+			if (!load((T*)info.mResource, info.mFileName))
+			{
+				// If failed to load, free object and return NULL
+				sResourcePool.free((T*)info.mResource);
+				info.mResource = 0;
+
 				return 0;
+			}
 		}
 
-		return object;
+		return (T*)info.mResource;
 	}
 
 	/// <summary>
@@ -174,36 +193,28 @@ public:
 	/// <param name="name">Name of the resource to free</param>
 	static void free(const sf::String& name)
 	{
-		// If resource doesn't exist, return
-		auto it = sResourceMap.find(name.toUtf32());
-		if (it == sResourceMap.end()) return;
-		T* object = it->second;
+		// Get resource info
+		ResourceInfo& info = sResourceMap[name.toUtf32()];
 
-		// Call free
-		object->free();
-
-		// If it is not a loadable, then remove it from object pool
-		if (!std::is_base_of<Loadable, T>::value)
+		// If object exists, free and reset object
+		if (info.mResource)
 		{
-			sResourcePool.free(object);
-			sResourceMap[name.toUtf32()] = 0;
+			sResourcePool.free((T*)info.mResource);
+			info.mResource = 0;
 		}
 	}
 
 private:
 	/// <summary>
-	/// Load resource from file
+	/// Load resource from file.
+	/// This function is meant to be specialized for each type
 	/// </summary>
 	/// <param name="object">The object to load</param>
 	/// <returns>True if there were no errors</returns>
-	static bool load(Loadable* object)
+	static bool load(T* object, const sf::String& fname)
 	{
-		// Load bytes into memory
-		Uint32 size = 0;
-		Uint8* data = ResourceFolder::open(object->getFileName(), size);
-
-		// Load data from memory
-		return data && object->load(data, size);
+		// Default nonloadable
+		return false;
 	}
 
 private:
@@ -215,16 +226,33 @@ private:
 	/// <summary>
 	/// Maps resource name to object pointers
 	/// </summary>
-	static std::unordered_map<std::basic_string<Uint32>, T*> sResourceMap;
+	static std::unordered_map<std::basic_string<Uint32>, ResourceInfo> sResourceMap;
 };
+
+template <typename T>
+ObjectPool<T> Resource<T>::sResourcePool;
+
+template <typename T>
+std::unordered_map<std::basic_string<Uint32>, ResourceInfo> Resource<T>::sResourceMap;
 
 // ============================================================================
 
-template <typename T>
-ObjectPool<T> ResourceMgr<T>::sResourcePool;
 
-template <typename T>
-std::unordered_map<std::basic_string<Uint32>, T*> ResourceMgr<T>::sResourceMap;
+
+// ============================================================================
+
+/// <summary>
+/// Load SFML texture
+/// </summary>
+template <>
+inline bool Resource<sf::Texture>::load(sf::Texture* object, const sf::String& fname)
+{
+	Uint32 size = 0;
+	Uint8* data = ResourceFolder::open(fname, size);
+	if (! data || !size) return false;
+
+	return object->loadFromMemory(data, size);
+}
 
 // ============================================================================
 

@@ -19,12 +19,6 @@
     <Filter Include="Source\Engine">
       <UniqueIdentifier>{685a43ac-d3fc-445d-959a-bcd84ab8aec1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Include\Resource">
-      <UniqueIdentifier>{d6a7a5dc-d365-463f-a8e3-b6866bd3038b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\Resource">
-      <UniqueIdentifier>{91cef03b-9b4c-41b2-97f8-ffbed240924c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Include\Core">
       <UniqueIdentifier>{4c23720c-6505-4924-80ee-73943454d346}</UniqueIdentifier>
     </Filter>
@@ -39,25 +33,16 @@
     <ClCompile Include="Source\Main.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Resource\Resource.cpp">
-      <Filter>Source\Resource</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Core\Allocate.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Engine\ResourceMgr.cpp">
-      <Filter>Source\Resource</Filter>
+    <ClCompile Include="Source\Engine\Resource.cpp">
+      <Filter>Source\Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\Engine.h">
       <Filter>Include\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Resource\ResourceMgr.h">
-      <Filter>Include\Resource</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Resource\Resource.h">
-      <Filter>Include\Resource</Filter>
     </ClInclude>
     <ClInclude Include="Source\Core\Allocate.h">
       <Filter>Include\Core</Filter>
@@ -72,6 +57,9 @@
       <Filter>Include\Core</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Scene.h">
+      <Filter>Include\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Resource.h">
       <Filter>Include\Engine</Filter>
     </ClInclude>
   </ItemGroup>

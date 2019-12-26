@@ -6,7 +6,7 @@ using namespace vne;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void* aligned_alloc(Uint32 size, Uint32 align)
+void* vne::aligned_alloc(Uint32 size, Uint32 align)
 {
 	// Max offset of memory
 	Uint32 offset = sizeof(void*) + align - 1;
@@ -22,7 +22,7 @@ void* aligned_alloc(Uint32 size, Uint32 align)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void aligned_free(void* ptr)
+void vne::aligned_free(void* ptr)
 {
 	if (!ptr) return;
 
