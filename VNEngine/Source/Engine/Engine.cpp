@@ -1,11 +1,13 @@
 #include <Engine/Engine.h>
+#include <Engine/Scene.h>
 
 using namespace vne;
 
 // ============================================================================
 // ============================================================================
 
-Engine::Engine()
+Engine::Engine() :
+	mScene			(0)
 {
 
 }
@@ -35,6 +37,11 @@ bool Engine::init(const EngineParams& params)
 	);
 	// Enable v-sync
 	mWindow.setVerticalSyncEnabled(true);
+
+
+	// Setup first scene
+	mScene = params.mStartScene;
+	mScene->init();
 
 
 	return true;
@@ -72,6 +79,8 @@ void Engine::pollEvents()
 		// Handle window close
 		if (e.type == sf::Event::Closed)
 			mWindow.close();
+
+		mScene->handleEvent(e);
 	}
 }
 
@@ -79,7 +88,7 @@ void Engine::pollEvents()
 
 void Engine::update(float dt)
 {
-
+	mScene->update(dt);
 }
 
 // ============================================================================
@@ -90,12 +99,12 @@ void Engine::render()
 	mWindow.clear();
 
 	// Render stuff
+	mScene->render();
 
 	// Swap buffers
 	mWindow.display();
 }
 
-// ============================================================================
 // ============================================================================
 
 void Engine::close()
@@ -106,7 +115,10 @@ void Engine::close()
 // ============================================================================
 // ============================================================================
 
-
+sf::RenderWindow& Engine::getWindow()
+{
+	return mWindow;
+}
 
 // ============================================================================
 // ============================================================================

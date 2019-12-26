@@ -1,6 +1,8 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+#include <SFML/Window.hpp>
+
 namespace vne
 {
 
@@ -24,6 +26,12 @@ public:
 	/// Called once on scene initialization
 	/// </summary>
 	virtual void init() = 0;
+
+	/// <summary>
+	/// Handle window input
+	/// </summary>
+	/// <param name="e"></param>
+	virtual void handleEvent(const sf::Event& e) = 0;
 
 	/// <summary>
 	/// Do any game updates (i.e. animation, etc.)
@@ -60,6 +68,12 @@ public:
 	/// Load resources, setup UI
 	/// </summary>
 	void init() override;
+
+	/// <summary>
+	/// Handle window input for UI
+	/// </summary>
+	/// <param name="e"></param>
+	void handleEvent(const sf::Event& e) override;
 
 	/// <summary>
 	/// Do animation updates, update displayed text

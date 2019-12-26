@@ -3,6 +3,8 @@
 #include <Engine/Engine.h>
 #include <Engine/Resource.h>
 
+#include <Scene1.h>
+
 #include <iostream>
 
 using namespace vne;
@@ -36,13 +38,16 @@ int main()
 	ResourceFolder::setKey(gResourceKey);
 	ResourceFolder::setPath("TestAssets");
 
+	Engine engine;
+	Scene1 scene(&engine);
+
 	EngineParams params;
 	params.mWindowWidth = 1280;
 	params.mWindowHeight = 720;
 	params.mWindowTitle = "VN Demo";
 	params.mFullscreen = false;
+	params.mStartScene = &scene;
 
-	Engine engine;
 	bool success = engine.init(params);
 	if (success)
 		engine.run();

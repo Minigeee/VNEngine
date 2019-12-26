@@ -1,8 +1,25 @@
 #include <Engine/Scene.h>
+#include <Engine/Engine.h>
+#include <Engine/Resource.h>
+
+#include <SFML/Graphics.hpp>
 
 using namespace vne;
 
 // ============================================================================
+// ============================================================================
+
+Scene::Scene(Engine* engine) :
+	mEngine			(engine)
+{
+
+}
+
+Scene::~Scene()
+{
+
+}
+
 // ============================================================================
 
 NovelScene::NovelScene(Engine* engine) :
@@ -22,6 +39,13 @@ NovelScene::~NovelScene()
 void NovelScene::init()
 {
 	onInit();
+}
+
+// ============================================================================
+
+void NovelScene::handleEvent(const sf::Event& e)
+{
+
 }
 
 // ============================================================================

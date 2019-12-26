@@ -82,6 +82,13 @@ public:
 	/// </summary>
 	void close();
 
+
+	/// <summary>
+	/// Get main game window
+	/// </summary>
+	/// <returns>SFML window</returns>
+	sf::RenderWindow& getWindow();
+
 private:
 	/// <summary>
 	/// Handles all input events from the window
@@ -104,6 +111,11 @@ private:
 	/// Main game window.
 	/// </summary>
 	sf::RenderWindow mWindow;
+
+	/// <summary>
+	/// Current scene
+	/// </summary>
+	Scene* mScene;
 };
 
 // ============================================================================
