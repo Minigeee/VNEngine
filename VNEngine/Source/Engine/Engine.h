@@ -4,6 +4,9 @@
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 
+namespace vne
+{
+
 // ============================================================================
 
 class Scene;
@@ -67,34 +70,34 @@ public:
 	/// </summary>
 	/// <param name="params">Parameter object that specifies certain settings (i.e. window size)</param>
 	/// <returns>True if engine successfully initialized</returns>
-	bool Init(const EngineParams& params);
+	bool init(const EngineParams& params);
 
 	/// <summary>
 	/// Start game loop.
 	/// </summary>
-	void Run();
+	void run();
 
 	/// <summary>
 	/// Stops the engine after completing the current frame
 	/// </summary>
-	void Close();
+	void close();
 
 private:
 	/// <summary>
 	/// Handles all input events from the window
 	/// </summary>
-	void PollEvents();
+	void pollEvents();
 
 	/// <summary>
 	/// Do any game updates, including animations, displaying text...
 	/// </summary>
 	/// <param name="dt">Time elapsed since last frame (in seconds)</param>
-	void Update(float dt);
+	void update(float dt);
 
 	/// <summary>
 	/// Render all UI elements, sprites, textures...
 	/// </summary>
-	void Render();
+	void render();
 
 private:
 	/// <summary>
@@ -104,5 +107,7 @@ private:
 };
 
 // ============================================================================
+
+}
 
 #endif

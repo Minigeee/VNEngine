@@ -1,5 +1,7 @@
 #include <Engine/Engine.h>
 
+using namespace vne;
+
 // ============================================================================
 // ============================================================================
 
@@ -16,7 +18,7 @@ Engine::~Engine()
 // ============================================================================
 // ============================================================================
 
-bool Engine::Init(const EngineParams& params)
+bool Engine::init(const EngineParams& params)
 {
 	// Set window style based on params
 	sf::Uint32 style = sf::Style::Default;
@@ -41,7 +43,7 @@ bool Engine::Init(const EngineParams& params)
 // ============================================================================
 // ============================================================================
 
-void Engine::Run()
+void Engine::run()
 {
 	sf::Clock clock;
 
@@ -49,19 +51,19 @@ void Engine::Run()
 	while (mWindow.isOpen())
 	{
 		// Handle input
-		PollEvents();
+		pollEvents();
 
 		// Do updates
-		Update(clock.restart().asSeconds());
+		update(clock.restart().asSeconds());
 
 		// Render scene
-		Render();
+		render();
 	}
 }
 
 // ============================================================================
 
-void Engine::PollEvents()
+void Engine::pollEvents()
 {
 	sf::Event e;
 
@@ -75,14 +77,14 @@ void Engine::PollEvents()
 
 // ============================================================================
 
-void Engine::Update(float dt)
+void Engine::update(float dt)
 {
 
 }
 
 // ============================================================================
 
-void Engine::Render()
+void Engine::render()
 {
 	// Clear screen
 	mWindow.clear();
@@ -96,7 +98,7 @@ void Engine::Render()
 // ============================================================================
 // ============================================================================
 
-void Engine::Close()
+void Engine::close()
 {
 	mWindow.close();
 }

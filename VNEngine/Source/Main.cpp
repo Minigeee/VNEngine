@@ -6,20 +6,24 @@
 
 #include <iostream>
 
+using namespace vne;
+
+// ============================================================================
+
 class A : public Loadable
 {
 public:
-	bool Load(Uint8* data, Uint32 size) override
+	bool load(Uint8* data, Uint32 size) override
 	{
 		std::cout << (char*)data << "\n";
-		free(data);
+		std::free(data);
 
 		mIsLoaded = true;
 
 		return true;
 	}
 
-	void Free() override
+	void free() override
 	{
 		std::cout << "Free Resource\n";
 
@@ -47,22 +51,12 @@ Uint8 gResourceKey[] =
 	0x55
 };
 
+// ============================================================================
+
 int main()
 {
-	ResourceFolder::SetKey(gResourceKey);
-
-	if (false)
-	{
-		ResourceFolder::SetPath("TestAssets");
-		ResourceFolder::Pack("resources.assets");
-	}
-	else
-	{
-		ResourceFolder::SetPath("resources.assets");
-
-		ResourceMgr<A>::AddLocation("Shaders/Default.frag", "Test");
-		A* test = ResourceMgr<A>::Get("Test");
-	}
+	ResourceFolder::setKey(gResourceKey);
+	ResourceFolder::setPath("TestAssets");
 
 	EngineParams params;
 	params.mWindowWidth = 1280;
@@ -71,9 +65,9 @@ int main()
 	params.mFullscreen = false;
 
 	Engine engine;
-	bool success = engine.Init(params);
+	bool success = engine.init(params);
 	if (success)
-		engine.Run();
+		engine.run();
 
 	return 0;
 }

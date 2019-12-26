@@ -2,9 +2,11 @@
 
 #include <cstdlib>
 
+using namespace vne;
+
 ///////////////////////////////////////////////////////////////////////////////
 
-void* Alloc(Uint32 size, Uint32 align)
+void* aligned_alloc(Uint32 size, Uint32 align)
 {
 	// Max offset of memory
 	Uint32 offset = sizeof(void*) + align - 1;
@@ -20,7 +22,7 @@ void* Alloc(Uint32 size, Uint32 align)
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Free(void* ptr)
+void aligned_free(void* ptr)
 {
 	if (!ptr) return;
 

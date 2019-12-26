@@ -14,6 +14,8 @@
 #include <vector>
 #include <queue>
 
+using namespace vne;
+
 // ============================================================================
 
 sf::String ResourceFolder::sResourcePath = "";
@@ -43,7 +45,7 @@ Uint8 gIV[] =
 
 // ============================================================================
 
-void ResourceFolder::SetPath(const sf::String& path)
+void ResourceFolder::setPath(const sf::String& path)
 {
 	sResourcePath = path;
 
@@ -89,24 +91,24 @@ void ResourceFolder::SetPath(const sf::String& path)
 
 // ============================================================================
 
-void ResourceFolder::SetKey(const Uint8* key)
+void ResourceFolder::setKey(const Uint8* key)
 {
 	sResourceKey = key;
 }
 
 // ============================================================================
 
-Uint8* ResourceFolder::Open(const sf::String& path, Uint32& size)
+Uint8* ResourceFolder::open(const sf::String& path, Uint32& size)
 {
 	if (sPackedFolder)
-		return OpenPacked(path, size);
+		return openPacked(path, size);
 	else
-		return OpenNormal(path, size);
+		return openNormal(path, size);
 }
 
 // ============================================================================
 
-Uint8* ResourceFolder::OpenNormal(const sf::String& path, Uint32& size)
+Uint8* ResourceFolder::openNormal(const sf::String& path, Uint32& size)
 {
 	// Open file
 	sf::String fname(sResourcePath + "/" + path);
@@ -129,7 +131,7 @@ Uint8* ResourceFolder::OpenNormal(const sf::String& path, Uint32& size)
 
 // ============================================================================
 
-Uint8* ResourceFolder::OpenPacked(const sf::String& path, Uint32& size)
+Uint8* ResourceFolder::openPacked(const sf::String& path, Uint32& size)
 {
 	// Get file offset
 	auto it = sPackedFolderMap.find(path.toUtf32());
@@ -193,7 +195,7 @@ Uint8* ResourceFolder::OpenPacked(const sf::String& path, Uint32& size)
 // ============================================================================
 // ============================================================================
 
-void ResourceFolder::Pack(const sf::String& dst)
+void ResourceFolder::pack(const sf::String& dst)
 {
 	// Get length of directory path
 	Uint32 dirLen = (Uint32)sResourcePath.getSize() + 1;

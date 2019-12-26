@@ -71,5 +71,8 @@
     <ClInclude Include="Source\Core\ObjectPool.h">
       <Filter>Include\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Engine\Scene.h">
+      <Filter>Include\Engine</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,5 +1,7 @@
 #include <Resource/Resource.h>
 
+using namespace vne;
+
 // ============================================================================
 // ============================================================================
 
@@ -13,17 +15,17 @@ Loadable::Loadable() :
 // ============================================================================
 // ============================================================================
 
-void Loadable::SetFileName(const sf::String& fname)
+void Loadable::setFileName(const sf::String& fname)
 {
 	mFileName = fname;
 }
 
-const sf::String& Loadable::GetFileName() const
+const sf::String& Loadable::getFileName() const
 {
 	return mFileName;
 }
 
-bool Loadable::IsLoaded() const
+bool Loadable::isLoaded() const
 {
 	return mIsLoaded;
 }

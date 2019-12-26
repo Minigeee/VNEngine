@@ -150,6 +150,7 @@
     <ClInclude Include="Source\Core\Macros.h" />
     <ClInclude Include="Source\Core\ObjectPool.h" />
     <ClInclude Include="Source\Engine\Engine.h" />
+    <ClInclude Include="Source\Engine\Scene.h" />
     <ClInclude Include="Source\Resource\Resource.h" />
     <ClInclude Include="Source\Resource\ResourceMgr.h" />
   </ItemGroup>

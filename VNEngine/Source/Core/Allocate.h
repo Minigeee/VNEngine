@@ -3,13 +3,18 @@
 
 #include <Core/DataTypes.h>
 
-///////////////////////////////////////////////////////////////////////////////
+namespace vne
+{
+
+// ============================================================================
 
 /* Aligned memory allocation */
-void* Alloc(Uint32 size, Uint32 align = 4);
+void* aligned_alloc(Uint32 size, Uint32 align = 4);
 /* Free allocated memory */
-void Free(void* ptr);
+void aligned_free(void* ptr);
 
-///////////////////////////////////////////////////////////////////////////////
+// ============================================================================
+
+}
 
 #endif

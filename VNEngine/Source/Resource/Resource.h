@@ -5,6 +5,9 @@
 
 #include <SFML/System.hpp>
 
+namespace vne
+{
+
 // ============================================================================
 
 class Resource
@@ -13,7 +16,7 @@ public:
 	/// <summary>
 	/// Free any resource data
 	/// </summary>
-	virtual void Free() = 0;
+	virtual void free() = 0;
 };
 
 // ============================================================================
@@ -27,25 +30,25 @@ public:
 	/// Load resource from memory
 	/// </summary>
 	/// <returns>True if loaded without errors</returns>
-	virtual bool Load(Uint8* data, Uint32 size) = 0;
+	virtual bool load(Uint8* data, Uint32 size) = 0;
 
 	/// <summary>
 	/// Set file to load from
 	/// </summary>
 	/// <param name="fname">File path</param>
-	void SetFileName(const sf::String& fname);
+	void setFileName(const sf::String& fname);
 
 	/// <summary>
 	/// Returns true if Load() has been called
 	/// </summary>
 	/// <returns>Returns true if loaded</returns>
-	bool IsLoaded() const;
+	bool isLoaded() const;
 
 	/// <summary>
 	/// Get file name
 	/// </summary>
 	/// <returns>File name</returns>
-	const sf::String& GetFileName() const;
+	const sf::String& getFileName() const;
 
 protected:
 	/// <summary>
@@ -60,5 +63,7 @@ protected:
 };
 
 // ============================================================================
+
+}
 
 #endif

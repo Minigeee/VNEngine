@@ -6,24 +6,27 @@
 
 #include <vector>
 
-///////////////////////////////////////////////////////////////////////////////
+namespace vne
+{
+
+// ============================================================================
 
 namespace
 {
-	/* Page header (actually goes at end of page) */
-	struct PageHeader
-	{
-		PageHeader() = default;
-		PageHeader(void* start) :
-			mNext		(0),
-			mNextFree	((void**)start)
-		{ }
+/* Page header (actually goes at end of page) */
+struct PageHeader
+{
+	PageHeader() = default;
+	PageHeader(void* start) :
+		mNext(0),
+		mNextFree((void**)start)
+	{ }
 
-		/* Pointer to next page */
-		void* mNext;
-		/* Free list */
-		void** mNextFree;
-	};
+	/* Pointer to next page */
+	void* mNext;
+	/* Free list */
+	void** mNextFree;
+};
 }
 
 /* Paged pool allocator */
@@ -32,25 +35,25 @@ class ObjectPool
 {
 public:
 	ObjectPool() :
-		mStart		(0),
-		mCurrent	(0),
-		mLast		(0),
-		mPageSize	(1024)
+		mStart(0),
+		mCurrent(0),
+		mLast(0),
+		mPageSize(1024)
 	{
 
 	}
 
 	~ObjectPool()
 	{
-		Free();
+		free();
 	}
 
 	ObjectPool(const ObjectPool& other) = delete;
 	ObjectPool& operator=(const ObjectPool& other) = delete;
 
 	ObjectPool(ObjectPool&& other) :
-		mStart		(0),
-		mCurrent	(0)
+		mStart(0),
+		mCurrent(0)
 	{
 		mStart = other.mStart;
 		mCurrent = other.mCurrent;
@@ -68,7 +71,7 @@ public:
 		if (this != &other)
 		{
 			if (mStart)
-				Free();
+				free();
 
 			mStart = other.mStart;
 			mCurrent = other.mCurrent;
@@ -85,7 +88,7 @@ public:
 	}
 
 	/* Free (all) memory */
-	void Free()
+	void free()
 	{
 		std::vector<bool> filled(mPageSize, true);
 
@@ -113,7 +116,7 @@ public:
 					filled[i] = true;
 			}
 
-			::Free(page);
+			aligned_free(page);
 		}
 
 		mStart = 0;
@@ -122,18 +125,18 @@ public:
 	}
 
 	/* Create new object */
-	T* New()
+	T* create()
 	{
 		if (!mStart || !mCurrent)
 		{
-			mStart = AllocPage(mPageSize);
+			mStart = allocPage(mPageSize);
 			mCurrent = mStart;
 			mLast = mCurrent;
 		}
 
 		// Get header of current page
 		PageHeader* header = (PageHeader*)(mCurrent + mPageSize);
-		
+
 		// If this page is filled up...
 		if (!header->mNextFree)
 		{
@@ -161,7 +164,7 @@ public:
 			else
 			{
 				// Allocate new block
-				mCurrent = AllocPage(mPageSize);
+				mCurrent = allocPage(mPageSize);
 				// Make header of the last page point to new page
 				header = (PageHeader*)(mLast + mPageSize);
 				header->mNext = mCurrent;
@@ -186,7 +189,7 @@ public:
 	}
 
 	/* Free object */
-	void Free(T* ptr)
+	void free(T* ptr)
 	{
 		// Find which page pointer belongs to
 		T* page = mStart;
@@ -211,16 +214,16 @@ public:
 	}
 
 	/* Set page size if nothing has been allocated yet */
-	void SetPageSize(Uint32 size)
+	void setPageSize(Uint32 size)
 	{
 		mPageSize = size;
 	}
 
 private:
 	/* Allocate page */
-	T* AllocPage(Uint32 size)
+	T* allocPage(Uint32 size)
 	{
-		T* ptr = (T*)Alloc(size * sizeof(T) + sizeof(PageHeader), alignof(T));
+		T* ptr = (T*)aligned_alloc(size * sizeof(T) + sizeof(PageHeader), alignof(T));
 
 		// Initialize free list
 		T* end = ptr + size;
@@ -244,6 +247,8 @@ private:
 	Uint32 mPageSize;
 };
 
-///////////////////////////////////////////////////////////////////////////////
+// ============================================================================
+
+}
 
 #endif

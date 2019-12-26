@@ -32,6 +32,10 @@
 
 // ============================================================================
 
+namespace vne
+{
+
+
 /// <summary>
 /// Handles opening files if using normal files system.
 /// Decrypt and uncompresses if using packed resource file
@@ -44,13 +48,13 @@ public:
 	/// This can be a directory or the packed resource folder
 	/// </summary>
 	/// <param name="path">Path to resource folder</param>
-	static void SetPath(const sf::String& path);
+	static void setPath(const sf::String& path);
 
 	/// <summary>
 	/// Set resource key used to encrypt / decrypt resource folder
 	/// </summary>
 	/// <param name="key">Pointer to 16 byte key (128 bits)</param>
-	static void SetKey(const Uint8* key);
+	static void setKey(const Uint8* key);
 
 	/// <summary>
 	/// Open and load file from resource folder and return pointer to to beggining of data, this memory has to be freed after use.
@@ -59,18 +63,18 @@ public:
 	/// <param name="fname">Path to file to load</param>
 	/// <param name="size">Refernce to int to retrieve data size</param>
 	/// <returns>Pointer to loaded data</returns>
-	static Uint8* Open(const sf::String& fname, Uint32& size);
+	static Uint8* open(const sf::String& fname, Uint32& size);
 
 	/// <summary>
 	/// Pack current directory into packed folder with options for encryption
 	/// </summary>
 	/// <param name="dst">Output file</param>
 	/// <param name="key">Pointer to key buffer</param>
-	static void Pack(const sf::String& dst);
+	static void pack(const sf::String& dst);
 
 private:
-	static Uint8* OpenPacked(const sf::String& fname, Uint32& size);
-	static Uint8* OpenNormal(const sf::String& fname, Uint32& size);
+	static Uint8* openPacked(const sf::String& fname, Uint32& size);
+	static Uint8* openNormal(const sf::String& fname, Uint32& size);
 
 private:
 	/// <summary>
@@ -109,7 +113,7 @@ public:
 	/// </summary>
 	/// <param name="name">The name of the object</param>
 	/// <returns>A pointer to the new object</returns>
-	static T* Create(const sf::String& name)
+	static T* create(const sf::String& name)
 	{
 		// Check if resource with same name exists
 		auto it = sResourceMap.find(name.toUtf32());
@@ -130,14 +134,14 @@ public:
 	/// </summary>
 	/// <param name="path">File path to the resource being loaded</param>
 	/// <param name="name">Name to assign the resource</param>
-	static void AddLocation(const sf::String& path, const sf::String& name)
+	static void addLocation(const sf::String& path, const sf::String& name)
 	{
 		// Create resource
-		T* object = Create(name);
+		T* object = create(name);
 		if (!object) return;
 
 		// Set file name
-		object->SetFileName(path);
+		object->setFileName(path);
 	}
 
 	/// <summary>
@@ -147,7 +151,7 @@ public:
 	/// </summary>
 	/// <param name="name">Name of resource to retrieve</param>
 	/// <returns>Pointer to resource</returns>
-	static T* Get(const sf::String& name)
+	static T* get(const sf::String& name)
 	{
 		// If resource doesn't exist, return
 		auto it = sResourceMap.find(name.toUtf32());
@@ -155,9 +159,9 @@ public:
 		T* object = it->second;
 
 		// Load object if not loaded
-		if (std::is_base_of<Loadable, T>::value && !object->IsLoaded())
+		if (std::is_base_of<Loadable, T>::value && !object->isLoaded())
 		{
-			if (!Load(object))
+			if (!load(object))
 				return 0;
 		}
 
@@ -168,7 +172,7 @@ public:
 	/// Free a resource by name
 	/// </summary>
 	/// <param name="name">Name of the resource to free</param>
-	static void Free(const sf::String& name)
+	static void free(const sf::String& name)
 	{
 		// If resource doesn't exist, return
 		auto it = sResourceMap.find(name.toUtf32());
@@ -176,12 +180,12 @@ public:
 		T* object = it->second;
 
 		// Call free
-		object->Free();
+		object->free();
 
 		// If it is not a loadable, then remove it from object pool
 		if (!std::is_base_of<Loadable, T>::value)
 		{
-			sResourcePool.Free(object);
+			sResourcePool.free(object);
 			sResourceMap[name.toUtf32()] = 0;
 		}
 	}
@@ -192,14 +196,14 @@ private:
 	/// </summary>
 	/// <param name="object">The object to load</param>
 	/// <returns>True if there were no errors</returns>
-	static bool Load(Loadable* object)
+	static bool load(Loadable* object)
 	{
 		// Load bytes into memory
 		Uint32 size = 0;
-		Uint8* data = ResourceFolder::Open(object->GetFileName(), size);
+		Uint8* data = ResourceFolder::open(object->getFileName(), size);
 
 		// Load data from memory
-		return data && object->Load(data, size);
+		return data && object->load(data, size);
 	}
 
 private:
@@ -223,5 +227,8 @@ template <typename T>
 std::unordered_map<std::basic_string<Uint32>, T*> ResourceMgr<T>::sResourceMap;
 
 // ============================================================================
+
+
+}
 
 #endif
