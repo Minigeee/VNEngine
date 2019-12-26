@@ -1,6 +1,8 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
+#include <Core/DataTypes.h>
+
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 
@@ -84,6 +86,19 @@ public:
 
 
 	/// <summary>
+	/// Set the coordinate space dimensions.
+	/// All sprite positions and scales will be based off of this size,
+	/// and this coordinate space will be transformed based on window size.
+	/// Note that this is different than the window size.
+	/// All sizes are measured in pixels.
+	/// By default, this space is 1920x1080 pixels.
+	/// </summary>
+	/// <param name="w">Width of the coordinate space</param>
+	/// <param name="h">Height of the coordinate space</param>
+	void setCoordSize(Uint32 w, Uint32 h);
+
+
+	/// <summary>
 	/// Get main game window
 	/// </summary>
 	/// <returns>SFML window</returns>
@@ -116,6 +131,11 @@ private:
 	/// Current scene
 	/// </summary>
 	Scene* mScene;
+
+	/// <summary>
+	/// Main view used to rescale all renderables to fit in window
+	/// </summary>
+	sf::View mView;
 };
 
 // ============================================================================

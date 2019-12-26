@@ -204,6 +204,15 @@ public:
 		}
 	}
 
+	/// <summary>
+	/// Free all resources
+	/// </summary>
+	static void free()
+	{
+		sResourcePool.free();
+		sResourceMap.clear();
+	}
+
 private:
 	/// <summary>
 	/// Load resource from file.
@@ -251,7 +260,16 @@ inline bool Resource<sf::Texture>::load(sf::Texture* object, const sf::String& f
 	Uint8* data = ResourceFolder::open(fname, size);
 	if (! data || !size) return false;
 
-	return object->loadFromMemory(data, size);
+	bool success = object->loadFromMemory(data, size);
+	std::free(data);
+
+	if (success)
+	{
+		// Enable smooth filter
+		object->setSmooth(true);
+	}
+
+	return success;
 }
 
 // ============================================================================

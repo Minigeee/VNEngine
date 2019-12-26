@@ -1,5 +1,6 @@
 #include <Engine/Engine.h>
 #include <Engine/Scene.h>
+#include <Engine/Resource.h>
 
 using namespace vne;
 
@@ -7,7 +8,8 @@ using namespace vne;
 // ============================================================================
 
 Engine::Engine() :
-	mScene			(0)
+	mScene			(0),
+	mView			(sf::FloatRect(0.0f, 0.0f, 1920.0f, 1080.0f))
 {
 
 }
@@ -38,6 +40,9 @@ bool Engine::init(const EngineParams& params)
 	// Enable v-sync
 	mWindow.setVerticalSyncEnabled(true);
 
+	// Main view
+	mWindow.setView(mView);
+
 
 	// Setup first scene
 	mScene = params.mStartScene;
@@ -66,9 +71,14 @@ void Engine::run()
 		// Render scene
 		render();
 	}
+
+	// Free all SFML resources
+	Resource<sf::Texture>::free();
 }
 
 // ============================================================================
+
+#include <iostream>
 
 void Engine::pollEvents()
 {
@@ -79,6 +89,36 @@ void Engine::pollEvents()
 		// Handle window close
 		if (e.type == sf::Event::Closed)
 			mWindow.close();
+
+		// Handle window resize
+		else if (e.type == sf::Event::Resized)
+		{
+			float ARs = (float)e.size.width / e.size.height;
+			const sf::Vector2f& viewSize = mView.getSize();
+			float ARc = viewSize.x / viewSize.y;
+
+			float w, h, x, y;
+			if (ARs >= ARc)
+			{
+				// Width is relatively bigger
+				w = ARc / ARs;
+				h = 1.0f;
+				x = (1.0f - w) * 0.5f;
+				y = 0.0f;
+			}
+			else
+			{
+				// Height is relatively bigger
+				w = 1.0f;
+				h = ARs / ARc;
+				x = 0.0f;
+				y = (1.0f - h) * 0.5f;
+			}
+
+			// Apply view
+			mView.setViewport(sf::FloatRect(x, y, w, h));
+			mWindow.setView(mView);
+		}
 
 		mScene->handleEvent(e);
 	}
@@ -100,6 +140,7 @@ void Engine::render()
 
 	// Render stuff
 	mScene->render();
+	mWindow.draw(sprite);
 
 	// Swap buffers
 	mWindow.display();
