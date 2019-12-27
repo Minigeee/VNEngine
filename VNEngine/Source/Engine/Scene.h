@@ -1,6 +1,8 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+#include <UI/UI.h>
+
 #include <SFML/Window.hpp>
 
 namespace vne
@@ -91,6 +93,12 @@ protected:
 	/// This is where the actions list should be populated
 	/// </summary>
 	virtual void onInit() = 0;
+
+protected:
+	/// <summary>
+	/// UI system
+	/// </summary>
+	UI mUI;
 };
 
 // ============================================================================

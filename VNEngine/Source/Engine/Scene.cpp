@@ -23,7 +23,8 @@ Scene::~Scene()
 // ============================================================================
 
 NovelScene::NovelScene(Engine* engine) :
-	Scene		(engine)
+	Scene		(engine),
+	mUI			(engine)
 {
 
 }
@@ -59,7 +60,9 @@ void NovelScene::update(float dt)
 
 void NovelScene::render()
 {
+	sf::RenderWindow& target = mEngine->getWindow();
 
+	target.draw(mUI);
 }
 
 // ============================================================================

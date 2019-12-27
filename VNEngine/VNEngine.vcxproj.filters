@@ -25,6 +25,12 @@
     <Filter Include="Source\Core">
       <UniqueIdentifier>{2d40e315-10af-4417-b604-9c4349021d1f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Include\UI">
+      <UniqueIdentifier>{418716ba-3238-4282-b30f-79fff3054b86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\UI">
+      <UniqueIdentifier>{2ad124f3-8850-4f6e-a6c7-cef939fa82d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Engine\Engine.cpp">
@@ -38,6 +44,12 @@
     </ClCompile>
     <ClCompile Include="Source\Engine\Scene.cpp">
       <Filter>Source\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\UIElement.cpp">
+      <Filter>Source\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\UI.cpp">
+      <Filter>Source\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +73,15 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Resource.h">
       <Filter>Include\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\UI.h">
+      <Filter>Include\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\UIElement.h">
+      <Filter>Include\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\UIContainer.h">
+      <Filter>Include\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

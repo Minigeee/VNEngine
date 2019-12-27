@@ -140,7 +140,6 @@ void Engine::render()
 
 	// Render stuff
 	mScene->render();
-	mWindow.draw(sprite);
 
 	// Swap buffers
 	mWindow.display();
