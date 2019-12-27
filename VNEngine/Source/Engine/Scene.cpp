@@ -53,7 +53,7 @@ void NovelScene::handleEvent(const sf::Event& e)
 
 void NovelScene::update(float dt)
 {
-
+	mUI.update(dt);
 }
 
 // ============================================================================

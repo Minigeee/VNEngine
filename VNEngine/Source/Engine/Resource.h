@@ -47,6 +47,11 @@ struct ResourceInfo
 	/// File name of resource to load. Empty if resource was created instead of loaded
 	/// </summary>
 	sf::String mFileName;
+
+	/// <summary>
+	/// Data the resource uses that must be freed after use
+	/// </summary>
+	Uint8* mData;
 };
 
 // ============================================================================
@@ -174,11 +179,12 @@ public:
 		if (info.mFileName.getSize() && !info.mResource)
 		{
 			info.mResource = sResourcePool.create();
-			if (!load((T*)info.mResource, info.mFileName))
+			if (!load((T*)info.mResource, info.mFileName, info.mData))
 			{
 				// If failed to load, free object and return NULL
 				sResourcePool.free((T*)info.mResource);
 				info.mResource = 0;
+				info.mData = 0;
 
 				return 0;
 			}
@@ -199,8 +205,12 @@ public:
 		// If object exists, free and reset object
 		if (info.mResource)
 		{
+			if (info.mData)
+				std::free(info.mData);
+
 			sResourcePool.free((T*)info.mResource);
 			info.mResource = 0;
+			info.mData = 0;
 		}
 	}
 
@@ -209,6 +219,13 @@ public:
 	/// </summary>
 	static void free()
 	{
+		// Free all resource data
+		for (auto it = sResourceMap.begin(); it != sResourceMap.end(); ++it)
+		{
+			if (it->second.mData)
+				std::free(it->second.mData);
+		}
+
 		sResourcePool.free();
 		sResourceMap.clear();
 	}
@@ -220,7 +237,7 @@ private:
 	/// </summary>
 	/// <param name="object">The object to load</param>
 	/// <returns>True if there were no errors</returns>
-	static bool load(T* object, const sf::String& fname)
+	static bool load(T* object, const sf::String& fname, Uint8*& data)
 	{
 		// Default nonloadable
 		return false;
@@ -254,14 +271,15 @@ std::unordered_map<std::basic_string<Uint32>, ResourceInfo> Resource<T>::sResour
 /// Load SFML texture
 /// </summary>
 template <>
-inline bool Resource<sf::Texture>::load(sf::Texture* object, const sf::String& fname)
+inline bool Resource<sf::Texture>::load(sf::Texture* object, const sf::String& fname, Uint8*& data)
 {
 	Uint32 size = 0;
-	Uint8* data = ResourceFolder::open(fname, size);
+	data = ResourceFolder::open(fname, size);
 	if (! data || !size) return false;
 
 	bool success = object->loadFromMemory(data, size);
 	std::free(data);
+	data = 0;
 
 	if (success)
 	{
@@ -270,6 +288,18 @@ inline bool Resource<sf::Texture>::load(sf::Texture* object, const sf::String& f
 	}
 
 	return success;
+}
+
+// ============================================================================
+
+template <>
+inline bool Resource<sf::Font>::load(sf::Font* object, const sf::String& fname, Uint8*& data)
+{
+	Uint32 size = 0;
+	data = ResourceFolder::open(fname, size);
+	if (!data || !size) return false;
+
+	return object->loadFromMemory(data, size);
 }
 
 // ============================================================================

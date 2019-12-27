@@ -36,7 +36,7 @@ Uint8 gResourceKey[] =
 int main()
 {
 	ResourceFolder::setKey(gResourceKey);
-	ResourceFolder::setPath("TestAssets");
+	ResourceFolder::setPath("Assets");
 
 	Engine engine;
 	Scene1 scene(&engine);

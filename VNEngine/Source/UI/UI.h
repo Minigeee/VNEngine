@@ -33,6 +33,12 @@ public:
 	T* get(const sf::String& name) const { return Resource<T>::get(name); }
 
 	/// <summary>
+	/// Update UI animations and transforms
+	/// </summary>
+	/// <param name="dt">Time elapsed since last frame</param>
+	void update(float dt);
+
+	/// <summary>
 	/// Add UI element to the root element
 	/// </summary>
 	/// <param name="element">UI element to add</param>
@@ -44,7 +50,13 @@ public:
 	/// <returns>Root element</returns>
 	UIElement* getRoot() const;
 
-protected:
+private:
+	/// <summary>
+	/// Update element transform
+	/// </summary>
+	/// <param name="element">Element to update</param>
+	void updateElement(UIElement* element);
+
 	/// <summary>
 	/// Draw all UI elements added to the system. Overriding Drawable
 	/// </summary>

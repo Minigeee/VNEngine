@@ -14,7 +14,6 @@ UIElement::UIElement() :
 	mSize				(0.0f, 0.0f),
 	mOrigin				(0.0f, 0.0f),
 	mAnchor				(0.0f, 0.0f),
-	mTexture			(0),
 	mTransformChanged	(false)
 {
 
@@ -39,25 +38,25 @@ void UIElement::addChild(UIElement* child)
 void UIElement::setPosition(const sf::Vector2f& pos)
 {
 	mRelPosition = pos;
-	mTransformChanged = true;
+	transformDirty();
 }
 
 void UIElement::setPosition(float x, float y)
 {
 	mRelPosition = sf::Vector2f(x, y);
-	mTransformChanged = true;
+	transformDirty();
 }
 
 void UIElement::move(const sf::Vector2f& pos)
 {
 	mRelPosition += pos;
-	mTransformChanged = true;
+	transformDirty();
 }
 
 void UIElement::move(float x, float y)
 {
 	mRelPosition += sf::Vector2f(x, y);
-	mTransformChanged = true;
+	transformDirty();
 }
 
 // ============================================================================
@@ -65,13 +64,13 @@ void UIElement::move(float x, float y)
 void UIElement::setRotation(float rotation)
 {
 	mRelRotation = fmodf(rotation, 360.0f);
-	mTransformChanged = true;
+	transformDirty();
 }
 
 void UIElement::rotate(float rotation)
 {
 	mRelRotation = fmodf(mRelRotation + rotation, 360.0f);
-	mTransformChanged = true;
+	transformDirty();
 }
 
 // ============================================================================
@@ -79,27 +78,27 @@ void UIElement::rotate(float rotation)
 void UIElement::setSize(const sf::Vector2f& size)
 {
 	mSize = size;
-	mTransformChanged = true;
+	transformDirty();
 }
 
 void UIElement::setSize(float w, float h)
 {
 	mSize = sf::Vector2f(w, h);
-	mTransformChanged = true;
+	transformDirty();
 }
 
 void UIElement::scale(const sf::Vector2f& size)
 {
 	mSize.x *= size.x;
 	mSize.y *= size.y;
-	mTransformChanged = true;
+	transformDirty();
 }
 
 void UIElement::scale(float w, float h)
 {
 	mSize.x *= w;
 	mSize.y *= h;
-	mTransformChanged = true;
+	transformDirty();
 }
 
 // ============================================================================
@@ -107,13 +106,13 @@ void UIElement::scale(float w, float h)
 void UIElement::setOrigin(const sf::Vector2f& origin)
 {
 	mOrigin = origin;
-	mTransformChanged = true;
+	transformDirty();
 }
 
 void UIElement::setOrigin(float x, float y)
 {
 	mOrigin = sf::Vector2f(x, y);
-	mTransformChanged = true;
+	transformDirty();
 }
 
 // ============================================================================
@@ -121,24 +120,16 @@ void UIElement::setOrigin(float x, float y)
 void UIElement::setAnchor(const sf::Vector2f& anchor)
 {
 	mAnchor = anchor;
-	mTransformChanged = true;
+	transformDirty();
 }
 
 void UIElement::setAnchor(float x, float y)
 {
 	mAnchor = sf::Vector2f(x, y);
-	mTransformChanged = true;
+	transformDirty();
 }
 
 // ============================================================================
-
-void UIElement::setTexture(sf::Texture* texture)
-{
-	mTexture = texture;
-}
-
-// ============================================================================
-
 const sf::Vector2f& UIElement::getRelPosition() const
 {
 	return mRelPosition;
@@ -176,11 +167,6 @@ const sf::Vector2f& UIElement::getAnchor() const
 	return mAnchor;
 }
 
-sf::Texture* UIElement::getTexture() const
-{
-	return mTexture;
-}
-
 UIElement* UIElement::getParent() const
 {
 	return mParent;
@@ -203,14 +189,7 @@ void UIElement::updateAbsTransforms()
 		if (mParent)
 		{
 			mParent->updateAbsTransforms();
-
-			// Calculate anchor offset
-			sf::Vector2f anchorOffset(
-				mAnchor.x * mParent->mSize.x,
-				mAnchor.y * mParent->mSize.y
-			);
-
-			mAbsPosition += mParent->mAbsPosition + anchorOffset;
+			mAbsPosition += mParent->mAbsPosition + mAnchor * mParent->mSize;
 			mAbsRotation += mParent->mAbsRotation;
 		}
 
@@ -218,6 +197,16 @@ void UIElement::updateAbsTransforms()
 
 		mTransformChanged = false;
 	}
+}
+
+// ============================================================================
+
+void UIElement::transformDirty()
+{
+	mTransformChanged = true;
+
+	for (Uint32 i = 0; i < mChildren.size(); ++i)
+		mChildren[i]->transformDirty();
 }
 
 // ============================================================================

@@ -19,6 +19,11 @@ protected:
 	/// This function does nothing because base container has no renderable component
 	/// </summary>
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override { }
+
+	/// <summary>
+	/// This function has nothing to update
+	/// </summary>
+	virtual void update() { }
 };
 
 // ============================================================================

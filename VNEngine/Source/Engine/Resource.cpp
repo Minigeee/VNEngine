@@ -350,7 +350,8 @@ void ResourceFolder::pack(const sf::String& dst)
 // ============================================================================
 
 ResourceInfo::ResourceInfo() :
-	mResource		(0)
+	mResource		(0),
+	mData			(0)
 {
 
 }

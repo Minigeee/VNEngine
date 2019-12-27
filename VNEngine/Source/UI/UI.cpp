@@ -1,5 +1,6 @@
 #include <UI/UI.h>
 #include <UI/UIContainer.h>
+#include <UI/Button.h>
 
 using namespace vne;
 
@@ -16,6 +17,7 @@ UI::UI(Engine* engine) :
 UI::~UI()
 {
 	Resource<UIContainer>::free();
+	Resource<Button>::free();
 }
 
 // ============================================================================
@@ -29,6 +31,21 @@ void UI::addToRoot(UIElement* element)
 UIElement* UI::getRoot() const
 {
 	return mRootElement;
+}
+
+// ============================================================================
+
+void UI::updateElement(UIElement* element)
+{
+	element->update();
+
+	for (Uint32 i = 0; i < element->mChildren.size(); ++i)
+		updateElement(element->mChildren[i]);
+}
+
+void UI::update(float dt)
+{
+	updateElement(mRootElement);
 }
 
 // ============================================================================

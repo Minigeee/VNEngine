@@ -13,8 +13,12 @@ namespace vne
 
 // ============================================================================
 
+class UI;
+
 class UIElement : public sf::Drawable
 {
+	friend UI;
+
 public:
 	UIElement();
 	virtual ~UIElement();
@@ -80,12 +84,6 @@ public:
 	/// The anchor is considered the center of the coordinate system for this element
 	/// </summary>
 	void setAnchor(float x, float y);
-
-	/// <summary>
-	/// Set texture to display on element
-	/// </summary>
-	/// <param name="texture"></param>
-	void setTexture(sf::Texture* texture);
 
 	/// <summary>
 	/// Add offset to current local position
@@ -158,12 +156,6 @@ public:
 	const sf::Vector2f& getAnchor() const;
 
 	/// <summary>
-	/// Get element texture
-	/// </summary>
-	/// <returns>Texture</returns>
-	sf::Texture* getTexture() const;
-
-	/// <summary>
 	/// Get pointer to element parent
 	/// </summary>
 	/// <returns>Element parent</returns>
@@ -177,9 +169,19 @@ public:
 
 protected:
 	/// <summary>
+	/// Update SFML drawable transforms
+	/// </summary>
+	virtual void update() = 0;
+
+	/// <summary>
 	/// Update any absolute transforms
 	/// </summary>
 	void updateAbsTransforms();
+
+	/// <summary>
+	/// Recursively mark transform dirty for all children
+	/// </summary>
+	void transformDirty();
 
 protected:
 	/// <summary>
@@ -234,11 +236,6 @@ protected:
 	/// It takes values from 0 to 1
 	/// </summary>
 	sf::Vector2f mAnchor;
-
-	/// <summary>
-	/// Texture to display on element
-	/// </summary>
-	sf::Texture* mTexture;
 
 	/// <summary>
 	/// This is true if element's orientation was changed

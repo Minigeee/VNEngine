@@ -74,6 +74,7 @@ void Engine::run()
 
 	// Free all SFML resources
 	Resource<sf::Texture>::free();
+	Resource<sf::Font>::free();
 }
 
 // ============================================================================
