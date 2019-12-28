@@ -21,6 +21,12 @@ Scene1::~Scene1()
 // ============================================================================
 // ============================================================================
 
+void onHoverStart(UIElement* element, const sf::Event& e)
+{
+	Button* btn = dynamic_cast<Button*>(element);
+	btn->getBody().setFillColor(sf::Color(255, 0, 0));
+}
+
 void Scene1::onInit()
 {
 	Resource<sf::Font>::addLocation("Fonts/segoeui/segoeui.ttf", "SegoeUI");
@@ -32,6 +38,7 @@ void Scene1::onInit()
 	button->getBody().setFillColor(sf::Color(130, 130, 250));
 	button->getLabel().setFont(*font);
 	button->getLabel().setString("Play");
+	button->setMouseEnterFunc(&onHoverStart);
 	mUI.addToRoot(button);
 }
 

@@ -46,7 +46,7 @@ void NovelScene::init()
 
 void NovelScene::handleEvent(const sf::Event& e)
 {
-
+	mUI.handleEvent(e);
 }
 
 // ============================================================================

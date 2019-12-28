@@ -32,7 +32,7 @@ sf::Text& Button::getLabel()
 
 void Button::update()
 {
-	if (mTransformChanged)
+	if (!mDrawablesUpdated)
 	{
 		updateAbsTransforms();
 
@@ -56,6 +56,8 @@ void Button::update()
 		);
 		mLabel.setPosition(center);
 		mLabel.setRotation(mAbsRotation);
+
+		mDrawablesUpdated = true;
 	}
 }
 

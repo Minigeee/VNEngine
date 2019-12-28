@@ -38,7 +38,7 @@ public:
 		mStart(0),
 		mCurrent(0),
 		mLast(0),
-		mPageSize(1024)
+		mPageSize(128)
 	{
 
 	}

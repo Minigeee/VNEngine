@@ -33,6 +33,12 @@ public:
 	T* get(const sf::String& name) const { return Resource<T>::get(name); }
 
 	/// <summary>
+	/// Handle input events
+	/// </summary>
+	/// <param name="e">SFML event</param>
+	void handleEvent(const sf::Event& e);
+
+	/// <summary>
 	/// Update UI animations and transforms
 	/// </summary>
 	/// <param name="dt">Time elapsed since last frame</param>
@@ -51,6 +57,13 @@ public:
 	UIElement* getRoot() const;
 
 private:
+	/// <summary>
+	/// Relay event to all UI elements
+	/// </summary>
+	/// <param name="element">Element to relay event to</param>
+	/// <param name="e">The event</param>
+	void relayEvent(UIElement* element, const sf::Event& e);
+
 	/// <summary>
 	/// Update element transform
 	/// </summary>
@@ -72,6 +85,11 @@ private:
 	/// Root element
 	/// </summary>
 	UIElement* mRootElement;
+
+	/// <summary>
+	/// Current element with focus
+	/// </summary>
+	UIElement* mFocusedElement;
 };
 
 // ============================================================================

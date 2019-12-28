@@ -14,7 +14,12 @@ UIElement::UIElement() :
 	mSize				(0.0f, 0.0f),
 	mOrigin				(0.0f, 0.0f),
 	mAnchor				(0.0f, 0.0f),
-	mTransformChanged	(false)
+	mTransformChanged	(false),
+	mDrawablesUpdated	(true),
+	mHasFocus			(false),
+	mHasHover			(false),
+	mNumMousePressed	(0),
+	mNumKeyPressed		(0)
 {
 
 }
@@ -204,9 +209,107 @@ void UIElement::updateAbsTransforms()
 void UIElement::transformDirty()
 {
 	mTransformChanged = true;
+	mDrawablesUpdated = false;
 
 	for (Uint32 i = 0; i < mChildren.size(); ++i)
 		mChildren[i]->transformDirty();
+}
+
+// ============================================================================
+// ============================================================================
+
+void UIElement::setMouseEnterFunc(const UICallback& func)
+{
+	mMouseEnterFunc = func;
+}
+
+void UIElement::setMouseExitFunc(const UICallback& func)
+{
+	mMouseExitFunc = func;
+}
+
+void UIElement::setMouseMoveFunc(const UICallback& func)
+{
+	mMouseMoveFunc = func;
+}
+
+void UIElement::setMousePressFunc(const UICallback& func)
+{
+	mMousePressFunc = func;
+}
+
+void UIElement::setMouseReleaseFunc(const UICallback& func)
+{
+	mMouseReleaseFunc = func;
+}
+
+void UIElement::setKeyPressFunc(const UICallback& func)
+{
+	mKeyPressFunc = func;
+}
+
+void UIElement::setKeyReleaseFunc(const UICallback& func)
+{
+	mKeyReleaseFunc = func;
+}
+
+// ============================================================================
+
+bool UIElement::hasFocus() const
+{
+	return mHasFocus;
+}
+
+bool UIElement::hasHover() const
+{
+	return mHasHover;
+}
+
+Uint8 UIElement::getNumMousePressed() const
+{
+	return mNumMousePressed;
+}
+
+Uint8 UIElement::getNumKeyPressed() const
+{
+	return mNumKeyPressed;
+}
+
+// ============================================================================
+
+void UIElement::onMouseEnter(const sf::Event& e)
+{
+
+}
+
+void UIElement::onMouseExit(const sf::Event& e)
+{
+
+}
+
+void UIElement::onMouseMove(const sf::Event& e)
+{
+
+}
+
+void UIElement::onMousePress(const sf::Event& e)
+{
+
+}
+
+void UIElement::onMouseRelease(const sf::Event& e)
+{
+
+}
+
+void UIElement::onKeyPress(const sf::Event& e)
+{
+
+}
+
+void UIElement::onKeyRelease(const sf::Event& e)
+{
+
 }
 
 // ============================================================================

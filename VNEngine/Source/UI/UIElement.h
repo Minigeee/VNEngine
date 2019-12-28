@@ -7,6 +7,7 @@
 #include <SFML/Graphics.hpp>
 
 #include <vector>
+#include <functional>
 
 namespace vne
 {
@@ -18,6 +19,9 @@ class UI;
 class UIElement : public sf::Drawable
 {
 	friend UI;
+
+public:
+	typedef std::function<void(UIElement*, const sf::Event&)> UICallback;
 
 public:
 	UIElement();
@@ -167,6 +171,69 @@ public:
 	/// <returns>List of children</returns>
 	const std::vector<UIElement*>& getChildren() const;
 
+
+	/// <summary>
+	/// Set callback for mouse enter event
+	/// </summary>
+	/// <param name="func">UI callback</param>
+	void setMouseEnterFunc(const UICallback& func);
+
+	/// <summary>
+	/// Set callback for mouse exit event
+	/// </summary>
+	/// <param name="func">UI callback</param>
+	void setMouseExitFunc(const UICallback& func);
+
+	/// <summary>
+	/// Set callback for mouse move event
+	/// </summary>
+	/// <param name="func">UI callback</param>
+	void setMouseMoveFunc(const UICallback& func);
+
+	/// <summary>
+	/// Set callback for mouse press event
+	/// </summary>
+	/// <param name="func">UI callback</param>
+	void setMousePressFunc(const UICallback& func);
+
+	/// <summary>
+	/// Set callback for mouse release event
+	/// </summary>
+	/// <param name="func">UI callback</param>
+	void setMouseReleaseFunc(const UICallback& func);
+
+	/// <summary>
+	/// Set callback for key press event
+	/// </summary>
+	/// <param name="func">UI callback</param>
+	void setKeyPressFunc(const UICallback& func);
+
+	/// <summary>
+	/// Set callback for key release event
+	/// </summary>
+	/// <param name="func">UI callback</param>
+	void setKeyReleaseFunc(const UICallback& func);
+
+	/// <summary>
+	/// Returns true if mouse is hovering over element
+	/// </summary>
+	bool hasHover() const;
+
+	/// <summary>
+	/// Returns true if element has focus
+	/// </summary>
+	bool hasFocus() const;
+
+	/// <summary>
+	/// Returns the number of mouse buttons pressed in element
+	/// </summary>
+	Uint8 getNumMousePressed() const;
+
+	/// <summary>
+	/// Returns the number of keys pressed within element
+	/// </summary>
+	Uint8 getNumKeyPressed() const;
+
 protected:
 	/// <summary>
 	/// Update SFML drawable transforms
@@ -182,6 +249,49 @@ protected:
 	/// Recursively mark transform dirty for all children
 	/// </summary>
 	void transformDirty();
+
+
+	/// <summary>
+	/// Called when mouse enters element
+	/// </summary>
+	/// <param name="e">SFML event</param>
+	virtual void onMouseEnter(const sf::Event& e);
+
+	/// <summary>
+	/// Called when mouse exits element
+	/// </summary>
+	/// <param name="e">SFML event</param>
+	virtual void onMouseExit(const sf::Event& e);
+
+	/// <summary>
+	/// Called when mouse moves within element
+	/// </summary>
+	/// <param name="e">SFML event</param>
+	virtual void onMouseMove(const sf::Event& e);
+
+	/// <summary>
+	/// Called when mouse button is pressed within element
+	/// </summary>
+	/// <param name="e">SFML event</param>
+	virtual void onMousePress(const sf::Event& e);
+
+	/// <summary>
+	/// Called when mouse button is released
+	/// </summary>
+	/// <param name="e">SFML event</param>
+	virtual void onMouseRelease(const sf::Event& e);
+
+	/// <summary>
+	/// Called when key is pressed within element
+	/// </summary>
+	/// <param name="e">SFML event</param>
+	virtual void onKeyPress(const sf::Event& e);
+
+	/// <summary>
+	/// Called when key is released
+	/// </summary>
+	/// <param name="e">SFML event</param>
+	virtual void onKeyRelease(const sf::Event& e);
 
 protected:
 	/// <summary>
@@ -241,6 +351,67 @@ protected:
 	/// This is true if element's orientation was changed
 	/// </summary>
 	bool mTransformChanged;
+
+	/// <summary>
+	/// This is true if transform changed and the transforms have been applied to drawables
+	/// </summary>
+	bool mDrawablesUpdated;
+
+
+	/// <summary>
+	/// Called when mouse enters element
+	/// </summary>
+	UICallback mMouseEnterFunc;
+
+	/// <summary>
+	/// Called when mouse exits element
+	/// </summary>
+	UICallback mMouseExitFunc;
+
+	/// <summary>
+	/// Called when mouse moves within element
+	/// </summary>
+	UICallback mMouseMoveFunc;
+
+	/// <summary>
+	/// Called when the mouse button is pressed within the element
+	/// </summary>
+	UICallback mMousePressFunc;
+
+	/// <summary>
+	/// Called when mouse button is released
+	/// </summary>
+	UICallback mMouseReleaseFunc;
+
+	/// <summary>
+	/// Called when key is pressed and element has hover
+	/// </summary>
+	UICallback mKeyPressFunc;
+
+	/// <summary>
+	/// Called when key is released
+	/// </summary>
+	UICallback mKeyReleaseFunc;
+
+	/// <summary>
+	/// True when element has hover
+	/// </summary>
+	bool mHasHover;
+
+	/// <summary>
+	/// True when element has focus
+	/// </summary>
+	bool mHasFocus;
+
+	/// <summary>
+	/// Keeps track of the number of mouse buttons pressed in element
+	/// </summary>
+	Uint8 mNumMousePressed;
+
+	/// <summary>
+	/// Keeps track of the number of keys pressed in element
+	/// </summary>
+	Uint8 mNumKeyPressed;
 };
 
 // ============================================================================
