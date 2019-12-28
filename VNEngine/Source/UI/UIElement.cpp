@@ -18,7 +18,7 @@ UIElement::UIElement() :
 	mDrawablesUpdated	(true),
 	mHasFocus			(false),
 	mHasHover			(false),
-	mNumMousePressed	(0),
+	mIsMousePressed		(false),
 	mNumKeyPressed		(0)
 {
 
@@ -253,6 +253,11 @@ void UIElement::setKeyReleaseFunc(const UICallback& func)
 	mKeyReleaseFunc = func;
 }
 
+void UIElement::setTextEnteredFunc(const UICallback& func)
+{
+	mTextEnteredFunc = func;
+}
+
 // ============================================================================
 
 bool UIElement::hasFocus() const
@@ -265,9 +270,9 @@ bool UIElement::hasHover() const
 	return mHasHover;
 }
 
-Uint8 UIElement::getNumMousePressed() const
+bool UIElement::isMousePressed() const
 {
-	return mNumMousePressed;
+	return mIsMousePressed;
 }
 
 Uint8 UIElement::getNumKeyPressed() const
@@ -308,6 +313,11 @@ void UIElement::onKeyPress(const sf::Event& e)
 }
 
 void UIElement::onKeyRelease(const sf::Event& e)
+{
+
+}
+
+void UIElement::onTextEntered(const sf::Event& e)
 {
 
 }

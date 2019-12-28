@@ -58,11 +58,12 @@ public:
 
 private:
 	/// <summary>
-	/// Relay event to all UI elements
+	/// Relay mouse move event to all UI elements
 	/// </summary>
 	/// <param name="element">Element to relay event to</param>
 	/// <param name="e">The event</param>
-	void relayEvent(UIElement* element, const sf::Event& e);
+	/// <returns>True if event has been handled</returns>
+	bool relayMouseEvent(UIElement* element, const sf::Event& e);
 
 	/// <summary>
 	/// Update element transform
@@ -87,9 +88,29 @@ private:
 	UIElement* mRootElement;
 
 	/// <summary>
-	/// Current element with focus
+	/// Current element with focus, only one element allowed to be focused at a time
 	/// </summary>
-	UIElement* mFocusedElement;
+	UIElement* mCurrentFocus;
+
+	/// <summary>
+	/// Current element with hover, only one element allowed to be hovered at a time
+	/// </summary>
+	UIElement* mCurrentHover;
+
+	/// <summary>
+	/// Current element being pressed, only one element allowed
+	/// </summary>
+	UIElement* mCurrentPress;
+
+	/// <summary>
+	/// Current element with key presses, only one allowed
+	/// </summary>
+	UIElement* mCurrentKeyPress;
+
+	/// <summary>
+	/// Manually keep track of keys pressed to prevent repeated keys for key press, but not text
+	/// </summary>
+	bool mIsKeyPressed[sf::Keyboard::KeyCount];
 };
 
 // ============================================================================

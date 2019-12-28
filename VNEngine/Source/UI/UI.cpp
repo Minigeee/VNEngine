@@ -10,11 +10,15 @@ using namespace vne;
 // ============================================================================
 
 UI::UI(Engine* engine) :
-	mEngine			(engine),
-	mRootElement	(0),
-	mFocusedElement	(0)
+	mEngine				(engine),
+	mRootElement		(0),
+	mCurrentFocus		(0),
+	mCurrentHover		(0),
+	mCurrentPress		(0),
+	mCurrentKeyPress	(0)
 {
 	mRootElement = Resource<UIContainer>::create("RootElement");
+	memset(mIsKeyPressed, false, sf::Keyboard::KeyCount);
 }
 
 UI::~UI()
@@ -38,140 +42,182 @@ UIElement* UI::getRoot() const
 
 // ============================================================================
 
-void UI::relayEvent(UIElement* element, const sf::Event& e)
+bool UI::relayMouseEvent(UIElement* element, const sf::Event& e)
 {
 	/* TODO : Add handled events so that not every element will need to be checked */
 	/* Mouse and key pressing / releasing can be shortened to single check */
 	/* Mouse movement events and hovering still need to be checked by every element */
 
+	bool handled = false;
+
 	// Relay event to children first
 	const std::vector<UIElement*>& children = element->getChildren();
-	for (Uint32 i = 0; i < children.size(); ++i)
-		relayEvent(children[i], e);
+	for (int i = children.size() - 1; i >= 0 && !handled; --i)
+		handled |= relayMouseEvent(children[i], e);
+
+	// Quit early if event handled
+	if (handled) return true;
 
 
-	// Mouse movement events
-	if (e.type == sf::Event::MouseMoved)
+	// Update transforms
+	element->updateAbsTransforms();
+
+	/* TODO : Handle rotated elements eventually */
+	// Get bounding box
+	sf::FloatRect box(
+		element->mAbsPosition.x,
+		element->mAbsPosition.y,
+		element->mSize.x,
+		element->mSize.y
+	);
+
+	// Get coordinate space point
+	sf::Vector2i mousePos(e.mouseMove.x, e.mouseMove.y);
+	sf::Vector2f p = mEngine->getWindow().mapPixelToCoords(mousePos);
+
+	// Get inside / outside of box
+	bool inside = box.contains(p);
+
+	// Test mouse enter
+	if (!element->mHasHover && inside)
 	{
-		// Update transforms
-		element->updateAbsTransforms();
-
-		/* TODO : Handle rotated elements eventually */
-		// Get bounding box
-		sf::FloatRect box(
-			element->mAbsPosition.x,
-			element->mAbsPosition.y,
-			element->mSize.x,
-			element->mSize.y
-		);
-
-		// Get coordinate space point
-		sf::Vector2i mousePos(e.mouseMove.x, e.mouseMove.y);
-		sf::Vector2f p = mEngine->getWindow().mapPixelToCoords(mousePos);
-
-		// Get inside / outside of box
-		bool inside = box.contains(p);
-
-		// Test mouse enter
-		if (!element->mHasHover && inside)
+		// Fire mouse leave event for previous hover element
+		if (mCurrentHover)
 		{
-			// Now hovering
-			element->mHasHover = true;
+			mCurrentHover->mHasHover = false;
 
-			element->onMouseEnter(e);
-			if (element->mMouseEnterFunc)
-				element->mMouseEnterFunc(element, e);
+			mCurrentHover->onMouseExit(e);
+			if (mCurrentHover->mMouseExitFunc)
+				mCurrentHover->mMouseExitFunc(mCurrentHover, e);
 		}
 
-		// Test mouse exit
-		else if (element->mHasHover && !inside)
-		{
-			// Not hovering
-			element->mHasHover = false;
+		// Now hovering
+		element->mHasHover = true;
+		mCurrentHover = element;
 
-			element->onMouseExit(e);
-			if (element->mMouseExitFunc)
-				element->mMouseExitFunc(element, e);
-		}
+		element->onMouseEnter(e);
+		if (element->mMouseEnterFunc)
+			element->mMouseEnterFunc(element, e);
 
-		// Test mouse move
-		else if (element->mHasHover && inside)
-		{
-			element->onMouseMove(e);
-			if (element->mMouseMoveFunc)
-				element->mMouseMoveFunc(element, e);
-		}
+		// Mark event as handled
+		handled = true;
 	}
 
-	// Mouse button events
-	else if (e.type == sf::Event::MouseButtonPressed)
+	// Test mouse exit
+	else if (element->mHasHover && !inside)
 	{
-		// Test if clicked inside element
-		if (element->mHasHover)
-		{
-			// Increment mouse press
-			++element->mNumMousePressed;
+		// Not hovering
+		element->mHasHover = false;
+		// Reset current hover
+		mCurrentHover = 0;
 
-			// This element now has focus
-			element->mHasFocus = true;
-			if (mFocusedElement)
-				mFocusedElement->mHasFocus = false;
-			mFocusedElement = element;
-
-
-			element->onMousePress(e);
-			if (element->mMousePressFunc)
-				element->mMousePressFunc(element, e);
-		}
-	}
-	else if (e.type == sf::Event::MouseButtonReleased)
-	{
-		// Test if release button is valid
-		if (element->mNumMousePressed > 0)
-		{
-			// Decrement mouse press
-			--element->mNumMousePressed;
-
-			element->onMouseRelease(e);
-			if (element->mMouseReleaseFunc)
-				element->mMouseReleaseFunc(element, e);
-		}
+		element->onMouseExit(e);
+		if (element->mMouseExitFunc)
+			element->mMouseExitFunc(element, e);
 	}
 
-	// Key events
-	else if (e.type == sf::Event::KeyPressed)
+	// Mouse move within element
+	else if (element->mHasHover && inside)
 	{
-		// Test if element has focus
-		if (element->mHasFocus)
-		{
-			/* TODO : Change num key press to simple boolean */
+		element->onMouseMove(e);
+		if (element->mMouseMoveFunc)
+			element->mMouseMoveFunc(element, e);
 
-			// Increment key press
-			++element->mNumKeyPressed;
-
-			element->onKeyPress(e);
-			if (element->mKeyPressFunc)
-				element->mKeyPressFunc(element, e);
-		}
+		// Mark event as handled
+		handled = true;
 	}
-	else if (e.type == sf::Event::KeyReleased)
-	{
-		// Test if key release is valid
-		if (element->mNumKeyPressed > 0)
-		{
-			// Decrement key press
-			--element->mNumKeyPressed;
 
-			element->onKeyRelease(e);
-			if (element->mKeyReleaseFunc)
-				element->mKeyReleaseFunc(element, e);
-		}
-	}
+	return handled;
 }
 
 void UI::handleEvent(const sf::Event& e)
 {
-	relayEvent(mRootElement, e);
+	// Handle mouse events
+	if (e.type == sf::Event::MouseMoved)
+		relayMouseEvent(mRootElement, e);
+
+	// Handle mouse button events
+	else if (e.type == sf::Event::MouseButtonPressed)
+	{
+		/* TODO : Maybe allow multitouch / More than one type of touch */
+
+		if (mCurrentHover && !mCurrentPress)
+		{
+			// Update state
+			mCurrentHover->mIsMousePressed = true;
+			mCurrentPress = mCurrentHover;
+
+			// This element now has focus
+			mCurrentHover->mHasFocus = true;
+			mCurrentFocus = mCurrentHover;
+
+			mCurrentHover->onMousePress(e);
+			if (mCurrentHover->mMousePressFunc)
+				mCurrentHover->mMousePressFunc(mCurrentHover, e);
+		}
+	}
+	else if (e.type == sf::Event::MouseButtonReleased)
+	{
+		if (mCurrentPress)
+		{
+			// Update state
+			mCurrentPress->mIsMousePressed = false;
+
+			mCurrentPress->onMouseRelease(e);
+			if (mCurrentPress->mMouseReleaseFunc)
+				mCurrentPress->mMouseReleaseFunc(mCurrentPress, e);
+
+			// Reset current pressed
+			mCurrentPress = 0;
+		}
+	}
+
+	// Handle key events
+	else if (e.type == sf::Event::KeyPressed && !mIsKeyPressed[e.key.code])
+	{
+		mIsKeyPressed[e.key.code] = true;
+
+		// Handle for current focused
+		if (mCurrentFocus && (!mCurrentKeyPress || mCurrentKeyPress == mCurrentFocus))
+		{
+			// Increment key press counter
+			++mCurrentFocus->mNumKeyPressed;
+			mCurrentKeyPress = mCurrentFocus;
+
+			mCurrentFocus->onKeyPress(e);
+			if (mCurrentFocus->mKeyPressFunc)
+				mCurrentFocus->mKeyPressFunc(mCurrentFocus, e);
+		}
+	}
+	else if (e.type == sf::Event::KeyReleased)
+	{
+		mIsKeyPressed[e.key.code] = false;
+
+		if (mCurrentKeyPress && mCurrentKeyPress->mNumKeyPressed)
+		{
+			// Decrement key counter
+			--mCurrentKeyPress->mNumKeyPressed;
+
+			mCurrentKeyPress->onKeyRelease(e);
+			if (mCurrentKeyPress->mKeyReleaseFunc)
+				mCurrentKeyPress->mKeyReleaseFunc(mCurrentKeyPress, e);
+
+			// Reset key press element
+			if (!mCurrentKeyPress->mNumKeyPressed)
+				mCurrentKeyPress = 0;
+		}
+	}
+
+	// Handle text input
+	else if (e.type == sf::Event::TextEntered)
+	{
+		if (mCurrentFocus)
+		{
+			mCurrentFocus->onTextEntered(e);
+			if (mCurrentFocus->mTextEnteredFunc)
+				mCurrentFocus->mTextEnteredFunc(mCurrentFocus, e);
+		}
+	}
 }
 
 // ============================================================================

@@ -215,6 +215,12 @@ public:
 	void setKeyReleaseFunc(const UICallback& func);
 
 	/// <summary>
+	/// Set callback for text entered event
+	/// </summary>
+	/// <param name="func">UI callback</param>
+	void setTextEnteredFunc(const UICallback& func);
+
+	/// <summary>
 	/// Returns true if mouse is hovering over element
 	/// </summary>
 	bool hasHover() const;
@@ -227,7 +233,7 @@ public:
 	/// <summary>
 	/// Returns the number of mouse buttons pressed in element
 	/// </summary>
-	Uint8 getNumMousePressed() const;
+	bool isMousePressed() const;
 
 	/// <summary>
 	/// Returns the number of keys pressed within element
@@ -282,7 +288,7 @@ protected:
 	virtual void onMouseRelease(const sf::Event& e);
 
 	/// <summary>
-	/// Called when key is pressed within element
+	/// Called when key is pressed while element has hover or focus
 	/// </summary>
 	/// <param name="e">SFML event</param>
 	virtual void onKeyPress(const sf::Event& e);
@@ -292,6 +298,12 @@ protected:
 	/// </summary>
 	/// <param name="e">SFML event</param>
 	virtual void onKeyRelease(const sf::Event& e);
+
+	/// <summary>
+	/// Called when text is entered into element
+	/// </summary>
+	/// <param name="e">SFML event</param>
+	virtual void onTextEntered(const sf::Event& e);
 
 protected:
 	/// <summary>
@@ -384,7 +396,7 @@ protected:
 	UICallback mMouseReleaseFunc;
 
 	/// <summary>
-	/// Called when key is pressed and element has hover
+	/// Called when key is pressed and element has hover or focus
 	/// </summary>
 	UICallback mKeyPressFunc;
 
@@ -392,6 +404,11 @@ protected:
 	/// Called when key is released
 	/// </summary>
 	UICallback mKeyReleaseFunc;
+
+	/// <summary>
+	/// Called when text is entered into element
+	/// </summary>
+	UICallback mTextEnteredFunc;
 
 	/// <summary>
 	/// True when element has hover
@@ -404,9 +421,9 @@ protected:
 	bool mHasFocus;
 
 	/// <summary>
-	/// Keeps track of the number of mouse buttons pressed in element
+	/// True if mouse is pressed on element
 	/// </summary>
-	Uint8 mNumMousePressed;
+	bool mIsMousePressed;
 
 	/// <summary>
 	/// Keeps track of the number of keys pressed in element
