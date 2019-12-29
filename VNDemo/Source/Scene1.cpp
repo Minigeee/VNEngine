@@ -21,66 +21,35 @@ Scene1::~Scene1()
 // ============================================================================
 // ============================================================================
 
-#include <iostream>
-
-void onHoverStart(UIElement* element, const sf::Event& e)
+void defaultState(Button* btn, Button::State prevState)
 {
-	Button* btn = dynamic_cast<Button*>(element);
-	btn->getBody().setFillColor(sf::Color(150, 150, 255));
-}
-
-void onHoverStop(UIElement* element, const sf::Event& e)
-{
-	Button* btn = dynamic_cast<Button*>(element);
 	btn->getBody().setFillColor(sf::Color(130, 130, 250));
 }
 
-void onPressStart(UIElement* element, const sf::Event& e)
+void hoverState(Button* btn, Button::State prevState)
 {
-	Button* btn = dynamic_cast<Button*>(element);
-	std::cout << btn->getLabel().getString().toAnsiString() << " pressed\n";
+	btn->getBody().setFillColor(sf::Color(150, 150, 255));
 }
 
-void onPressStop(UIElement* element, const sf::Event& e)
+void pressState(Button* btn, Button::State prevState)
 {
-	Button* btn = dynamic_cast<Button*>(element);
-	std::cout << btn->getLabel().getString().toAnsiString() << " released\n";
-}
-
-void onKeyPress(UIElement* element, const sf::Event& e)
-{
-	Button* btn = dynamic_cast<Button*>(element);
-	std::cout << btn->getLabel().getString().toAnsiString() << " key pressed\n";
-}
-
-void onKeyRelease(UIElement* element, const sf::Event& e)
-{
-	Button* btn = dynamic_cast<Button*>(element);
-	std::cout << btn->getLabel().getString().toAnsiString() << " key released\n";
-}
-
-void onTextEntered(UIElement* element, const sf::Event& e)
-{
-	Button* btn = dynamic_cast<Button*>(element);
-	std::cout << (char)e.text.unicode;
+	btn->getBody().setFillColor(sf::Color(110, 110, 230));
 }
 
 void Scene1::onInit()
 {
 	Resource<sf::Font>::addLocation("Fonts/segoeui/segoeui.ttf", "SegoeUI");
+	Resource<sf::Texture>::addLocation("Textures/YourName.jpg", "YourName");
 
 	mUI.setDefaultFont(Resource<sf::Font>::get("SegoeUI"));
 
 	Button* button = mUI.create<Button>("PlayBtn");
 	button->setSize(150.0f, 60.0f);
-	button->getBody().setFillColor(sf::Color(130, 130, 250));
 	button->getLabel().setCharacterSize(25);
 	button->getLabel().setString("Play");
-	button->setMouseEnterFunc(&onHoverStart);
-	button->setMouseExitFunc(&onHoverStop);
-	button->setMousePressFunc(&onPressStart);
-	button->setMouseReleaseFunc(&onPressStop);
-	button->setTextEnteredFunc(&onTextEntered);
+	button->setDefaultStateFunc(&defaultState);
+	button->setHoverStateFunc(&hoverState);
+	button->setPressStateFunc(&pressState);
 	mUI.addToRoot(button);
 
 	button = mUI.copy<Button>("TestBtn", "PlayBtn");

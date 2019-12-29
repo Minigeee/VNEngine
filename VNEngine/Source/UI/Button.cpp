@@ -6,7 +6,8 @@ using namespace vne;
 // ============================================================================
 // ============================================================================
 
-Button::Button()
+Button::Button() :
+	mState			(Default)
 {
 
 }
@@ -27,6 +28,11 @@ sf::RectangleShape& Button::getBody()
 sf::Text& Button::getLabel()
 {
 	return mLabel;
+}
+
+Button::State Button::getState() const
+{
+	return mState;
 }
 
 // ============================================================================
@@ -70,10 +76,80 @@ void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 // ============================================================================
 
+void Button::setDefaultStateFunc(Button::Callback func)
+{
+	mDefaultStateFunc = func;
+
+	State prevState = mState;
+	mState = Default;
+	mDefaultStateFunc(this, prevState);
+}
+
+void Button::setHoverStateFunc(Button::Callback func)
+{
+	mHoverStateFunc = func;
+}
+
+void Button::setPressStateFunc(Button::Callback func)
+{
+	mPressStateFunc = func;
+}
+
+// ============================================================================
+
 void Button::onInit(UI* ui)
 {
 	if (ui->getDefaultFont())
 		mLabel.setFont(*ui->getDefaultFont());
+}
+
+void Button::onMouseEnter(const sf::Event& e)
+{
+	if (mState == Default)
+	{
+		mState = Hover;
+		if (mHoverStateFunc)
+			mHoverStateFunc(this, Default);
+	}
+}
+
+void Button::onMouseExit(const sf::Event& e)
+{
+	if (mState == Hover)
+	{
+		mState = Default;
+		if (mDefaultStateFunc)
+			mDefaultStateFunc(this, Hover);
+	}
+}
+
+void Button::onMousePress(const sf::Event& e)
+{
+	if (mState == Hover)
+	{
+		mState = Press;
+		if (mPressStateFunc)
+			mPressStateFunc(this, Hover);
+	}
+}
+
+void Button::onMouseRelease(const sf::Event& e)
+{
+	if (mState == Press)
+	{
+		if (mHasHover)
+		{
+			mState = Hover;
+			if (mHoverStateFunc)
+				mHoverStateFunc(this, Press);
+		}
+		else
+		{
+			mState = Default;
+			if (mDefaultStateFunc)
+				mDefaultStateFunc(this, Press);
+		}
+	}
 }
 
 // ============================================================================

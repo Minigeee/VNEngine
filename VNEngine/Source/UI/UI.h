@@ -27,6 +27,7 @@ public:
 	T* create(const sf::String& name)
 	{
 		T* element = Resource<T>::create(name);
+		element->setName(name);
 		element->onInit(this);
 		return element;
 	}
@@ -42,6 +43,7 @@ public:
 
 		T* element = Resource<T>::create(name);
 		*element = *srcElement;
+		element->setName(name);
 		element->onInit(this);
 
 		return element;

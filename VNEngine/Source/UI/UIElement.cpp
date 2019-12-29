@@ -32,6 +32,11 @@ UIElement::~UIElement()
 // ============================================================================
 // ============================================================================
 
+void UIElement::setName(const sf::String& name)
+{
+	mName = name;
+}
+
 void UIElement::addChild(UIElement* child)
 {
 	child->mParent = this;
@@ -135,6 +140,20 @@ void UIElement::setAnchor(float x, float y)
 }
 
 // ============================================================================
+
+void UIElement::setVisible(bool visible, bool recursive)
+{
+	mIsVisible = visible;
+
+	if (recursive)
+	{
+		for (Uint32 i = 0; i < mChildren.size(); ++i)
+			mChildren[i]->setVisible(visible, recursive);
+	}
+}
+
+// ============================================================================
+
 const sf::Vector2f& UIElement::getRelPosition() const
 {
 	return mRelPosition;
@@ -170,6 +189,16 @@ const sf::Vector2f& UIElement::getOrigin() const
 const sf::Vector2f& UIElement::getAnchor() const
 {
 	return mAnchor;
+}
+
+bool UIElement::isVisible() const
+{
+	return mIsVisible;
+}
+
+const sf::String& UIElement::getName() const
+{
+	return mName;
 }
 
 UIElement* UIElement::getParent() const

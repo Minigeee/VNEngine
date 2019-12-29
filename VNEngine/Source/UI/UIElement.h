@@ -28,6 +28,12 @@ public:
 	virtual ~UIElement();
 
 	/// <summary>
+	/// Set element name
+	/// </summary>
+	/// <param name="name">Element name string</param>
+	void setName(const sf::String& name);
+
+	/// <summary>
 	/// Add a child element
 	/// </summary>
 	/// <param name="child">Pointer to child</param>
@@ -88,6 +94,13 @@ public:
 	/// The anchor is considered the center of the coordinate system for this element
 	/// </summary>
 	void setAnchor(float x, float y);
+
+	/// <summary>
+	/// Set visibility of element.
+	/// Optionally set visibility for all children recursively
+	/// </summary>
+	/// <param name="visible"></param>
+	void setVisible(bool visible, bool recursive = true);
 
 	/// <summary>
 	/// Add offset to current local position
@@ -158,6 +171,18 @@ public:
 	/// </summary>
 	/// <returns>Anchor</returns>
 	const sf::Vector2f& getAnchor() const;
+
+	/// <summary>
+	/// Returns true if element is visible
+	/// </summary>
+	/// <returns>Visibility</returns>
+	bool isVisible() const;
+
+	/// <summary>
+	/// Get element name
+	/// </summary>
+	/// <returns>Name string</returns>
+	const sf::String& getName() const;
 
 	/// <summary>
 	/// Get pointer to element parent
@@ -313,6 +338,11 @@ protected:
 
 protected:
 	/// <summary>
+	/// Element name
+	/// </summary>
+	sf::String mName;
+
+	/// <summary>
 	/// Parent UI element
 	/// </summary>
 	UIElement* mParent;
@@ -364,6 +394,11 @@ protected:
 	/// It takes values from 0 to 1
 	/// </summary>
 	sf::Vector2f mAnchor;
+
+	/// <summary>
+	/// True if element is visible
+	/// </summary>
+	bool mIsVisible;
 
 	/// <summary>
 	/// This is true if element's orientation was changed

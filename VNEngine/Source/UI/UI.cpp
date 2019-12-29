@@ -251,8 +251,9 @@ void UI::update(float dt)
 
 void drawElement(UIElement* element, sf::RenderTarget& target, const sf::RenderStates& states)
 {
-	// Render element
-	target.draw(*element, states);
+	// Render element if visible
+	if (element->isVisible())
+		target.draw(*element, states);
 
 	// Render children elements
 	const std::vector<UIElement*>& children = element->getChildren();
