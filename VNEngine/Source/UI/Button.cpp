@@ -1,4 +1,5 @@
 #include <UI/Button.h>
+#include <UI/UI.h>
 
 using namespace vne;
 
@@ -65,6 +66,14 @@ void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(mBody, states);
 	target.draw(mLabel, states);
+}
+
+// ============================================================================
+
+void Button::onInit(UI* ui)
+{
+	if (ui->getDefaultFont())
+		mLabel.setFont(*ui->getDefaultFont());
 }
 
 // ============================================================================

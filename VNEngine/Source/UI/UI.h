@@ -24,13 +24,59 @@ public:
 	/// Create UI element of type T
 	/// </summary>
 	template <typename T>
-	T* create(const sf::String& name) const { return Resource<T>::create(name); }
+	T* create(const sf::String& name)
+	{
+		T* element = Resource<T>::create(name);
+		element->onInit(this);
+		return element;
+	}
+
+	/// <summary>
+	/// Initialize a new UI element with name, using src as a template
+	/// </summary>
+	template <typename T>
+	T* copy(const sf::String& name, const sf::String& src)
+	{
+		T* srcElement = Resource<T>::get(src);
+		if (!srcElement) return 0;
+
+		T* element = Resource<T>::create(name);
+		*element = *srcElement;
+		element->onInit(this);
+
+		return element;
+	}
 
 	/// <summary>
 	/// Get UI element of type T by name
 	/// </summary>
 	template <typename T>
 	T* get(const sf::String& name) const { return Resource<T>::get(name); }
+
+	/// <summary>
+	/// Add UI element to the root element
+	/// </summary>
+	/// <param name="element">UI element to add</param>
+	void addToRoot(UIElement* element);
+
+	/// <summary>
+	/// Set default font to use for text
+	/// </summary>
+	/// <param name="font">SFML font</param>
+	void setDefaultFont(sf::Font* font);
+
+	/// <summary>
+	/// Get root UI element
+	/// </summary>
+	/// <returns>Root element</returns>
+	UIElement* getRoot() const;
+
+	/// <summary>
+	/// Get default text font
+	/// </summary>
+	/// <returns>SFML font</returns>
+	sf::Font* getDefaultFont() const;
+
 
 	/// <summary>
 	/// Handle input events
@@ -43,18 +89,6 @@ public:
 	/// </summary>
 	/// <param name="dt">Time elapsed since last frame</param>
 	void update(float dt);
-
-	/// <summary>
-	/// Add UI element to the root element
-	/// </summary>
-	/// <param name="element">UI element to add</param>
-	void addToRoot(UIElement* element);
-
-	/// <summary>
-	/// Get root UI element
-	/// </summary>
-	/// <returns>Root element</returns>
-	UIElement* getRoot() const;
 
 private:
 	/// <summary>
@@ -81,6 +115,11 @@ private:
 	/// Access to engine
 	/// </summary>
 	Engine* mEngine;
+
+	/// <summary>
+	/// Default font
+	/// </summary>
+	sf::Font* mDefaultFont;
 
 	/// <summary>
 	/// Root element

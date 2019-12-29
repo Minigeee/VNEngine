@@ -12,6 +12,7 @@ using namespace vne;
 UI::UI(Engine* engine) :
 	mEngine				(engine),
 	mRootElement		(0),
+	mDefaultFont		(0),
 	mCurrentFocus		(0),
 	mCurrentHover		(0),
 	mCurrentPress		(0),
@@ -40,10 +41,21 @@ UIElement* UI::getRoot() const
 	return mRootElement;
 }
 
+void UI::setDefaultFont(sf::Font* font)
+{
+	mDefaultFont = font;
+}
+
+sf::Font* UI::getDefaultFont() const
+{
+	return mDefaultFont;
+}
+
 // ============================================================================
 
 bool UI::relayMouseEvent(UIElement* element, const sf::Event& e)
 {
+
 	/* TODO : Add handled events so that not every element will need to be checked */
 	/* Mouse and key pressing / releasing can be shortened to single check */
 	/* Mouse movement events and hovering still need to be checked by every element */

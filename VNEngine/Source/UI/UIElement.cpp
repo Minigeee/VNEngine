@@ -282,6 +282,11 @@ Uint8 UIElement::getNumKeyPressed() const
 
 // ============================================================================
 
+void UIElement::onInit(UI* ui)
+{
+
+}
+
 void UIElement::onMouseEnter(const sf::Event& e)
 {
 

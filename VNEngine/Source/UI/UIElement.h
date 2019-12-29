@@ -258,6 +258,12 @@ protected:
 
 
 	/// <summary>
+	/// Called right after element is created
+	/// </summary>
+	/// <param name="ui">UI system</param>
+	virtual void onInit(UI* ui);
+
+	/// <summary>
 	/// Called when mouse enters element
 	/// </summary>
 	/// <param name="e">SFML event</param>

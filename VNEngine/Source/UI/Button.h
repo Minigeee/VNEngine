@@ -10,6 +10,8 @@ namespace vne
 
 class Button : public UIElement
 {
+	friend UI;
+
 public:
 	Button();
 	virtual ~Button();
@@ -36,6 +38,12 @@ protected:
 	/// Draw button
 	/// </summary>
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+
+	/// <summary>
+	/// Set default font
+	/// </summary>
+	/// <param name="ui">UI system</param>
+	virtual void onInit(UI* ui) override;
 
 protected:
 	/// <summary>

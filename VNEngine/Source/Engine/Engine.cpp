@@ -26,16 +26,30 @@ bool Engine::init(const EngineParams& params)
 {
 	// Set window style based on params
 	sf::Uint32 style = sf::Style::Default;
+	sf::VideoMode vmode(params.mWindowWidth, params.mWindowHeight);
+
+	// Fullscreen
 	if (params.mFullscreen)
+	{
 		style = sf::Style::Fullscreen;
+		// Use fullscreen resolution
+		vmode = sf::VideoMode::getDesktopMode();
+	}
+
+	// Resizeable
 	if (!params.mResizable)
 		style = style & ~sf::Style::Resize;
 
+	// Enable anti-aliasing
+	sf::ContextSettings settings;
+	settings.antialiasingLevel = 4;
+
 	// Create window
 	mWindow.create(
-		sf::VideoMode(params.mWindowWidth, params.mWindowHeight),
+		vmode,
 		params.mWindowTitle,
-		style
+		style,
+		settings
 	);
 	// Enable v-sync
 	mWindow.setVerticalSyncEnabled(true);
