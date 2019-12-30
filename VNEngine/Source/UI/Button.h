@@ -33,10 +33,22 @@ public:
 	sf::RectangleShape& getBody();
 
 	/// <summary>
+	/// Get rectangle body of button
+	/// </summary>
+	/// <returns>Rectangle shape</returns>
+	const sf::RectangleShape& getBody() const;
+
+	/// <summary>
 	/// Get label of button
 	/// </summary>
 	/// <returns>Button label</returns>
 	sf::Text& getLabel();
+
+	/// <summary>
+	/// Get label of button
+	/// </summary>
+	/// <returns>Button label</returns>
+	const sf::Text& getLabel() const;
 
 	/// <summary>
 	/// Get button state

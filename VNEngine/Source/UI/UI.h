@@ -81,6 +81,12 @@ public:
 
 
 	/// <summary>
+	/// Put an element into focus
+	/// </summary>
+	/// <param name="element">Element to focus</param>
+	void setFocus(UIElement* element);
+
+	/// <summary>
 	/// Handle input events
 	/// </summary>
 	/// <param name="e">SFML event</param>

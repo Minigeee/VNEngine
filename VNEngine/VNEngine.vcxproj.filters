@@ -89,5 +89,14 @@
     <ClInclude Include="Source\UI\Button.h">
       <Filter>Include\UI</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Callback.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\UIAnimation.h">
+      <Filter>Include\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Math.h">
+      <Filter>Include\Core</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

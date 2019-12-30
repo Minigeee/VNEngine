@@ -1,5 +1,7 @@
 #include <UI/UIElement.h>
 
+#include <Core/Math.h>
+
 using namespace vne;
 
 // ============================================================================
@@ -15,7 +17,7 @@ UIElement::UIElement() :
 	mOrigin				(0.0f, 0.0f),
 	mAnchor				(0.0f, 0.0f),
 	mTransformChanged	(false),
-	mDrawablesUpdated	(true),
+	mDrawablesChanged	(false),
 	mHasFocus			(false),
 	mHasHover			(false),
 	mIsMousePressed		(false),
@@ -238,7 +240,7 @@ void UIElement::updateAbsTransforms()
 void UIElement::transformDirty()
 {
 	mTransformChanged = true;
-	mDrawablesUpdated = false;
+	mDrawablesChanged = true;
 
 	for (Uint32 i = 0; i < mChildren.size(); ++i)
 		mChildren[i]->transformDirty();
@@ -246,6 +248,16 @@ void UIElement::transformDirty()
 
 // ============================================================================
 // ============================================================================
+
+void UIElement::setFocusFunc(const std::function<void(UIElement*)>& func)
+{
+	mFocusFunc = func;
+}
+
+void UIElement::setUnfocusFunc(const std::function<void(UIElement*)>& func)
+{
+	mUnfocusFunc = func;
+}
 
 void UIElement::setMouseEnterFunc(const UICallback& func)
 {
@@ -312,6 +324,16 @@ Uint8 UIElement::getNumKeyPressed() const
 // ============================================================================
 
 void UIElement::onInit(UI* ui)
+{
+
+}
+
+void UIElement::onFocus()
+{
+
+}
+
+void UIElement::onUnfocus()
 {
 
 }

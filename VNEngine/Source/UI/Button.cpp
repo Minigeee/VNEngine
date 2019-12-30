@@ -1,6 +1,8 @@
 #include <UI/Button.h>
 #include <UI/UI.h>
 
+#include <Core/Math.h>
+
 using namespace vne;
 
 // ============================================================================
@@ -22,10 +24,22 @@ Button::~Button()
 
 sf::RectangleShape& Button::getBody()
 {
+	mDrawablesChanged = true;
+	return mBody;
+}
+
+const sf::RectangleShape& Button::getBody() const
+{
 	return mBody;
 }
 
 sf::Text& Button::getLabel()
+{
+	mDrawablesChanged = true;
+	return mLabel;
+}
+
+const sf::Text& Button::getLabel() const
 {
 	return mLabel;
 }
@@ -39,7 +53,7 @@ Button::State Button::getState() const
 
 void Button::update()
 {
-	if (!mDrawablesUpdated)
+	if (mDrawablesChanged)
 	{
 		updateAbsTransforms();
 
@@ -48,7 +62,6 @@ void Button::update()
 		mBody.setSize(mSize);
 		mBody.setOrigin(mOrigin * mSize);
 
-		sf::Vector2f center = mAbsPosition - mBody.getOrigin() + mSize * 0.5f;
 		const sf::FloatRect& xBounds =
 			mLabel.getFont()->getGlyph(
 				L'X',
@@ -56,15 +69,15 @@ void Button::update()
 				mLabel.getStyle() & sf::Text::Bold
 			).bounds;
 		const sf::FloatRect& box = mLabel.getLocalBounds();
+		sf::Vector2f origin =
+			sf::Vector2f(box.width * 0.5f, -xBounds.top * 0.5f + box.top)
+			- mSize * 0.5f;
 
-		mLabel.setOrigin(
-			box.width * 0.5f,
-			-xBounds.top * 0.5f + box.top
-		);
-		mLabel.setPosition(center);
+		mLabel.setOrigin(origin);
+		mLabel.setPosition(mAbsPosition - mBody.getOrigin());
 		mLabel.setRotation(mAbsRotation);
 
-		mDrawablesUpdated = true;
+		mDrawablesChanged = false;
 	}
 }
 

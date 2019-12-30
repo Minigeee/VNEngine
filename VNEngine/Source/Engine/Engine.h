@@ -95,7 +95,7 @@ public:
 	/// </summary>
 	/// <param name="w">Width of the coordinate space</param>
 	/// <param name="h">Height of the coordinate space</param>
-	void setCoordSize(Uint32 w, Uint32 h);
+	void setViewSize(Uint32 w, Uint32 h);
 
 
 	/// <summary>

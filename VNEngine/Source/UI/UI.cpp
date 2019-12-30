@@ -2,6 +2,8 @@
 #include <UI/UIContainer.h>
 #include <UI/Button.h>
 
+#include <Core/Math.h>
+
 #include <Engine/Engine.h>
 
 using namespace vne;
@@ -19,6 +21,8 @@ UI::UI(Engine* engine) :
 	mCurrentKeyPress	(0)
 {
 	mRootElement = Resource<UIContainer>::create("RootElement");
+	mRootElement->setSize(mEngine->getWindow().getView().getSize());
+
 	memset(mIsKeyPressed, false, sf::Keyboard::KeyCount);
 }
 
@@ -53,6 +57,29 @@ sf::Font* UI::getDefaultFont() const
 
 // ============================================================================
 
+void UI::setFocus(UIElement* element)
+{
+	if (mCurrentFocus)
+	{
+		mCurrentFocus->mHasFocus = false;
+		mCurrentFocus->onUnfocus();
+		if (mCurrentFocus->mUnfocusFunc)
+			mCurrentFocus->mUnfocusFunc(mCurrentFocus);
+	}
+
+	if (element != mCurrentFocus)
+	{
+		mCurrentFocus = element;
+
+		element->mHasFocus = true;
+		element->onFocus();
+		if (element->mFocusFunc)
+			element->mFocusFunc(element);
+	}
+}
+
+// ============================================================================
+
 bool UI::relayMouseEvent(UIElement* element, const sf::Event& e)
 {
 
@@ -74,11 +101,10 @@ bool UI::relayMouseEvent(UIElement* element, const sf::Event& e)
 	// Update transforms
 	element->updateAbsTransforms();
 
-	/* TODO : Handle rotated elements eventually */
 	// Get bounding box
 	sf::FloatRect box(
-		element->mAbsPosition.x,
-		element->mAbsPosition.y,
+		-element->mOrigin.x * element->mSize.x,
+		-element->mOrigin.y * element->mSize.y,
 		element->mSize.x,
 		element->mSize.y
 	);
@@ -86,8 +112,15 @@ bool UI::relayMouseEvent(UIElement* element, const sf::Event& e)
 	// Get coordinate space point
 	sf::Vector2i mousePos(e.mouseMove.x, e.mouseMove.y);
 	sf::Vector2f p = mEngine->getWindow().mapPixelToCoords(mousePos);
+	// Adjust for translation
+	p -= element->mAbsPosition;
+	// Adjust for rotation
+	float angle = -toRadians(element->mAbsRotation);
+	float ca = cos(angle);
+	float sa = sin(angle);
+	p = sf::Vector2f(p.x * ca - p.y * sa, p.x * sa + p.y * ca);
 
-	// Get inside / outside of box
+	// Get if inside / outside of box
 	bool inside = box.contains(p);
 
 	// Test mouse enter
@@ -160,8 +193,7 @@ void UI::handleEvent(const sf::Event& e)
 			mCurrentPress = mCurrentHover;
 
 			// This element now has focus
-			mCurrentHover->mHasFocus = true;
-			mCurrentFocus = mCurrentHover;
+			setFocus(mCurrentHover);
 
 			mCurrentHover->onMousePress(e);
 			if (mCurrentHover->mMousePressFunc)

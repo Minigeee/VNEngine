@@ -198,6 +198,18 @@ public:
 
 
 	/// <summary>
+	/// Set callback for focus event
+	/// </summary>
+	/// <param name="func">Callback</param>
+	void setFocusFunc(const std::function<void(UIElement*)>& func);
+
+	/// <summary>
+	/// Set callback for unfocus event
+	/// </summary>
+	/// <param name="func">Callback</param>
+	void setUnfocusFunc(const std::function<void(UIElement*)>& func);
+
+	/// <summary>
 	/// Set callback for mouse enter event
 	/// </summary>
 	/// <param name="func">UI callback</param>
@@ -287,6 +299,16 @@ protected:
 	/// </summary>
 	/// <param name="ui">UI system</param>
 	virtual void onInit(UI* ui);
+
+	/// <summary>
+	/// Called when an element gains focus
+	/// </summary>
+	virtual void onFocus();
+
+	/// <summary>
+	/// Called when an element loses focus
+	/// </summary>
+	virtual void onUnfocus();
 
 	/// <summary>
 	/// Called when mouse enters element
@@ -406,10 +428,21 @@ protected:
 	bool mTransformChanged;
 
 	/// <summary>
-	/// This is true if transform changed and the transforms have been applied to drawables
+	/// This is true if transform changed and the transforms have been applied to drawables.
+	/// Or the drawable properties (i.e. colors, textures) have changed
 	/// </summary>
-	bool mDrawablesUpdated;
+	bool mDrawablesChanged;
 
+
+	/// <summary>
+	/// Called when element gains focus
+	/// </summary>
+	std::function<void(UIElement*)> mFocusFunc;
+
+	/// <summary>
+	/// Called when element loses focus
+	/// </summary>
+	std::function<void(UIElement*)> mUnfocusFunc;
 
 	/// <summary>
 	/// Called when mouse enters element

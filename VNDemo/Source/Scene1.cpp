@@ -21,6 +21,8 @@ Scene1::~Scene1()
 // ============================================================================
 // ============================================================================
 
+#include <iostream>
+
 void defaultState(Button* btn, Button::State prevState)
 {
 	btn->getBody().setFillColor(sf::Color(130, 130, 250));
@@ -34,6 +36,12 @@ void hoverState(Button* btn, Button::State prevState)
 void pressState(Button* btn, Button::State prevState)
 {
 	btn->getBody().setFillColor(sf::Color(110, 110, 230));
+}
+
+void onFocus(UIElement* element)
+{
+	Button* btn = (Button*)element;
+	std::cout << btn->getLabel().getString().toAnsiString() << " focused\n";
 }
 
 void Scene1::onInit()
@@ -50,10 +58,12 @@ void Scene1::onInit()
 	button->setDefaultStateFunc(&defaultState);
 	button->setHoverStateFunc(&hoverState);
 	button->setPressStateFunc(&pressState);
+	button->setFocusFunc(&onFocus);
 	mUI.addToRoot(button);
 
 	button = mUI.copy<Button>("TestBtn", "PlayBtn");
 	button->setPosition(50.0f, 50.0f);
+	button->setRotation(45.0f);
 	button->getLabel().setString("Test");
 	mUI.addToRoot(button);
 }
