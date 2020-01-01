@@ -51,7 +51,7 @@ Button::State Button::getState() const
 
 // ============================================================================
 
-void Button::update()
+void Button::update(float dt)
 {
 	if (mDrawablesChanged)
 	{

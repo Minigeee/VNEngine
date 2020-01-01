@@ -1,6 +1,7 @@
 #include <Scene1.h>
 
 #include <UI/Button.h>
+#include <UI/TextInupt.h>
 
 using namespace vne;
 
@@ -66,6 +67,14 @@ void Scene1::onInit()
 	button->setRotation(45.0f);
 	button->getLabel().setString("Test");
 	mUI.addToRoot(button);
+
+	TextInput* input = mUI.create<TextInput>("Input1");
+	input->setPosition(10, 100);
+	input->setSize(300, 45);
+	input->getBody().setFillColor(sf::Color(25, 25, 30));
+	input->getText().setString("Hello World!");
+	input->getText().setCharacterSize(25);
+	mUI.addToRoot(input);
 }
 
 // ============================================================================

@@ -23,7 +23,7 @@ protected:
 	/// <summary>
 	/// This function has nothing to update
 	/// </summary>
-	virtual void update() { }
+	virtual void update(float dt) override { }
 };
 
 // ============================================================================

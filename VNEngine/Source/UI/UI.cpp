@@ -266,17 +266,17 @@ void UI::handleEvent(const sf::Event& e)
 
 // ============================================================================
 
-void UI::updateElement(UIElement* element)
+void UI::updateElement(UIElement* element, float dt)
 {
-	element->update();
+	element->update(dt);
 
 	for (Uint32 i = 0; i < element->mChildren.size(); ++i)
-		updateElement(element->mChildren[i]);
+		updateElement(element->mChildren[i], dt);
 }
 
 void UI::update(float dt)
 {
-	updateElement(mRootElement);
+	updateElement(mRootElement, dt);
 }
 
 // ============================================================================

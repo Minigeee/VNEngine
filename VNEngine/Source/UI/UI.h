@@ -111,7 +111,7 @@ private:
 	/// Update element transform
 	/// </summary>
 	/// <param name="element">Element to update</param>
-	void updateElement(UIElement* element);
+	void updateElement(UIElement* element, float dt);
 
 	/// <summary>
 	/// Draw all UI elements added to the system. Overriding Drawable

@@ -281,7 +281,7 @@ protected:
 	/// <summary>
 	/// Update SFML drawable transforms
 	/// </summary>
-	virtual void update() = 0;
+	virtual void update(float dt) = 0;
 
 	/// <summary>
 	/// Update any absolute transforms

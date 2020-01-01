@@ -79,7 +79,7 @@ protected:
 	/// <summary>
 	/// Update body and label transsforms
 	/// </summary>
-	virtual void update();
+	virtual void update(float dt) override;
 
 	/// <summary>
 	/// Draw button
