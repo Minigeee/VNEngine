@@ -8,6 +8,7 @@ using namespace vne;
 // ============================================================================
 
 UIElement::UIElement() :
+	mEngine				(0),
 	mParent				(0),
 	mRelPosition		(0.0f, 0.0f),
 	mAbsPosition		(0.0f, 0.0f),
@@ -20,8 +21,7 @@ UIElement::UIElement() :
 	mDrawablesChanged	(false),
 	mHasFocus			(false),
 	mHasHover			(false),
-	mIsMousePressed		(false),
-	mNumKeyPressed		(0)
+	mIsMousePressed		(false)
 {
 
 }
@@ -314,11 +314,6 @@ bool UIElement::hasHover() const
 bool UIElement::isMousePressed() const
 {
 	return mIsMousePressed;
-}
-
-Uint8 UIElement::getNumKeyPressed() const
-{
-	return mNumKeyPressed;
 }
 
 // ============================================================================

@@ -55,20 +55,45 @@ sf::Font* UI::getDefaultFont() const
 	return mDefaultFont;
 }
 
+TextCursor& UI::getTextCursor()
+{
+	return mTextCursor;
+}
+
 // ============================================================================
 
 void UI::setFocus(UIElement* element)
 {
-	if (mCurrentFocus)
+	if (element && element != mCurrentFocus)
 	{
-		mCurrentFocus->mHasFocus = false;
-		mCurrentFocus->onUnfocus();
-		if (mCurrentFocus->mUnfocusFunc)
-			mCurrentFocus->mUnfocusFunc(mCurrentFocus);
-	}
+		// Release all keys
+		if (mCurrentKeyPress)
+		{
+			for (Uint32 i = 0; i < sf::Keyboard::KeyCount; ++i)
+			{
+				if (mIsKeyPressed[i])
+				{
+					sf::Event e;
+					e.type = sf::Event::KeyReleased;
+					e.key.code = (sf::Keyboard::Key)i;
 
-	if (element != mCurrentFocus)
-	{
+					mCurrentKeyPress->onKeyRelease(e);
+					if (mCurrentKeyPress->mKeyReleaseFunc)
+						mCurrentKeyPress->mKeyReleaseFunc(mCurrentKeyPress, e);
+				}
+			}
+
+			mCurrentKeyPress = 0;
+		}
+
+		if (mCurrentFocus)
+		{
+			mCurrentFocus->mHasFocus = false;
+			mCurrentFocus->onUnfocus();
+			if (mCurrentFocus->mUnfocusFunc)
+				mCurrentFocus->mUnfocusFunc(mCurrentFocus);
+		}
+
 		mCurrentFocus = element;
 
 		element->mHasFocus = true;
@@ -217,16 +242,15 @@ void UI::handleEvent(const sf::Event& e)
 	}
 
 	// Handle key events
-	else if (e.type == sf::Event::KeyPressed && !mIsKeyPressed[e.key.code])
+	else if (e.type == sf::Event::KeyPressed)
 	{
-		mIsKeyPressed[e.key.code] = true;
-
 		// Handle for current focused
-		if (mCurrentFocus && (!mCurrentKeyPress || mCurrentKeyPress == mCurrentFocus))
+		if (mCurrentFocus)
 		{
-			// Increment key press counter
-			++mCurrentFocus->mNumKeyPressed;
 			mCurrentKeyPress = mCurrentFocus;
+
+			// Mark as pressed
+			mIsKeyPressed[e.key.code] = true;
 
 			mCurrentFocus->onKeyPress(e);
 			if (mCurrentFocus->mKeyPressFunc)
@@ -235,20 +259,14 @@ void UI::handleEvent(const sf::Event& e)
 	}
 	else if (e.type == sf::Event::KeyReleased)
 	{
-		mIsKeyPressed[e.key.code] = false;
-
-		if (mCurrentKeyPress && mCurrentKeyPress->mNumKeyPressed)
+		if (mCurrentKeyPress)
 		{
-			// Decrement key counter
-			--mCurrentKeyPress->mNumKeyPressed;
+			// Mark key as released
+			mIsKeyPressed[e.key.code] = false;
 
 			mCurrentKeyPress->onKeyRelease(e);
 			if (mCurrentKeyPress->mKeyReleaseFunc)
 				mCurrentKeyPress->mKeyReleaseFunc(mCurrentKeyPress, e);
-
-			// Reset key press element
-			if (!mCurrentKeyPress->mNumKeyPressed)
-				mCurrentKeyPress = 0;
 		}
 	}
 

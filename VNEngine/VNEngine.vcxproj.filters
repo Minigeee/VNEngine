@@ -57,6 +57,12 @@
     <ClCompile Include="Source\UI\TextInput.cpp">
       <Filter>Source\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Source\UI\TextCursor.cpp">
+      <Filter>Source\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Engine\Cursor.cpp">
+      <Filter>Source\Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\Engine.h">
@@ -103,6 +109,12 @@
     </ClInclude>
     <ClInclude Include="Source\UI\TextInupt.h">
       <Filter>Include\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\TextCursor.h">
+      <Filter>Include\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Cursor.h">
+      <Filter>Include\Engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

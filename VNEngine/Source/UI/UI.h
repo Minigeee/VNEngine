@@ -4,6 +4,7 @@
 #include <Engine/Resource.h>
 
 #include <UI/UIElement.h>
+#include <UI/TextCursor.h>
 
 #include <SFML/Graphics.hpp>
 
@@ -27,6 +28,7 @@ public:
 	T* create(const sf::String& name)
 	{
 		T* element = Resource<T>::create(name);
+		element->mEngine = mEngine;
 		element->setName(name);
 		element->onInit(this);
 		return element;
@@ -78,6 +80,12 @@ public:
 	/// </summary>
 	/// <returns>SFML font</returns>
 	sf::Font* getDefaultFont() const;
+
+	/// <summary>
+	/// Get the UI text cursor
+	/// </summary>
+	/// <returns>Text cursor</returns>
+	TextCursor& getTextCursor();
 
 
 	/// <summary>
@@ -133,6 +141,11 @@ private:
 	/// Root element
 	/// </summary>
 	UIElement* mRootElement;
+
+	/// <summary>
+	/// The blinking text cursor that appears in text inputs
+	/// </summary>
+	TextCursor mTextCursor;
 
 	/// <summary>
 	/// Current element with focus, only one element allowed to be focused at a time

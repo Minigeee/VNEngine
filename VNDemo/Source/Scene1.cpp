@@ -69,7 +69,8 @@ void Scene1::onInit()
 	mUI.addToRoot(button);
 
 	TextInput* input = mUI.create<TextInput>("Input1");
-	input->setPosition(10, 100);
+	input->setPosition(10, 200);
+	input->setRotation(45.0f);
 	input->setSize(300, 45);
 	input->getBody().setFillColor(sf::Color(25, 25, 30));
 	input->getText().setString("Hello World!");

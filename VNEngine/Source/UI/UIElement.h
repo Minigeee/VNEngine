@@ -15,6 +15,7 @@ namespace vne
 // ============================================================================
 
 class UI;
+class Engine;
 
 class UIElement : public sf::Drawable
 {
@@ -272,11 +273,6 @@ public:
 	/// </summary>
 	bool isMousePressed() const;
 
-	/// <summary>
-	/// Returns the number of keys pressed within element
-	/// </summary>
-	Uint8 getNumKeyPressed() const;
-
 protected:
 	/// <summary>
 	/// Update SFML drawable transforms
@@ -359,6 +355,11 @@ protected:
 	virtual void onTextEntered(const sf::Event& e);
 
 protected:
+	/// <summary>
+	/// Access to engine and window
+	/// </summary>
+	Engine* mEngine;
+
 	/// <summary>
 	/// Element name
 	/// </summary>
@@ -498,11 +499,6 @@ protected:
 	/// True if mouse is pressed on element
 	/// </summary>
 	bool mIsMousePressed;
-
-	/// <summary>
-	/// Keeps track of the number of keys pressed in element
-	/// </summary>
-	Uint8 mNumKeyPressed;
 };
 
 // ============================================================================

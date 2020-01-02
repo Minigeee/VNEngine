@@ -8,6 +8,8 @@ namespace vne
 
 // ============================================================================
 
+class TextCursor;
+
 class TextInput : public UIElement
 {
 	friend UI;
@@ -41,28 +43,10 @@ public:
 	const sf::Text& getText() const;
 
 	/// <summary>
-	/// Get text cursor object
-	/// </summary>
-	/// <returns>SFML Rectangle shape</returns>
-	sf::RectangleShape& getTextCursor();
-
-	/// <summary>
-	/// Get text cursor object
-	/// </summary>
-	/// <returns>SFML Rectangle shape</returns>
-	const sf::RectangleShape& getTextCursor() const;
-
-	/// <summary>
 	/// Set left text margin in pixels
 	/// </summary>
 	/// <param name="offset">The offset</param>
 	void setTextOffset(float offset);
-
-	/// <summary>
-	/// Set the animation period of the blinking text cursor (in seconds)
-	/// </summary>
-	/// <param name="period">Period in seconds</param>
-	void setCursorAnimPeriod(float period);
 
 protected:
 	virtual void update(float dt) override;
@@ -70,11 +54,18 @@ protected:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 	/// <summary>
+	/// Gets character local position at a certain index
+	/// </summary>
+	/// <param name="index">Character index</param>
+	/// <returns>Character x-position</returns>
+	float getCharPos(Uint32 index);
+
+	/// <summary>
 	/// Set text font
 	/// </summary>
 	virtual void onInit(UI* ui) override;
 
-	virtual void onMouseEnter(const sf::Event& e) override;
+	virtual void onFocus() override;
 	virtual void onMouseExit(const sf::Event& e) override;
 	virtual void onMousePress(const sf::Event& e) override;
 	virtual void onMouseRelease(const sf::Event& e) override;
@@ -95,7 +86,7 @@ protected:
 	/// <summary>
 	/// The blinking text cursor
 	/// </summary>
-	sf::RectangleShape mTextCursor;
+	TextCursor* mTextCursor;
 
 	/// <summary>
 	/// Left text margin
@@ -103,16 +94,14 @@ protected:
 	float mTextOffset;
 
 	/// <summary>
-	/// Current time in animation cycle
+	/// Cursor index in string
 	/// </summary>
-	float mAnimationTime;
+	int mCursorIndex;
 
 	/// <summary>
-	/// Period of the text cursor animation in seconds
+	/// Cursor position
 	/// </summary>
-	float mAnimationPeriod;
-
-	int mCursorPos;
+	float mCursorPos;
 	Uint32 mMaxChars;
 };
 

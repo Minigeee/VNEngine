@@ -1,6 +1,7 @@
 #include <Engine/Engine.h>
 #include <Engine/Scene.h>
 #include <Engine/Resource.h>
+#include <Engine/Cursor.h>
 
 using namespace vne;
 
@@ -56,6 +57,9 @@ bool Engine::init(const EngineParams& params)
 
 	// Main view
 	mWindow.setView(mView);
+
+	// Initialize cursors
+	Cursor::init(&mWindow);
 
 
 	// Setup first scene
