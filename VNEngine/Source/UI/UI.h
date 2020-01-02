@@ -87,6 +87,12 @@ public:
 	/// <returns>Text cursor</returns>
 	TextCursor& getTextCursor();
 
+	/// <summary>
+	/// Get the rectangle that highlights selected text
+	/// </summary>
+	/// <returns>Text highlight</returns>
+	sf::RectangleShape& getTextHighlight();
+
 
 	/// <summary>
 	/// Put an element into focus
@@ -146,6 +152,11 @@ private:
 	/// The blinking text cursor that appears in text inputs
 	/// </summary>
 	TextCursor mTextCursor;
+
+	/// <summary>
+	/// The highlight box that appears when text is selected
+	/// </summary>
+	sf::RectangleShape mTextHighlight;
 
 	/// <summary>
 	/// Current element with focus, only one element allowed to be focused at a time

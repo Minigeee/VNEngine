@@ -68,7 +68,7 @@ protected:
 	virtual void onFocus() override;
 	virtual void onMouseExit(const sf::Event& e) override;
 	virtual void onMousePress(const sf::Event& e) override;
-	virtual void onMouseRelease(const sf::Event& e) override;
+	virtual void onMouseMove(const sf::Event& e, const sf::Vector2f& localPos) override;
 	virtual void onKeyPress(const sf::Event& e) override;
 	virtual void onTextEntered(const sf::Event& e) override;
 
@@ -89,6 +89,11 @@ protected:
 	TextCursor* mTextCursor;
 
 	/// <summary>
+	/// Highlight that covers selected text
+	/// </summary>
+	sf::RectangleShape* mTextHighlight;
+
+	/// <summary>
 	/// Left text margin
 	/// </summary>
 	float mTextOffset;
@@ -102,6 +107,17 @@ protected:
 	/// Cursor position
 	/// </summary>
 	float mCursorPos;
+
+	/// <summary>
+	/// Index of where text selection starts
+	/// </summary>
+	int mSelectIndex;
+
+	/// <summary>
+	/// Local position of selection box start
+	/// </summary>
+	float mSelectPos;
+
 	Uint32 mMaxChars;
 };
 

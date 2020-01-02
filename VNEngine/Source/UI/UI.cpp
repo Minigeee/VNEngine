@@ -24,6 +24,9 @@ UI::UI(Engine* engine) :
 	mRootElement->setSize(mEngine->getWindow().getView().getSize());
 
 	memset(mIsKeyPressed, false, sf::Keyboard::KeyCount);
+
+	// Default text highlight colors
+	mTextHighlight.setFillColor(sf::Color(120, 180, 255, 100));
 }
 
 UI::~UI()
@@ -58,6 +61,11 @@ sf::Font* UI::getDefaultFont() const
 TextCursor& UI::getTextCursor()
 {
 	return mTextCursor;
+}
+
+sf::RectangleShape& UI::getTextHighlight()
+{
+	return mTextHighlight;
 }
 
 // ============================================================================
@@ -189,7 +197,7 @@ bool UI::relayMouseEvent(UIElement* element, const sf::Event& e)
 	// Mouse move within element
 	else if (element->mHasHover && inside)
 	{
-		element->onMouseMove(e);
+		element->onMouseMove(e, p);
 		if (element->mMouseMoveFunc)
 			element->mMouseMoveFunc(element, e);
 

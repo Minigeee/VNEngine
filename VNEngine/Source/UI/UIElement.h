@@ -322,7 +322,7 @@ protected:
 	/// Called when mouse moves within element
 	/// </summary>
 	/// <param name="e">SFML event</param>
-	virtual void onMouseMove(const sf::Event& e);
+	virtual void onMouseMove(const sf::Event& e, const sf::Vector2f& localPos);
 
 	/// <summary>
 	/// Called when mouse button is pressed within element

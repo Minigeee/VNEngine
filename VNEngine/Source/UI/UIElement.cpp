@@ -343,7 +343,7 @@ void UIElement::onMouseExit(const sf::Event& e)
 
 }
 
-void UIElement::onMouseMove(const sf::Event& e)
+void UIElement::onMouseMove(const sf::Event& e, const sf::Vector2f& localPos)
 {
 
 }
