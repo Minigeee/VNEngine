@@ -18,7 +18,8 @@ TextInput::TextInput() :
 	mTextOffset				(10.0f),
 	mCursorIndex			(0),
 	mSelectIndex			(-1),
-	mCursorPos				(0.0f)
+	mCursorPos				(0.0f),
+	mMaxChars				(30)
 {
 
 }
@@ -59,6 +60,32 @@ void TextInput::setTextOffset(float offset)
 	mTextOffset = offset;
 }
 
+void TextInput::setMaxChars(Uint32 max)
+{
+	mMaxChars = max;
+}
+
+void TextInput::setSubmitFunc(const std::function<void(TextInput*)>& func)
+{
+	mSubmitFunc = func;
+}
+
+float TextInput::getTextOffset() const
+{
+	return mTextOffset;
+}
+
+Uint32 TextInput::getMaxChars() const
+{
+	return mMaxChars;
+}
+
+void TextInput::submit()
+{
+	if (mSubmitFunc)
+		mSubmitFunc(this);
+}
+
 // ============================================================================
 
 void TextInput::update(float dt)
@@ -66,6 +93,10 @@ void TextInput::update(float dt)
 	if (mDrawablesChanged)
 	{
 		updateAbsTransforms();
+
+		// Make sure string length is less than max
+		if (mText.getString().getSize() > mMaxChars)
+			mText.setString(mText.getString().substring(0, mMaxChars));
 
 		mBody.setPosition(mAbsPosition);
 		mBody.setRotation(mAbsRotation);
@@ -152,6 +183,12 @@ void TextInput::onFocus()
 {
 	// To update text cursor
 	mDrawablesChanged = true;
+}
+
+void TextInput::onUnfocus()
+{
+	// Remove any selections
+	mSelectIndex = -1;
 }
 
 void TextInput::onMouseExit(const sf::Event& e)
@@ -417,6 +454,11 @@ void TextInput::onKeyPress(const sf::Event& e)
 				mDrawablesChanged = true;
 			}
 		}
+		else if (e.key.code == sf::Keyboard::Enter)
+		{
+			if (mSubmitFunc)
+				mSubmitFunc(this);
+		}
 	}
 }
 
@@ -424,7 +466,10 @@ void TextInput::onTextEntered(const sf::Event& e)
 {
 	const sf::String& oldStr = mText.getString();
 
-	if (e.text.unicode >= 32 && e.text.unicode != 127)
+	// Make sure size doesn't go over max
+	if (oldStr.getSize() == mMaxChars) return;
+
+	if (e.text.unicode >= 32 && e.text.unicode != 127 && e.text.unicode != '\n')
 	{
 		sf::String newStr = oldStr.substring(0, mCursorIndex) + e.text.unicode + oldStr.substring(mCursorIndex);
 		mText.setString(newStr);

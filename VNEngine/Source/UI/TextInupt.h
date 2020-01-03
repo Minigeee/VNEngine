@@ -48,6 +48,35 @@ public:
 	/// <param name="offset">The offset</param>
 	void setTextOffset(float offset);
 
+	/// <summary>
+	/// Set the maximum number of characters allowed in input (Default: 30)
+	/// </summary>
+	/// <param name="max">Max</param>
+	void setMaxChars(Uint32 max);
+
+	/// <summary>
+	/// Set the submit callback
+	/// </summary>
+	/// <param name="func">Callback function</param>
+	void setSubmitFunc(const std::function<void(TextInput*)>& func);
+
+	/// <summary>
+	/// Get left text margin
+	/// </summary>
+	/// <returns>Offset of text in pixels</returns>
+	float getTextOffset() const;
+
+	/// <summary>
+	/// Get the maximum number of characters allowed
+	/// </summary>
+	/// <returns>Max number</returns>
+	Uint32 getMaxChars() const;
+
+	/// <summary>
+	/// Call the submit callback function
+	/// </summary>
+	void submit();
+
 protected:
 	virtual void update(float dt) override;
 
@@ -66,6 +95,7 @@ protected:
 	virtual void onInit(UI* ui) override;
 
 	virtual void onFocus() override;
+	virtual void onUnfocus() override;
 	virtual void onMouseExit(const sf::Event& e) override;
 	virtual void onMousePress(const sf::Event& e) override;
 	virtual void onMouseMove(const sf::Event& e, const sf::Vector2f& localPos) override;
@@ -118,7 +148,15 @@ protected:
 	/// </summary>
 	float mSelectPos;
 
+	/// <summary>
+	/// The maximum number of characters allowed
+	/// </summary>
 	Uint32 mMaxChars;
+
+	/// <summary>
+	/// The function that is called on submit
+	/// </summary>
+	std::function<void(TextInput*)> mSubmitFunc;
 };
 
 // ============================================================================

@@ -45,6 +45,11 @@ void onFocus(UIElement* element)
 	std::cout << btn->getLabel().getString().toAnsiString() << " focused\n";
 }
 
+void onSubmit(TextInput* input)
+{
+	std::cout << input->getText().getString().toAnsiString() << "\n";
+}
+
 void Scene1::onInit()
 {
 	Resource<sf::Font>::addLocation("Fonts/segoeui/segoeui.ttf", "SegoeUI");
@@ -74,6 +79,7 @@ void Scene1::onInit()
 	input->getBody().setFillColor(sf::Color(25, 25, 30));
 	input->getText().setString("Hello World!");
 	input->getText().setCharacterSize(25);
+	input->setSubmitFunc(&onSubmit);
 	mUI.addToRoot(input);
 }
 
