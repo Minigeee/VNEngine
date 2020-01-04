@@ -20,7 +20,7 @@ UI::UI(Engine* engine) :
 	mCurrentPress		(0),
 	mCurrentKeyPress	(0)
 {
-	mRootElement = Resource<UIContainer>::create("RootElement");
+	mRootElement = create<UIContainer>("RootElement");
 	mRootElement->setSize(mEngine->getWindow().getView().getSize());
 
 	memset(mIsKeyPressed, false, sf::Keyboard::KeyCount);
@@ -136,22 +136,13 @@ bool UI::relayMouseEvent(UIElement* element, const sf::Event& e)
 
 	// Get bounding box
 	sf::FloatRect box(
-		-element->mOrigin.x * element->mSize.x,
-		-element->mOrigin.y * element->mSize.y,
+		0.0f, 0.0f,
 		element->mSize.x,
 		element->mSize.y
 	);
 
-	// Get coordinate space point
-	sf::Vector2i mousePos(e.mouseMove.x, e.mouseMove.y);
-	sf::Vector2f p = mEngine->getWindow().mapPixelToCoords(mousePos);
-	// Adjust for translation
-	p -= element->mAbsPosition;
-	// Adjust for rotation
-	float angle = -toRadians(element->mAbsRotation);
-	float ca = cos(angle);
-	float sa = sin(angle);
-	p = sf::Vector2f(p.x * ca - p.y * sa, p.x * sa + p.y * ca);
+	// Get local space point
+	sf::Vector2f p = element->screenToLocal(sf::Vector2i(e.mouseMove.x, e.mouseMove.y));
 
 	// Get if inside / outside of box
 	bool inside = box.contains(p);
@@ -212,7 +203,19 @@ void UI::handleEvent(const sf::Event& e)
 {
 	// Handle mouse events
 	if (e.type == sf::Event::MouseMoved)
+	{
 		relayMouseEvent(mRootElement, e);
+
+		if(mCurrentPress)
+		{
+			// Also give move event to current pressed
+			sf::Vector2f p = mCurrentPress->screenToLocal(sf::Vector2i(e.mouseMove.x, e.mouseMove.y));
+
+			mCurrentPress->onMouseMove(e, p);
+			if (mCurrentPress->mMouseMoveFunc)
+				mCurrentPress->mMouseMoveFunc(mCurrentPress, e);
+		}
+	}
 
 	// Handle mouse button events
 	else if (e.type == sf::Event::MouseButtonPressed)

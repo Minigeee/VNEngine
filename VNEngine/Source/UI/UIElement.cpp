@@ -2,6 +2,8 @@
 
 #include <Core/Math.h>
 
+#include <Engine/Engine.h>
+
 using namespace vne;
 
 // ============================================================================
@@ -244,6 +246,29 @@ void UIElement::transformDirty()
 
 	for (Uint32 i = 0; i < mChildren.size(); ++i)
 		mChildren[i]->transformDirty();
+}
+
+// ============================================================================
+
+sf::Vector2f UIElement::coordToLocal(const sf::Vector2f& coord)
+{
+	// Make sure transforms are updated
+	updateAbsTransforms();
+
+	// Adjust for translation
+	sf::Vector2f p = coord - mAbsPosition;
+	// Adjust for rotation
+	float angle = -toRadians(mAbsRotation);
+	float ca = cos(angle);
+	float sa = sin(angle);
+	p = sf::Vector2f(p.x * ca - p.y * sa, p.x * sa + p.y * ca);
+
+	return p + mSize * mOrigin;
+}
+
+sf::Vector2f UIElement::screenToLocal(const sf::Vector2i& screen)
+{
+	return coordToLocal(mEngine->getWindow().mapPixelToCoords(screen));
 }
 
 // ============================================================================

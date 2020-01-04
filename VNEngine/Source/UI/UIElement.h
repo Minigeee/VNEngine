@@ -199,6 +199,21 @@ public:
 
 
 	/// <summary>
+	/// Convert point from engine coordinate space to element local space
+	/// </summary>
+	/// <param name="p">Coordinate space point</param>
+	/// <returns>Local space point</returns>
+	sf::Vector2f coordToLocal(const sf::Vector2f& p);
+
+	/// <summary>
+	/// Convert point from screen space to element local space
+	/// </summary>
+	/// <param name="p">Coordinate space point</param>
+	/// <returns>Local space point</returns>
+	sf::Vector2f screenToLocal(const sf::Vector2i& p);
+
+
+	/// <summary>
 	/// Set callback for focus event
 	/// </summary>
 	/// <param name="func">Callback</param>

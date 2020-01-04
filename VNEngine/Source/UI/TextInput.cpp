@@ -204,17 +204,8 @@ void TextInput::onMousePress(const sf::Event& e)
 	// Make sure transforms are updated
 	updateAbsTransforms();
 
-	// Get coordinate space point
-	sf::Vector2i mousePos(e.mouseButton.x, e.mouseButton.y);
-	sf::Vector2f p = mEngine->getWindow().mapPixelToCoords(mousePos);
-	// Adjust for translation
-	p -= mAbsPosition;
-	// Adjust for rotation
-	float angle = -toRadians(mAbsRotation);
-	float ca = cos(angle);
-	float sa = sin(angle);
-	// Position relative to top-left
-	p = sf::Vector2f(p.x * ca - p.y * sa, p.x * sa + p.y * ca) + mBody.getOrigin();
+	// Get local space point
+	sf::Vector2f p = screenToLocal(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
 	p.x -= mTextOffset;
 
 	const sf::String& textStr = mText.getString();
@@ -471,11 +462,29 @@ void TextInput::onTextEntered(const sf::Event& e)
 
 	if (e.text.unicode >= 32 && e.text.unicode != 127 && e.text.unicode != '\n')
 	{
-		sf::String newStr = oldStr.substring(0, mCursorIndex) + e.text.unicode + oldStr.substring(mCursorIndex);
-		mText.setString(newStr);
+		if (mSelectIndex >= 0)
+		{
+			int selectStart = mCursorIndex < mSelectIndex ? mCursorIndex : mSelectIndex;
+			int selectEnd = mCursorIndex > mSelectIndex ? mCursorIndex : mSelectIndex;
 
-		// Increment cursor position
-		mCursorPos = getCharPos(++mCursorIndex);
+			sf::String newStr =	oldStr.substring(0, selectStart) + e.text.unicode + oldStr.substring(selectEnd);
+			mText.setString(newStr);
+
+			// Update cursor position
+			mCursorIndex = selectStart + 1;
+			mCursorPos = getCharPos(mCursorIndex);
+
+			// Remove selection
+			mSelectIndex = -1;
+		}
+		else
+		{
+			sf::String newStr = oldStr.substring(0, mCursorIndex) + e.text.unicode + oldStr.substring(mCursorIndex);
+			mText.setString(newStr);
+
+			// Increment cursor position
+			mCursorPos = getCharPos(++mCursorIndex);
+		}
 
 		mTextCursor->mAnimationTime = 0.0f;
 		mDrawablesChanged = true;

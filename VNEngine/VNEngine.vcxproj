@@ -144,6 +144,7 @@
     <ClCompile Include="Source\Engine\Resource.cpp" />
     <ClCompile Include="Source\Engine\Scene.cpp" />
     <ClCompile Include="Source\UI\Button.cpp" />
+    <ClCompile Include="Source\UI\Slider.cpp" />
     <ClCompile Include="Source\UI\TextCursor.cpp" />
     <ClCompile Include="Source\UI\TextInput.cpp" />
     <ClCompile Include="Source\UI\UI.cpp" />
@@ -161,6 +162,7 @@
     <ClInclude Include="Source\Engine\Resource.h" />
     <ClInclude Include="Source\Engine\Scene.h" />
     <ClInclude Include="Source\UI\Button.h" />
+    <ClInclude Include="Source\UI\Slider.h" />
     <ClInclude Include="Source\UI\TextCursor.h" />
     <ClInclude Include="Source\UI\TextInupt.h" />
     <ClInclude Include="Source\UI\UI.h" />

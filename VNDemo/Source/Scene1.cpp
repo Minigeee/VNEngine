@@ -2,6 +2,7 @@
 
 #include <UI/Button.h>
 #include <UI/TextInupt.h>
+#include <UI/Slider.h>
 
 using namespace vne;
 
@@ -50,6 +51,11 @@ void onSubmit(TextInput* input)
 	std::cout << input->getText().getString().toAnsiString() << "\n";
 }
 
+void onValueChanged(Slider* slider)
+{
+	std::cout << slider->getValue() << "\n";
+}
+
 void Scene1::onInit()
 {
 	Resource<sf::Font>::addLocation("Fonts/segoeui/segoeui.ttf", "SegoeUI");
@@ -81,6 +87,15 @@ void Scene1::onInit()
 	input->getText().setCharacterSize(25);
 	input->setSubmitFunc(&onSubmit);
 	mUI.addToRoot(input);
+
+	Slider* slider = mUI.create<Slider>("Slider1");
+	slider->setPosition(10, 260);
+	slider->setSize(300, 30);
+	slider->getBody().setFillColor(sf::Color(25, 25, 30));
+	slider->getSlider().setSize(sf::Vector2f(50.0f, 20.0f));
+	slider->getSlider().setFillColor(sf::Color(70, 70, 80));
+	slider->setValueChangedFunc(&onValueChanged);
+	mUI.addToRoot(slider);
 }
 
 // ============================================================================

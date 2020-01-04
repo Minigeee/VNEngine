@@ -63,6 +63,9 @@
     <ClCompile Include="Source\Engine\Cursor.cpp">
       <Filter>Source\Engine</Filter>
     </ClCompile>
+    <ClCompile Include="Source\UI\Slider.cpp">
+      <Filter>Source\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\Engine.h">
@@ -115,6 +118,9 @@
     </ClInclude>
     <ClInclude Include="Source\Engine\Cursor.h">
       <Filter>Include\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\Slider.h">
+      <Filter>Include\UI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
