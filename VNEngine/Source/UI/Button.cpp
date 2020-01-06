@@ -70,9 +70,17 @@ void Button::update(float dt)
 				mLabel.getCharacterSize(),
 				mLabel.getStyle() & sf::Text::Bold
 			).bounds;
-		const sf::FloatRect& box = mLabel.getLocalBounds();
+
+		sf::FloatRect rect = mLabel.getLocalBounds();
+		// Account for text scale effects
+		const sf::Vector2f& scale = mLabel.getScale();
+		rect.left *= scale.x;
+		rect.top *= scale.y;
+		rect.width *= scale.x;
+		rect.height *= scale.y;
+
 		sf::Vector2f origin =
-			sf::Vector2f(box.width * 0.5f, -xBounds.top * 0.5f + box.top)
+			sf::Vector2f(rect.width * 0.5f, -xBounds.top * 0.5f + rect.top)
 			- mSize * 0.5f;
 
 		// Adjust origin for text scale

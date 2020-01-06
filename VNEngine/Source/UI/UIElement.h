@@ -312,13 +312,6 @@ protected:
 	virtual void onInit(UI* ui);
 
 	/// <summary>
-	/// Called when render target changes size.
-	/// This is mostly used to rescale fonts on resize
-	/// </summary>
-	/// <param name="res">New resolution</param>
-	virtual void onTargetResize(const sf::Vector2u& res);
-
-	/// <summary>
 	/// Called when an element gains focus
 	/// </summary>
 	virtual void onFocus();

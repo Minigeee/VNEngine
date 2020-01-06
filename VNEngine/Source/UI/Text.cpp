@@ -58,27 +58,6 @@ Uint32 Text::getCharacterSize() const
 
 // ============================================================================
 
-sf::FloatRect Text::getLocalBounds() const
-{
-	sf::FloatRect rect = sf::Text::getLocalBounds();
-
-	// Account for scale effects
-	const sf::Vector2f& factor = sf::Text::getScale();
-	rect.left *= factor.x;
-	rect.top *= factor.y;
-	rect.width *= factor.x;
-	rect.height *= factor.y;
-
-	return rect;
-}
-
-sf::FloatRect Text::getGlobalBounds() const
-{
-	return getTransform().transformRect(getLocalBounds());
-}
-
-// ============================================================================
-
 void Text::setView(const sf::View* view)
 {
 	mView = view;

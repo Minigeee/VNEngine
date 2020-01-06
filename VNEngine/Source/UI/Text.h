@@ -40,10 +40,6 @@ public:
 	/// <returns>Character size</returns>
 	Uint32 getCharacterSize() const;
 
-	// Override bounds functions to ensure correct bounds
-	sf::FloatRect getLocalBounds() const;
-	sf::FloatRect getGlobalBounds() const;
-
 	/// <summary>
 	/// Set the view used as reference to scale character size
 	/// </summary>

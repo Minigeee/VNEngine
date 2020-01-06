@@ -110,8 +110,16 @@ void TextInput::update(float dt)
 				mText.getCharacterSize(),
 				mText.getStyle() & sf::Text::Bold
 			).bounds;
-		const sf::FloatRect& box = mText.getLocalBounds();
-		sf::Vector2f origin = sf::Vector2f(-mTextOffset, -xBounds.top * 0.5f + box.top - mSize.y * 0.5f);
+
+		sf::FloatRect rect = mText.getLocalBounds();
+		// Account for text scale effects
+		const sf::Vector2f& scale = mText.getScale();
+		rect.left *= scale.x;
+		rect.top *= scale.y;
+		rect.width *= scale.x;
+		rect.height *= scale.y;
+
+		sf::Vector2f origin = sf::Vector2f(-mTextOffset, -xBounds.top * 0.5f + rect.top - mSize.y * 0.5f);
 
 		mText.setOrigin(origin / mText.getScale());
 		mText.setPosition(mAbsPosition - mBody.getOrigin());
