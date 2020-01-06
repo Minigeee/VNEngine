@@ -348,6 +348,11 @@ void UIElement::onInit(UI* ui)
 
 }
 
+void UIElement::onTargetResize(const sf::Vector2u& res)
+{
+
+}
+
 void UIElement::onFocus()
 {
 

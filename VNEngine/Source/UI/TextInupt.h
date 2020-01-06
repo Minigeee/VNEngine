@@ -2,6 +2,7 @@
 #define TEXT_INPUT_H
 
 #include <UI/UIElement.h>
+#include <UI/Text.h>
 
 namespace vne
 {
@@ -34,13 +35,13 @@ public:
 	/// Get text object
 	/// </summary>
 	/// <returns>SFML Text</returns>
-	sf::Text& getText();
+	Text& getText();
 
 	/// <summary>
 	/// Get text object
 	/// </summary>
 	/// <returns>SFML Text</returns>
-	const sf::Text& getText() const;
+	const Text& getText() const;
 
 	/// <summary>
 	/// Set left text margin in pixels
@@ -111,7 +112,7 @@ protected:
 	/// <summary>
 	/// The text that is displayed
 	/// </summary>
-	sf::Text mText;
+	Text mText;
 
 	/// <summary>
 	/// The blinking text cursor

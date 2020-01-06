@@ -2,6 +2,7 @@
 #define BUTTON_H
 
 #include <UI/UIElement.h>
+#include <UI/Text.h>
 
 namespace vne
 {
@@ -42,13 +43,13 @@ public:
 	/// Get label of button
 	/// </summary>
 	/// <returns>Button label</returns>
-	sf::Text& getLabel();
+	Text& getLabel();
 
 	/// <summary>
 	/// Get label of button
 	/// </summary>
 	/// <returns>Button label</returns>
-	const sf::Text& getLabel() const;
+	const Text& getLabel() const;
 
 	/// <summary>
 	/// Get button state
@@ -106,7 +107,7 @@ protected:
 	/// <summary>
 	/// Label of button
 	/// </summary>
-	sf::Text mLabel;
+	Text mLabel;
 
 	/// <summary>
 	/// Current button state

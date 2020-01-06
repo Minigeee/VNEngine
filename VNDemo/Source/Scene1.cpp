@@ -1,5 +1,8 @@
 #include <Scene1.h>
 
+#include <Engine/Engine.h>
+
+#include <UI/Text.h>
 #include <UI/Button.h>
 #include <UI/TextInupt.h>
 #include <UI/Slider.h>
@@ -60,6 +63,10 @@ void Scene1::onInit()
 {
 	Resource<sf::Font>::addLocation("Fonts/segoeui/segoeui.ttf", "SegoeUI");
 	Resource<sf::Texture>::addLocation("Textures/YourName.jpg", "YourName");
+
+	Text text;
+	text.setView(&mEngine->getWindow().getView());
+	text.setCharacterSize(30);
 
 	mUI.setDefaultFont(Resource<sf::Font>::get("SegoeUI"));
 

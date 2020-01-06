@@ -43,13 +43,13 @@ const sf::RectangleShape& TextInput::getBody() const
 	return mBody;
 }
 
-sf::Text& TextInput::getText()
+Text& TextInput::getText()
 {
 	mDrawablesChanged = true;
 	return mText;
 }
 
-const sf::Text& TextInput::getText() const
+const Text& TextInput::getText() const
 {
 	return mText;
 }
@@ -113,7 +113,7 @@ void TextInput::update(float dt)
 		const sf::FloatRect& box = mText.getLocalBounds();
 		sf::Vector2f origin = sf::Vector2f(-mTextOffset, -xBounds.top * 0.5f + box.top - mSize.y * 0.5f);
 
-		mText.setOrigin(origin);
+		mText.setOrigin(origin / mText.getScale());
 		mText.setPosition(mAbsPosition - mBody.getOrigin());
 		mText.setRotation(mAbsRotation);
 
@@ -174,6 +174,7 @@ void TextInput::onInit(UI* ui)
 {
 	if (ui->getDefaultFont())
 		mText.setFont(*ui->getDefaultFont());
+	mText.setView(&mEngine->getWindow().getView());
 
 	mTextCursor = &ui->getTextCursor();
 	mTextHighlight = &ui->getTextHighlight();
@@ -226,6 +227,14 @@ void TextInput::onMousePress(const sf::Event& e)
 		if (localPos < 0.5f * advance) break;
 
 		charPos += advance;
+	}
+
+	// Select if shift is held
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) ||
+		sf::Keyboard::isKeyPressed(sf::Keyboard::RShift))
+	{
+		mSelectIndex = mCursorIndex;
+		mSelectPos = mCursorPos;
 	}
 
 	mCursorIndex = i;
@@ -318,11 +327,10 @@ void TextInput::onKeyPress(const sf::Event& e)
 			int selectEnd = mCursorIndex > mSelectIndex ? mCursorIndex : mSelectIndex;
 			if (selectStart < 0)
 				selectStart = selectEnd;
+			int len = selectEnd - selectStart;
 
 			// Copy selection
-			sf::Clipboard::setString(mText.getString().substring(selectStart, selectEnd));
-
-			mSelectIndex = -1;
+			sf::Clipboard::setString(mText.getString().substring(selectStart, len));
 		}
 		else if (e.key.code == sf::Keyboard::V)
 		{
@@ -351,8 +359,9 @@ void TextInput::onKeyPress(const sf::Event& e)
 			int selectEnd = mCursorIndex > mSelectIndex ? mCursorIndex : mSelectIndex;
 			if (selectStart < 0)
 				selectStart = selectEnd;
+			int len = selectEnd - selectStart;
 
-			sf::Clipboard::setString(mText.getString().substring(selectStart, selectEnd));
+			sf::Clipboard::setString(mText.getString().substring(selectStart, len));
 			const sf::String& oldStr = mText.getString();
 			mText.setString(oldStr.substring(0, selectStart) + oldStr.substring(selectEnd));
 

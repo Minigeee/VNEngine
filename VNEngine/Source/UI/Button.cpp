@@ -3,6 +3,8 @@
 
 #include <Core/Math.h>
 
+#include <Engine/Engine.h>
+
 using namespace vne;
 
 // ============================================================================
@@ -33,13 +35,13 @@ const sf::RectangleShape& Button::getBody() const
 	return mBody;
 }
 
-sf::Text& Button::getLabel()
+Text& Button::getLabel()
 {
 	mDrawablesChanged = true;
 	return mLabel;
 }
 
-const sf::Text& Button::getLabel() const
+const Text& Button::getLabel() const
 {
 	return mLabel;
 }
@@ -73,7 +75,8 @@ void Button::update(float dt)
 			sf::Vector2f(box.width * 0.5f, -xBounds.top * 0.5f + box.top)
 			- mSize * 0.5f;
 
-		mLabel.setOrigin(origin);
+		// Adjust origin for text scale
+		mLabel.setOrigin(origin / mLabel.getScale());
 		mLabel.setPosition(mAbsPosition - mBody.getOrigin());
 		mLabel.setRotation(mAbsRotation);
 
@@ -114,6 +117,9 @@ void Button::onInit(UI* ui)
 {
 	if (ui->getDefaultFont())
 		mLabel.setFont(*ui->getDefaultFont());
+
+	// Set view
+	mLabel.setView(&mEngine->getWindow().getView());
 }
 
 void Button::onMouseEnter(const sf::Event& e)
