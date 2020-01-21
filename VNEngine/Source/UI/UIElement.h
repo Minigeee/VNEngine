@@ -41,6 +41,25 @@ public:
 	void addChild(UIElement* child);
 
 	/// <summary>
+	/// Move element to be in front of all other siblings
+	/// Sets z-index to max
+	/// </summary>
+	void moveToFront();
+
+	/// <summary>
+	/// Move element to be behind all other siblings
+	/// Sets z-index to 0
+	/// </summary>
+	void moveToBack();
+
+	/// <summary>
+	/// Set z-index, which determines the order elements are displayed
+	/// 0 is the back, (number of siblings) is front
+	/// </summary>
+	/// <param name="index">Z-Index</param>
+	void setZIndex(Uint32 index);
+
+	/// <summary>
 	/// Set local position in coordinate space pixels
 	/// </summary>
 	void setPosition(const sf::Vector2f& pos);
@@ -196,6 +215,12 @@ public:
 	/// </summary>
 	/// <returns>List of children</returns>
 	const std::vector<UIElement*>& getChildren() const;
+
+	/// <summary>
+	/// Get the z-index
+	/// </summary>
+	/// <returns></returns>
+	Uint32 getZIndex() const;
 
 
 	/// <summary>

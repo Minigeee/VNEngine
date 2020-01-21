@@ -49,6 +49,47 @@ void UIElement::addChild(UIElement* child)
 
 // ============================================================================
 
+void UIElement::moveToFront()
+{
+	if (mParent)
+		setZIndex(mParent->mChildren.size() - 1);
+}
+
+void UIElement::moveToBack()
+{
+	setZIndex(0);
+}
+
+void UIElement::setZIndex(Uint32 index)
+{
+	if (mParent)
+	{
+		std::vector<UIElement*>& siblings = mParent->mChildren;
+		Uint32 src = getZIndex();
+
+		// Clamp to range of number of siblings
+		if (index >= siblings.size())
+			index = siblings.size() - 1;
+
+		// Shift all siblings
+		if (src < index)
+		{
+			for (int i = src; i < index; ++i)
+				siblings[i] = siblings[i + 1];
+		}
+		else
+		{
+			for (int i = src; i > index; --i)
+				siblings[i] = siblings[i - 1];
+		}
+
+		// Update element in list
+		siblings[index] = this;
+	}
+}
+
+// ============================================================================
+
 void UIElement::setPosition(const sf::Vector2f& pos)
 {
 	mRelPosition = pos;
@@ -213,6 +254,24 @@ UIElement* UIElement::getParent() const
 const std::vector<UIElement*>& UIElement::getChildren() const
 {
 	return mChildren;
+}
+
+Uint32 UIElement::getZIndex() const
+{
+	if (mParent)
+	{
+		const std::vector<UIElement*>& siblings = mParent->mChildren;
+
+		// Brute force linear search
+		for (Uint32 i = 0; i < siblings.size(); ++i)
+		{
+			if (siblings[i] == this)
+				return i;
+		}
+	}
+
+	// If this is an unattached element, or the search failed
+	return 0;
 }
 
 // ============================================================================

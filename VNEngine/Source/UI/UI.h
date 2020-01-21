@@ -46,6 +46,8 @@ public:
 		T* element = Resource<T>::create(name);
 		*element = *srcElement;
 		element->setName(name);
+		// Reset parent
+		element->mParent = 0;
 		element->onInit(this);
 
 		return element;

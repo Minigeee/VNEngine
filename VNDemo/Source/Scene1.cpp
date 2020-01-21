@@ -85,6 +85,7 @@ void Scene1::onInit()
 	button->setRotation(45.0f);
 	button->getLabel().setString("Test");
 	mUI.addToRoot(button);
+	button->moveToBack();
 
 	TextInput* input = mUI.create<TextInput>("Input1");
 	input->setPosition(10, 200);
