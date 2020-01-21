@@ -13,6 +13,7 @@ public:
 
 private:
 	void onInit() override;
+	void onUpdate(float dt) override;
 };
 
 // ============================================================================

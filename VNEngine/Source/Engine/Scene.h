@@ -94,6 +94,11 @@ protected:
 	/// </summary>
 	virtual void onInit() = 0;
 
+	/// <summary>
+	/// Use this function to implement any extra features needed
+	/// </summary>
+	virtual void onUpdate(float dt);
+
 protected:
 	/// <summary>
 	/// UI system

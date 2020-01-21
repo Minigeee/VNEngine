@@ -4,6 +4,7 @@
 #include <Engine/Resource.h>
 
 #include <UI/UIElement.h>
+#include <UI/UIAnimation.h>
 #include <UI/TextCursor.h>
 
 #include <SFML/Graphics.hpp>
@@ -64,6 +65,11 @@ public:
 	/// </summary>
 	/// <param name="element">UI element to add</param>
 	void addToRoot(UIElement* element);
+
+	/// <summary>
+	/// Add an animation
+	/// </summary>
+	void addAnimation(I_UIAnimation* anim);
 
 	/// <summary>
 	/// Set default font to use for text
@@ -159,6 +165,11 @@ private:
 	/// The highlight box that appears when text is selected
 	/// </summary>
 	sf::RectangleShape mTextHighlight;
+
+	/// <summary>
+	/// List of UI animations
+	/// </summary>
+	std::vector<I_UIAnimation*> mAnimations;
 
 	/// <summary>
 	/// Current element with focus, only one element allowed to be focused at a time

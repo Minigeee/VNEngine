@@ -53,6 +53,9 @@ void NovelScene::handleEvent(const sf::Event& e)
 
 void NovelScene::update(float dt)
 {
+	// Custom update comse first
+	onUpdate(dt);
+
 	mUI.update(dt);
 }
 
@@ -63,6 +66,14 @@ void NovelScene::render()
 	sf::RenderWindow& target = mEngine->getWindow();
 
 	target.draw(mUI);
+}
+
+// ============================================================================
+// ============================================================================
+
+void NovelScene::onUpdate(float dt)
+{
+
 }
 
 // ============================================================================

@@ -31,6 +31,10 @@ UI::UI(Engine* engine) :
 
 UI::~UI()
 {
+	// Remove all animations
+	for (Uint32 i = 0; i < mAnimations.size(); ++i)
+		delete mAnimations[i];
+
 	Resource<UIContainer>::free();
 	Resource<Button>::free();
 }
@@ -51,6 +55,11 @@ UIElement* UI::getRoot() const
 void UI::setDefaultFont(sf::Font* font)
 {
 	mDefaultFont = font;
+}
+
+void UI::addAnimation(I_UIAnimation* anim)
+{
+	mAnimations.push_back(anim);
 }
 
 sf::Font* UI::getDefaultFont() const
@@ -305,6 +314,22 @@ void UI::updateElement(UIElement* element, float dt)
 
 void UI::update(float dt)
 {
+	// Update UI animations
+	for (Uint32 i = 0; i < mAnimations.size(); ++i)
+	{
+		// Update animation
+		I_UIAnimation* anim = mAnimations[i];
+		anim->update(dt);
+
+		// Remove if finished
+		if (anim->isFinished())
+		{
+			delete anim;
+			mAnimations[i--] = mAnimations.back();
+			mAnimations.pop_back();
+		}
+	}
+
 	updateElement(mRootElement, dt);
 }
 
