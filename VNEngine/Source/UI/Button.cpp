@@ -64,6 +64,7 @@ void Button::update(float dt)
 		mBody.setSize(mSize);
 		mBody.setOrigin(mOrigin * mSize);
 
+		float charSize = (float)mLabel.getCharacterSize();
 		const sf::FloatRect& xBounds =
 			mLabel.getFont()->getGlyph(
 				L'X',
@@ -80,7 +81,7 @@ void Button::update(float dt)
 		rect.height *= scale.y;
 
 		sf::Vector2f origin =
-			sf::Vector2f(rect.width * 0.5f, -xBounds.top * 0.5f + rect.top)
+			sf::Vector2f(rect.width * 0.5f, charSize - 0.5f * xBounds.height)
 			- mSize * 0.5f;
 
 		// Adjust origin for text scale

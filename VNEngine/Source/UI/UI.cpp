@@ -262,7 +262,7 @@ void UI::handleEvent(const sf::Event& e)
 	}
 
 	// Handle key events
-	else if (e.type == sf::Event::KeyPressed)
+	else if (e.type == sf::Event::KeyPressed && e.key.code >= 0)
 	{
 		// Handle for current focused
 		if (mCurrentFocus)
@@ -277,7 +277,7 @@ void UI::handleEvent(const sf::Event& e)
 				mCurrentFocus->mKeyPressFunc(mCurrentFocus, e);
 		}
 	}
-	else if (e.type == sf::Event::KeyReleased)
+	else if (e.type == sf::Event::KeyReleased && e.key.code >= 0)
 	{
 		if (mCurrentKeyPress)
 		{
