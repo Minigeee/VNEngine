@@ -11,6 +11,34 @@ namespace vne
 // ============================================================================
 
 /// <summary>
+/// Interpolate linearly between _1 and _2, using factor
+/// </summary>
+/// <param name="_1">The first value used for interpolation</param>
+/// <param name="_2">The second value used for interpolation</param>
+/// <param name="factor">Factor of how much to mix between the two end points (0.0f - 1.0f)</param>
+/// <returns>Interpolated value</returns>
+inline float interpLinear(float _1, float _2, float factor)
+{
+	return _1 + factor * (_2 - _1);
+}
+
+/// <summary>
+/// Interpolate between _1 and _2, using factor in a polynomial function.
+/// The function is f(x) = x ^ a
+/// </summary>
+/// <param name="_1">The first value used for interpolation</param>
+/// <param name="_2">The second value used for interpolation</param>
+/// <param name="factor">Factor used in parabola function, which will become the interpolation factor. This will be clamped to 0.0f - 1.0f</param>
+/// <param name="a">The first (a) value in the parabola equation (Default 2.0f)</param>
+/// <returns>Interpolated value</returns>
+inline float interpPolynomial(float _1, float _2, float factor, float a = 2.0f)
+{
+	return interpLinear(_1, _2, powf(factor, a));
+}
+
+// ============================================================================
+
+/// <summary>
 /// Base animation class
 /// </summary>
 class I_UIAnimation
@@ -19,6 +47,7 @@ public:
 	I_UIAnimation() :
 		mTime		(0.0f),
 		mDuration	(1.0f),
+		mDelay		(0.0f),
 		mRepeat		(false)
 	{ }
 
@@ -35,8 +64,8 @@ public:
 		// Loop time if needed
 		if (mTime > mDuration)
 		{
-			if (mRepeat)
-				mTime = fmodf(mTime, mDuration);
+			if (mRepeat && mDuration != 0.0f)
+				mTime = fmodf(mTime, mDuration) - mDelay;
 			else
 				mTime = mDuration;
 		}
@@ -52,6 +81,28 @@ public:
 	}
 
 	/// <summary>
+	/// Set animation delay (How long to wait before actually starting the animation).
+	/// This could be used create sequences of animations
+	/// (i.e. create a jumping animation by adding a move up animation,
+	/// followed by a move down element after a delay)
+	/// </summary>
+	/// <param name="delay">Delay in seconds</param>
+	void setDelay(float delay)
+	{
+		mDelay = delay;
+	}
+
+	/// <summary>
+	/// Set animation repeat flag.
+	/// Animation will loop if this is true
+	/// </summary>
+	/// <param name="repeat">Repeat mode</param>
+	void setRepeat(bool repeat)
+	{
+		mRepeat = repeat;
+	}
+
+	/// <summary>
 	/// Get animation duration in seconds
 	/// </summary>
 	/// <returns>Duration in seconds</returns>
@@ -61,12 +112,39 @@ public:
 	}
 
 	/// <summary>
+	/// Get animation delay in seconds
+	/// </summary>
+	/// <returns>Delay in seconds</returns>
+	float getDelay() const
+	{
+		return mDelay;
+	}
+
+	/// <summary>
 	/// Returns true if animation is completed
 	/// </summary>
 	/// <returns>Finished state</returns>
 	bool isFinished() const
 	{
 		return mTime >= mDuration;
+	}
+
+	/// <summary>
+	/// Reset time to 0 seconds.
+	/// This does not immediately reset property values
+	/// </summary>
+	void reset()
+	{
+		mTime = -mDelay;
+	}
+
+	/// <summary>
+	/// Finish animation by setting time value to animation duration.
+	/// This does not affect repeat mode, and will not immediately update property value
+	/// </summary>
+	void finish()
+	{
+		mTime = mDuration;
 	}
 
 protected:
@@ -79,6 +157,11 @@ protected:
 	/// Animation duration
 	/// </summary>
 	float mDuration;
+
+	/// <summary>
+	/// Animation delay (to create sequences)
+	/// </summary>
+	float mDelay;
 
 	/// <summary>
 	/// True if animation should repeat
@@ -101,6 +184,12 @@ public:
 	UIAnimation() { }
 	virtual ~UIAnimation() { }
 
+	UIAnimation(const PropSetter& setter, const T& s, const T& e) :
+		mSetter		(setter),
+		mStart		(s),
+		mEnd		(e)
+	{ }
+
 	/// <summary>
 	/// Set animation property setter function
 	/// </summary>
@@ -110,11 +199,52 @@ public:
 		mSetter = setter;
 	}
 
+	/// <summary>
+	/// Set starting value for animation
+	/// </summary>
+	/// <param name="val">Starting value</param>
+	void setStartValue(const T& val)
+	{
+		mStart = val;
+	}
+
+	/// <summary>
+	/// Set ending value for animation
+	/// </summary>
+	/// <param name="val">Ending value</param>
+	void setEndValue(const T& val)
+	{
+		mEnd = val;
+	}
+
+	/// <summary>
+	/// Cancel animation and reset property values
+	/// </summary>
+	void cancel()
+	{
+		mRepeat = false;
+		mDuration = 0.0f;
+		mTime = 0.0f;
+
+		// Reset values
+		mSetter(mStart);
+	}
+
 protected:
 	/// <summary>
 	/// Function object for property setter
 	/// </summary>
 	PropSetter mSetter;
+
+	/// <summary>
+	/// Starting value for animation
+	/// </summary>
+	T mStart;
+
+	/// <summary>
+	/// Ending value for animation
+	/// </summary>
+	T mEnd;
 };
 
 // ============================================================================
@@ -131,15 +261,15 @@ public:
 	/// <summary>
 	/// Initialize animation with given parameters
 	/// </summary>
-	/// <param name="s">Starting value of the animation</param>
-	/// <param name="e">Ending value of the animation</param>
+	/// <param name="setter">The setter function of the property you want to animate</param>
+	/// <param name="s">Starting value of the property you want to animate</param>
+	/// <param name="e">Ending value of the property you want to animate</param>
 	/// <param name="duration">Duration of animation</param>
 	FloatAnimation(const PropSetter& setter, float s, float e, float duration) :
-		mStart	(s),
-		mEnd	(e)
+		UIAnimation		(setter, s, e),
+		mPowFactor		(1.0f)
 	{
 		mDuration = duration;
-		mSetter = setter;
 	}
 
 	/// <summary>
@@ -151,25 +281,35 @@ public:
 		// Update time
 		UIAnimation<float>::update(dt);
 
-		// Linear interpolation
-		float factor = mTime / mDuration;
-		float val = mStart + factor * (mEnd - mStart);
+		if (mTime >= 0.0f)
+		{
+			// Linear interpolation
+			float factor = mTime / mDuration;
+			float val = interpPolynomial(mStart, mEnd, factor, mPowFactor);
 
-		// Set new value
-		if (mSetter)
-			mSetter(val);
+			// Set new value
+			if (mSetter)
+				mSetter(val);
+		}
+	}
+
+	/// <summary>
+	/// Set the power factor that is applied to the time interpolation factor.
+	/// This can be used to create nonlinear animation transitions (i.e. can be used to create a gravity effect).
+	/// Applied to interpolation factor using this function: f(x) = x ^ a, where x is the interpolation factor.
+	/// (Default 1.0f)
+	/// </summary>
+	/// <param name="factor">Power factor</param>
+	void setPowFactor(float factor)
+	{
+		mPowFactor = factor;
 	}
 
 protected:
 	/// <summary>
-	/// Start value of animation
+	/// The power factor that is applied to time factor
 	/// </summary>
-	float mStart;
-
-	/// <summary>
-	/// End value of animation
-	/// </summary>
-	float mEnd;
+	float mPowFactor;
 };
 
 // ============================================================================
@@ -186,15 +326,15 @@ public:
 	/// <summary>
 	/// Initialize animation with given parameters
 	/// </summary>
-	/// <param name="s">Starting value of the animation</param>
-	/// <param name="e">Ending value of the animation</param>
+	/// <param name="setter">The setter function of the property you want to animate</param>
+	/// <param name="s">Starting value of the property you want to animate</param>
+	/// <param name="e">Ending value of the property you want to animate</param>
 	/// <param name="duration">Duration of animation</param>
 	Vec2Animation(const PropSetter& setter, const sf::Vector2f& s, const sf::Vector2f& e, float duration) :
-		mStart		(s),
-		mEnd		(e)
+		UIAnimation		(setter, s, e),
+		mPowFactor		(1.0f)
 	{
 		mDuration = duration;
-		mSetter = setter;
 	}
 
 	/// <summary>
@@ -206,27 +346,37 @@ public:
 		// Update time
 		UIAnimation<sf::Vector2f>::update(dt);
 
-		// Linear interpolation
-		sf::Vector2f val;
-		float factor = mTime / mDuration;
-		val.x = mStart.x + factor * (mEnd.x - mStart.x);
-		val.y = mStart.y + factor * (mEnd.y - mStart.y);
+		if (mTime >= 0.0f)
+		{
+			// Linear interpolation
+			sf::Vector2f val;
+			float factor = mTime / mDuration;
+			val.x = interpPolynomial(mStart.x, mEnd.x, factor, mPowFactor);
+			val.y = interpPolynomial(mStart.y, mEnd.y, factor, mPowFactor);
 
-		// Set new value
-		if (mSetter)
-			mSetter(val);
+			// Set new value
+			if (mSetter)
+				mSetter(val);
+		}
+	}
+
+	/// <summary>
+	/// Set the power factor that is applied to the time interpolation factor.
+	/// This can be used to create nonlinear animation transitions (i.e. can be used to create a gravity effect).
+	/// Applied to interpolation factor using this function: f(x) = x ^ a, where x is the interpolation factor.
+	/// (Default 1.0f)
+	/// </summary>
+	/// <param name="factor">Power factor</param>
+	void setPowFactor(float factor)
+	{
+		mPowFactor = factor;
 	}
 
 protected:
 	/// <summary>
-	/// Start value of animation
+	/// The power factor that is applied to time factor
 	/// </summary>
-	sf::Vector2f mStart;
-
-	/// <summary>
-	/// End value of animation
-	/// </summary>
-	sf::Vector2f mEnd;
+	float mPowFactor;
 };
 
 // ============================================================================
@@ -243,15 +393,15 @@ public:
 	/// <summary>
 	/// Initialize animation with given parameters
 	/// </summary>
-	/// <param name="s">Starting value of the animation</param>
-	/// <param name="e">Ending value of the animation</param>
+	/// <param name="setter">The setter function of the property you want to animate</param>
+	/// <param name="s">Starting value of the property you want to animate</param>
+	/// <param name="e">Ending value of the property you want to animate</param>
 	/// <param name="duration">Duration of animation</param>
 	ColorAnimation(const PropSetter& setter, const sf::Color& s, const sf::Color& e, float duration) :
-		mStart	(s),
-		mEnd	(e)
+		UIAnimation		(setter, s, e),
+		mPowFactor		(1.0f)
 	{
 		mDuration = duration;
-		mSetter = setter;
 	}
 
 	/// <summary>
@@ -263,29 +413,40 @@ public:
 		// Update time
 		UIAnimation<sf::Color>::update(dt);
 
-		// Linear interpolation
-		sf::Color val;
-		float factor = mTime / mDuration;
-		val.r = (Uint8)(mStart.r + factor * (mEnd.r - mStart.r));
-		val.g = (Uint8)(mStart.g + factor * (mEnd.g - mStart.g));
-		val.b = (Uint8)(mStart.b + factor * (mEnd.b - mStart.b));
-		val.a = (Uint8)(mStart.a + factor * (mEnd.a - mStart.a));
 
-		// Set new value
-		if (mSetter)
-			mSetter(val);
+		if (mTime >= 0.0f)
+		{
+			// Linear interpolation
+			sf::Color val;
+			float factor = mTime / mDuration;
+			val.r = (Uint8)interpPolynomial(mStart.r, mEnd.r, factor, mPowFactor);
+			val.g = (Uint8)interpPolynomial(mStart.g, mEnd.g, factor, mPowFactor);
+			val.b = (Uint8)interpPolynomial(mStart.b, mEnd.b, factor, mPowFactor);
+			val.a = (Uint8)interpPolynomial(mStart.a, mEnd.a, factor, mPowFactor);
+
+			// Set new value
+			if (mSetter)
+				mSetter(val);
+		}
+	}
+
+	/// <summary>
+	/// Set the power factor that is applied to the time interpolation factor.
+	/// This can be used to create nonlinear animation transitions (i.e. can be used to create a gravity effect).
+	/// Applied to interpolation factor using this function: f(x) = x ^ a, where x is the interpolation factor.
+	/// (Default 1.0f)
+	/// </summary>
+	/// <param name="factor">Power factor</param>
+	void setPowFactor(float factor)
+	{
+		mPowFactor = factor;
 	}
 
 protected:
 	/// <summary>
-	/// Start value of animation
+	/// The power factor that is applied to time factor
 	/// </summary>
-	sf::Color mStart;
-
-	/// <summary>
-	/// End value of animation
-	/// </summary>
-	sf::Color mEnd;
+	float mPowFactor;
 };
 
 // ============================================================================

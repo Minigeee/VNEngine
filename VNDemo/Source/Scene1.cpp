@@ -84,9 +84,18 @@ void Scene1::onInit()
 
 	button = mUI.copy<Button>("TestBtn", "PlayBtn");
 	button->setPosition(50.0f, 50.0f);
-	// button->setRotation(45.0f);
+	button->setRotation(45.0f);
 	button->getLabel().setString("Test");
 	mUI.addToRoot(button);
+
+	Vec2Animation* anim = ANIMATE_POS(button, button->getRelPosition(), sf::Vector2f(500.0f, 500.0f), 2.0f);
+	anim->setDelay(2.0f);
+	anim->setPowFactor(2.0f);
+	mUI.addAnimation(anim);
+	mUI.addAnimation(ANIMATE_ROT(button, 0.0f, 360.0f, 2.0f));
+	mUI.addAnimation(ANIMATE_FLOAT(&button->getBody(), OutlineThickness, 0.0f, 20.0f, 2.0f));
+	mUI.addAnimation(ANIMATE_COLOR(&button->getBody(), FillColor, sf::Color::Red, sf::Color::Blue, 2.0f));
+	mUI.addAnimation(ANIMATE_COLOR(&button->getBody(), OutlineColor, sf::Color::Green, sf::Color::Red, 2.0f));
 
 	TextInput* input = mUI.create<TextInput>("Input1");
 	input->setPosition(10, 200);

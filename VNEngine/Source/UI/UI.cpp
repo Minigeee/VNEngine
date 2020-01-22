@@ -59,6 +59,7 @@ void UI::setDefaultFont(sf::Font* font)
 
 void UI::addAnimation(I_UIAnimation* anim)
 {
+	anim->reset();
 	mAnimations.push_back(anim);
 }
 
