@@ -17,7 +17,9 @@ public:
 	virtual ~Slider();
 
 	/// <summary>
-	/// Get the body of the slider (background)
+	/// Get the body of the slider (background).
+	/// The size of the rectangle, all color and texture values, and outline values are modifiable.
+	/// The position, rotation, and origin are not modifiable.
 	/// </summary>
 	/// <returns>SFML Rectangle</returns>
 	sf::RectangleShape& getBody();
@@ -29,7 +31,9 @@ public:
 	const sf::RectangleShape& getBody() const;
 
 	/// <summary>
-	/// Get the draggable part of the slider
+	/// Get the draggable part of the slider.
+	/// The size of the rectangle, all color and texture values, and outline values are modifiable.
+	/// The position, rotation, and origin are not modifiable.
 	/// </summary>
 	/// <returns>SFML Rectangle</returns>
 	sf::RectangleShape& getSlider();

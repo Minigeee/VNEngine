@@ -125,8 +125,24 @@ void Slider::onMousePress(const sf::Event& e)
 
 	if (mSliderPressed)
 	{
-		// Offset is negative, so add instead of subtract
+		// Origin is negative, so add instead of subtract
 		mPressOffset = p.x + mSlider.getOrigin().x;
+	}
+	else
+	{
+		// Otherwise, move slider directly to mouse location
+		float newValue = (p.x - 0.5f * mSlider.getSize().x) / (mSize.x - mSlider.getSize().x);
+		if (newValue < 0.0f)
+			newValue = 0.0f;
+		else if (newValue > 1.0f)
+			newValue = 1.0f;
+
+		mValue = newValue;
+		mDrawablesChanged = true;
+
+		// Start dragging
+		mSliderPressed = true;
+		mPressOffset = 0.5f * mSlider.getSize().x;
 	}
 }
 

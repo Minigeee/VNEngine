@@ -18,6 +18,8 @@ class Engine;
 
 class UI : public sf::Drawable
 {
+	friend UIElement;
+
 public:
 	UI(Engine* engine);
 	~UI();
@@ -29,9 +31,7 @@ public:
 	T* create(const sf::String& name)
 	{
 		T* element = Resource<T>::create(name);
-		element->mEngine = mEngine;
-		element->setName(name);
-		element->onInit(this);
+		element->init(this, name);
 		return element;
 	}
 
@@ -46,10 +46,7 @@ public:
 
 		T* element = Resource<T>::create(name);
 		*element = *srcElement;
-		element->setName(name);
-		// Reset parent
-		element->mParent = 0;
-		element->onInit(this);
+		element->init(this, name);
 
 		return element;
 	}

@@ -28,6 +28,16 @@ public:
 	UIElement();
 	virtual ~UIElement();
 
+	UIElement(const UIElement& other);
+	UIElement& operator=(const UIElement& other);
+
+	/// <summary>
+	/// Initialize UI element
+	/// </summary>
+	/// <param name="ui">Pointer to UI manager</param>
+	/// <param name="name">Name of the element</param>
+	void init(UI* ui, const sf::String& name);
+
 	/// <summary>
 	/// Set element name
 	/// </summary>

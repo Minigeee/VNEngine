@@ -4,6 +4,8 @@
 
 #include <Engine/Engine.h>
 
+#include <UI/UI.h>
+
 using namespace vne;
 
 // ============================================================================
@@ -11,6 +13,7 @@ using namespace vne;
 
 UIElement::UIElement() :
 	mEngine				(0),
+	mName				(""),
 	mParent				(0),
 	mRelPosition		(0.0f, 0.0f),
 	mAbsPosition		(0.0f, 0.0f),
@@ -34,7 +37,63 @@ UIElement::~UIElement()
 }
 
 // ============================================================================
+
+UIElement::UIElement(const UIElement& other) :
+	mEngine				(other.mEngine),
+	mName				(""),
+	mParent				(0),
+	mRelPosition		(other.mRelPosition),
+	mAbsPosition		(other.mAbsPosition),
+	mRelRotation		(other.mRelRotation),
+	mAbsRotation		(other.mAbsRotation),
+	mSize				(other.mSize),
+	mOrigin				(other.mOrigin),
+	mAnchor				(other.mAnchor),
+	mTransformChanged	(false),
+	mDrawablesChanged	(false),
+	mHasFocus			(false),
+	mHasHover			(false),
+	mIsMousePressed		(false)
+{
+	// Just reset parent and name
+}
+
+UIElement& UIElement::operator=(const UIElement& other)
+{
+	if (&other != this)
+	{
+		// Just reset parent and name
+		mEngine = other.mEngine;
+		mName = "";
+		mParent = 0;
+		mRelPosition = other.mRelPosition;
+		mAbsPosition = other.mAbsPosition;
+		mRelRotation = other.mRelRotation;
+		mAbsRotation = other.mAbsRotation;
+		mSize = other.mSize;
+		mOrigin = other.mOrigin;
+		mAnchor = other.mAnchor;
+		mTransformChanged = true;
+		mDrawablesChanged = true;
+		mHasFocus = false;
+		mHasHover = false;
+		mIsMousePressed = false;
+	}
+
+	return *this;
+}
+
 // ============================================================================
+// ============================================================================
+
+void UIElement::init(UI* ui, const sf::String& name)
+{
+	mEngine = ui->mEngine;
+	mName = name;
+
+	// Custom init
+	onInit(ui);
+}
 
 void UIElement::setName(const sf::String& name)
 {
