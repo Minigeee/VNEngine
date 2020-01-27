@@ -156,6 +156,12 @@ bool UI::relayMouseEvent(UIElement* element, const sf::Event& e)
 
 	// Get if inside / outside of box
 	bool inside = box.contains(p);
+	// Make sure it is also inside clipping area if enabled
+	if (element->isClipEnabled())
+	{
+		sf::Vector2f coordSpace = mEngine->getWindow().mapPixelToCoords(sf::Vector2i(e.mouseMove.x, e.mouseMove.y));
+		inside &= element->getClipBounds().contains(coordSpace);
+	}
 
 	// Test mouse enter
 	if (!element->mHasHover && inside)
@@ -336,8 +342,32 @@ void UI::update(float dt)
 
 // ============================================================================
 
-void drawElement(UIElement* element, sf::RenderTarget& target, const sf::RenderStates& states)
+void UI::drawElement(UIElement* element, sf::RenderTarget& target, const sf::RenderStates& states) const
 {
+	// Start clipping if this element has clipping enabled, but not parent
+	bool startClipping = element->isClipEnabled() && (!element->getParent() || !element->getParent()->isClipEnabled());
+	sf::View prevView = target.getView();
+
+	if (startClipping)
+	{
+		const sf::FloatRect& bounds = element->getClipBounds();
+
+		// Calculate normalized bounds for viewport
+		sf::RenderWindow& window = mEngine->getWindow();
+
+		sf::Vector2f normPos =
+			(sf::Vector2f)window.mapCoordsToPixel(bounds.getPosition()) / (sf::Vector2f)window.getSize();
+		sf::Vector2f normSize = 
+			(sf::Vector2f)(window.mapCoordsToPixel(bounds.getSize()) - window.mapCoordsToPixel(sf::Vector2f(0.0f, 0.0f)))
+				/ (sf::Vector2f)window.getSize();
+
+		// Set new view
+		sf::View view(bounds);
+		view.setViewport(sf::FloatRect(normPos, normSize));
+		target.setView(view);
+	}
+
+
 	// Render element if visible
 	if (element->isVisible())
 		target.draw(*element, states);
@@ -346,6 +376,11 @@ void drawElement(UIElement* element, sf::RenderTarget& target, const sf::RenderS
 	const std::vector<UIElement*>& children = element->getChildren();
 	for (Uint32 i = 0; i < children.size(); ++i)
 		drawElement(children[i], target, states);
+
+
+	// Reset view if clipping
+	if (startClipping)
+		target.setView(prevView);
 }
 
 void UI::draw(sf::RenderTarget& target, sf::RenderStates states) const

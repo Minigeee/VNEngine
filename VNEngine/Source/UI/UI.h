@@ -133,6 +133,11 @@ private:
 	void updateElement(UIElement* element, float dt);
 
 	/// <summary>
+	/// Recursive draw
+	/// </summary>
+	void drawElement(UIElement* element, sf::RenderTarget& target, const sf::RenderStates& states) const;
+
+	/// <summary>
 	/// Draw all UI elements added to the system. Overriding Drawable
 	/// </summary>
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

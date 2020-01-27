@@ -22,6 +22,9 @@ UIElement::UIElement() :
 	mSize				(0.0f, 0.0f),
 	mOrigin				(0.0f, 0.0f),
 	mAnchor				(0.0f, 0.0f),
+	mIsVisible			(true),
+	mClipEnabled		(false),
+	mClipBounds			(0.0f, 0.0f, 0.0f, 0.0f),
 	mTransformChanged	(false),
 	mDrawablesChanged	(false),
 	mHasFocus			(false),
@@ -39,7 +42,7 @@ UIElement::~UIElement()
 // ============================================================================
 
 UIElement::UIElement(const UIElement& other) :
-	mEngine				(other.mEngine),
+	mEngine				(0),
 	mName				(""),
 	mParent				(0),
 	mRelPosition		(other.mRelPosition),
@@ -63,7 +66,7 @@ UIElement& UIElement::operator=(const UIElement& other)
 	if (&other != this)
 	{
 		// Just reset parent and name
-		mEngine = other.mEngine;
+		mEngine = 0;
 		mName = "";
 		mParent = 0;
 		mRelPosition = other.mRelPosition;
@@ -88,11 +91,15 @@ UIElement& UIElement::operator=(const UIElement& other)
 
 void UIElement::init(UI* ui, const sf::String& name)
 {
-	mEngine = ui->mEngine;
-	mName = name;
+	// Only initialize if not initialized
+	if (!mEngine)
+	{
+		mEngine = ui->mEngine;
+		mName = name;
 
-	// Custom init
-	onInit(ui);
+		// Custom init
+		onInit(ui);
+	}
 }
 
 void UIElement::setName(const sf::String& name)
@@ -256,6 +263,26 @@ void UIElement::setVisible(bool visible, bool recursive)
 	}
 }
 
+void UIElement::setClipEnabled(bool enabled)
+{
+	if (enabled != mClipEnabled)
+	{
+		mClipEnabled = enabled;
+
+		for (Uint32 i = 0; i < mChildren.size(); ++i)
+			mChildren[i]->setClipEnabled(enabled);
+	}
+}
+
+void UIElement::setClipBounds(const sf::FloatRect& bounds)
+{
+	mClipEnabled = true;
+	mClipBounds = bounds;
+
+	for (Uint32 i = 0; i < mChildren.size(); ++i)
+		mChildren[i]->setClipBounds(bounds);
+}
+
 // ============================================================================
 
 const sf::Vector2f& UIElement::getRelPosition() const
@@ -298,6 +325,16 @@ const sf::Vector2f& UIElement::getAnchor() const
 bool UIElement::isVisible() const
 {
 	return mIsVisible;
+}
+
+bool UIElement::isClipEnabled() const
+{
+	return mClipEnabled;
+}
+
+const sf::FloatRect& UIElement::getClipBounds() const
+{
+	return mClipBounds;
 }
 
 const sf::String& UIElement::getName() const

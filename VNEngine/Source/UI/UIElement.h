@@ -133,6 +133,21 @@ public:
 	void setVisible(bool visible, bool recursive = true);
 
 	/// <summary>
+	/// Enable or disable clipping for this element and all children
+	/// </summary>
+	/// <param name="enabled">Boolean for clip state</param>
+	void setClipEnabled(bool enabled);
+
+	/// <summary>
+	/// Set the clipping boundaries for this element and all children.
+	/// This is the area that will be rendered onto the screen.
+	/// Any part of the element that is outside this area will be cut off and not rendered.
+	/// The rectangle is defined in coordinate space, not pixels.
+	/// </summary>
+	/// <param name="bounds">Rectangle defining boundary</param>
+	void setClipBounds(const sf::FloatRect& bounds);
+
+	/// <summary>
 	/// Add offset to current local position
 	/// </summary>
 	/// <param name="pos">Offset</param>
@@ -207,6 +222,18 @@ public:
 	/// </summary>
 	/// <returns>Visibility</returns>
 	bool isVisible() const;
+
+	/// <summary>
+	/// Returns true if clipping is enabled
+	/// </summary>
+	/// <returns>Clip state</returns>
+	bool isClipEnabled() const;
+
+	/// <summary>
+	/// Returns clipping boundaries
+	/// </summary>
+	/// <returns>Clip bounds</returns>
+	const sf::FloatRect& getClipBounds() const;
 
 	/// <summary>
 	/// Get element name
@@ -472,6 +499,16 @@ protected:
 	/// True if element is visible
 	/// </summary>
 	bool mIsVisible;
+
+	/// <summary>
+	/// True if element has clipping enabled
+	/// </summary>
+	bool mClipEnabled;
+
+	/// <summary>
+	/// The rectangle defining clip boundaries if it is enabled
+	/// </summary>
+	sf::FloatRect mClipBounds;
 
 	/// <summary>
 	/// This is true if element's orientation was changed

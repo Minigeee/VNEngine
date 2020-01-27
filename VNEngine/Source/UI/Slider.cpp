@@ -12,7 +12,8 @@ Slider::Slider() :
 	mSliderPressed	(false),
 	mPressOffset	(0.0f)
 {
-
+	// Default slider width
+	setSliderWidth(30.0f);
 }
 
 Slider::~Slider()
@@ -43,6 +44,12 @@ sf::RectangleShape& Slider::getSlider()
 const sf::RectangleShape& Slider::getSlider() const
 {
 	return mSlider;
+}
+
+void Slider::setSliderWidth(float w)
+{
+	mSlider.setSize(sf::Vector2f(w, mSize.y));
+	mDrawablesChanged = true;
 }
 
 void Slider::setValue(float value)
@@ -87,7 +94,7 @@ void Slider::update(float dt)
 
 		sf::Vector2f topLeft = mAbsPosition - mBody.getOrigin();
 		sf::Vector2f sliderPos = -mSlider.getOrigin();
-		const sf::Vector2f sliderSize = mSlider.getSize();
+		sf::Vector2f sliderSize(mSlider.getSize().x, mSize.y);
 
 		// Clamp slider x-position
 		if (mValue < 0.0f) mValue = 0.0f;
@@ -98,6 +105,7 @@ void Slider::update(float dt)
 		mSlider.setOrigin(-sliderPos);
 		mSlider.setPosition(topLeft);
 		mSlider.setRotation(mAbsRotation);
+		mSlider.setSize(sliderSize);
 
 		mDrawablesChanged = false;
 	}

@@ -7,6 +7,7 @@
 #include <UI/Button.h>
 #include <UI/TextInupt.h>
 #include <UI/Slider.h>
+#include <UI/ScrollView.h>
 
 using namespace vne;
 
@@ -72,7 +73,7 @@ void Scene1::onInit()
 	mUI.setDefaultFont(Resource<sf::Font>::get("SegoeUI"));
 
 	Button* button = mUI.create<Button>("PlayBtn");
-	button->setPosition(10.0f, 10.0f);
+	button->setPosition(-30.0f, 370.0f);
 	button->setSize(150.0f, 60.0f);
 	button->getLabel().setCharacterSize(25);
 	button->getLabel().setString("Play");
@@ -80,7 +81,7 @@ void Scene1::onInit()
 	button->setHoverStateFunc(&hoverState);
 	button->setPressStateFunc(&pressState);
 	button->setFocusFunc(&onFocus);
-	mUI.addToRoot(button);
+	// mUI.addToRoot(button);
 
 	button = mUI.copy<Button>("TestBtn", "PlayBtn");
 	button->setPosition(50.0f, 50.0f);
@@ -109,11 +110,20 @@ void Scene1::onInit()
 	Slider* slider = mUI.create<Slider>("Slider1");
 	slider->setPosition(10, 260);
 	slider->setSize(300, 30);
+	slider->setSliderWidth(60.0f);
 	slider->getBody().setFillColor(sf::Color(25, 25, 30));
-	slider->getSlider().setSize(sf::Vector2f(50.0f, 20.0f));
 	slider->getSlider().setFillColor(sf::Color(70, 70, 80));
 	slider->setValueChangedFunc(&onValueChanged);
 	mUI.addToRoot(slider);
+
+	ScrollView* scroll = mUI.create<ScrollView>("ScrollView");
+	scroll->setPosition(400.0f, 10.0f);
+	scroll->setSize(300.0f, 400.0f);
+	scroll->getBackground().setFillColor(sf::Color(25, 25, 30));
+	scroll->getScrollBar()->getSlider().setFillColor(sf::Color(70, 70, 80));
+	mUI.addToRoot(scroll);
+
+	scroll->getContainer()->addChild(mUI.get<Button>("PlayBtn"));
 }
 
 // ============================================================================

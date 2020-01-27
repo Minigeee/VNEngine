@@ -18,7 +18,7 @@ public:
 
 	/// <summary>
 	/// Get the body of the slider (background).
-	/// The size of the rectangle, all color and texture values, and outline values are modifiable.
+	/// All color and texture values, and outline values are modifiable.
 	/// The position, rotation, and origin are not modifiable.
 	/// </summary>
 	/// <returns>SFML Rectangle</returns>
@@ -32,8 +32,8 @@ public:
 
 	/// <summary>
 	/// Get the draggable part of the slider.
-	/// The size of the rectangle, all color and texture values, and outline values are modifiable.
-	/// The position, rotation, and origin are not modifiable.
+	/// The width of the rectangle, all color and texture values, and outline values are modifiable.
+	/// The position, rotation, height, and origin are not modifiable.
 	/// </summary>
 	/// <returns>SFML Rectangle</returns>
 	sf::RectangleShape& getSlider();
@@ -43,6 +43,12 @@ public:
 	/// </summary>
 	/// <returns>SFML Rectangle</returns>
 	const sf::RectangleShape& getSlider() const;
+
+	/// <summary>
+	/// Set the width of the draggable part of the slider
+	/// </summary>
+	/// <param name="w">Width in coordinate space</param>
+	void setSliderWidth(float w);
 
 	/// <summary>
 	/// Set the value of the slider from 0 to 1
