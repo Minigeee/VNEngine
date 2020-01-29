@@ -151,7 +151,7 @@ void Button::onMouseExit(const sf::Event& e)
 	}
 }
 
-void Button::onMousePress(const sf::Event& e)
+bool Button::onMousePress(const sf::Event& e)
 {
 	if (mState == Hover)
 	{
@@ -159,9 +159,12 @@ void Button::onMousePress(const sf::Event& e)
 		if (mPressStateFunc)
 			mPressStateFunc(this, Hover);
 	}
+
+	// Event handled
+	return true;
 }
 
-void Button::onMouseRelease(const sf::Event& e)
+bool Button::onMouseRelease(const sf::Event& e)
 {
 	if (mState == Press)
 	{
@@ -178,6 +181,9 @@ void Button::onMouseRelease(const sf::Event& e)
 				mDefaultStateFunc(this, Press);
 		}
 	}
+
+	// Event handled
+	return true;
 }
 
 // ============================================================================

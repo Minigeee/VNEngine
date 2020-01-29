@@ -95,8 +95,8 @@ protected:
 
 	virtual void onMouseEnter(const sf::Event& e) override;
 	virtual void onMouseExit(const sf::Event& e) override;
-	virtual void onMousePress(const sf::Event& e) override;
-	virtual void onMouseRelease(const sf::Event& e) override;
+	virtual bool onMousePress(const sf::Event& e) override;
+	virtual bool onMouseRelease(const sf::Event& e) override;
 
 protected:
 	/// <summary>

@@ -64,18 +64,22 @@ public:
 
 	/// <summary>
 	/// Set the function that gets called when value changes
+	/// Function must take Slider* and bool as parameters,
+	/// First parameter is pointer to the slider that had its value changed,
+	/// second parameter is if the slider was manually dragged to changed
+	/// rather than using setValue()
 	/// </summary>
 	/// <param name="func">Callback</param>
-	void setValueChangedFunc(const std::function<void(Slider*)>& func);
+	void setValueChangedFunc(const std::function<void(Slider*, bool)>& func);
 
 protected:
-	void update(float dt) override;
+	virtual void update(float dt) override;
 
-	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
-	void onMousePress(const sf::Event& e) override;
-	void onMouseRelease(const sf::Event& e) override;
-	void onMouseMove(const sf::Event& e, const sf::Vector2f& p) override;
+	virtual bool onMousePress(const sf::Event& e) override;
+	virtual bool onMouseRelease(const sf::Event& e) override;
+	virtual bool onMouseMove(const sf::Event& e, const sf::Vector2f& p) override;
 
 protected:
 	/// <summary>
@@ -106,7 +110,7 @@ protected:
 	/// <summary>
 	/// This function is called when the value of the slider changes
 	/// </summary>
-	std::function<void(Slider*)> mValueChangedFunc;
+	std::function<void(Slider*, bool)> mValueChangedFunc;
 };
 
 // ============================================================================

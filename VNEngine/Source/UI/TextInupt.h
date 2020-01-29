@@ -98,8 +98,8 @@ protected:
 	virtual void onFocus() override;
 	virtual void onUnfocus() override;
 	virtual void onMouseExit(const sf::Event& e) override;
-	virtual void onMousePress(const sf::Event& e) override;
-	virtual void onMouseMove(const sf::Event& e, const sf::Vector2f& localPos) override;
+	virtual bool onMousePress(const sf::Event& e) override;
+	virtual bool onMouseMove(const sf::Event& e, const sf::Vector2f& localPos) override;
 	virtual void onKeyPress(const sf::Event& e) override;
 	virtual void onTextEntered(const sf::Event& e) override;
 

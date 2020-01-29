@@ -33,13 +33,6 @@ public:
 	const sf::RectangleShape& getBackground() const;
 
 	/// <summary>
-	/// Get the container that contains all elements within the scroll view.
-	/// Add children to this container if you want your element to be scrollable.
-	/// </summary>
-	/// <returns>UI Container</returns>
-	UIContainer* getContainer() const;
-
-	/// <summary>
 	/// Get the scroll bar.
 	/// The position, size.x, and scale of the slider are not modifiable.
 	/// To set the width of the vertical scrollbar, use scrollBar.setSize(0, width)
@@ -48,6 +41,14 @@ public:
 	/// </summary>
 	/// <returns>Slider element</returns>
 	Slider* getScrollBar() const;
+
+	/// <summary>
+	/// Add a UI element to the scrollable container.
+	/// Elements added using this function will be scrollable.
+	/// Items added using <code>addChild()</code> will be overlayed over the scroll view
+	/// </summary>
+	/// <param name="element">UI Element</param>
+	void addToView(UIElement* element);
 
 protected:
 	/// <summary>
@@ -67,6 +68,10 @@ protected:
 	/// </summary>
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
+	void onScrollBarMoved(Slider* slider, bool dragged);
+
+	virtual bool onMouseScroll(const sf::Event& e) override;
+
 protected:
 	/// <summary>
 	/// The background of the scroll view
@@ -82,6 +87,18 @@ protected:
 	/// Scroll bar
 	/// </summary>
 	Slider* mScrollBar;
+
+	/// <summary>
+	/// Min value of coordinates in view
+	/// </summary>
+	sf::Vector2f mMinVal;
+
+	/// <summary>
+	/// Max value of coordinates in view
+	/// </summary>
+	sf::Vector2f mMaxVal;
+
+	float mScrollSpeed;
 };
 
 // ============================================================================

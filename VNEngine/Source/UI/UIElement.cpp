@@ -254,12 +254,15 @@ void UIElement::setAnchor(float x, float y)
 
 void UIElement::setVisible(bool visible, bool recursive)
 {
-	mIsVisible = visible;
-
-	if (recursive)
+	if (visible != mIsVisible)
 	{
-		for (Uint32 i = 0; i < mChildren.size(); ++i)
-			mChildren[i]->setVisible(visible, recursive);
+		mIsVisible = visible;
+
+		if (recursive)
+		{
+			for (Uint32 i = 0; i < mChildren.size(); ++i)
+				mChildren[i]->setVisible(visible, recursive);
+		}
 	}
 }
 
@@ -320,6 +323,12 @@ const sf::Vector2f& UIElement::getOrigin() const
 const sf::Vector2f& UIElement::getAnchor() const
 {
 	return mAnchor;
+}
+
+const sf::FloatRect& UIElement::getBounds()
+{
+	updateAbsTransforms();
+	return mBounds;
 }
 
 bool UIElement::isVisible() const
@@ -387,6 +396,22 @@ void UIElement::updateAbsTransforms()
 		}
 
 		mAbsRotation = fmodf(mAbsRotation, 360.0f);
+
+		// Create transform, based on SFML Transformable
+		float angle = -mAbsRotation * 3.141592654f / 180.f;
+		float c = static_cast<float>(std::cos(angle));
+		float s = static_cast<float>(std::sin(angle));
+		float ox = mOrigin.x * mSize.x;
+		float oy = mOrigin.y * mSize.y;
+		float tx = -ox * c - oy * s + mAbsPosition.x;
+		float ty = ox * s - oy * c + mAbsPosition.y;
+
+		sf::Transform t(c, s, tx,
+			-s, c, ty,
+			0.f, 0.f, 1.f);
+
+		// Update bounds
+		mBounds = t.transformRect(sf::FloatRect(sf::Vector2f(0.0f, 0.0f), mSize));
 
 		mTransformChanged = false;
 	}
@@ -464,6 +489,11 @@ void UIElement::setMouseReleaseFunc(const UICallback& func)
 	mMouseReleaseFunc = func;
 }
 
+void UIElement::setMouseScrollFunc(const UICallback& func)
+{
+	mMouseScrollFunc = func;
+}
+
 void UIElement::setKeyPressFunc(const UICallback& func)
 {
 	mKeyPressFunc = func;
@@ -523,19 +553,24 @@ void UIElement::onMouseExit(const sf::Event& e)
 
 }
 
-void UIElement::onMouseMove(const sf::Event& e, const sf::Vector2f& localPos)
+bool UIElement::onMouseMove(const sf::Event& e, const sf::Vector2f& localPos)
 {
-
+	return false;
 }
 
-void UIElement::onMousePress(const sf::Event& e)
+bool UIElement::onMousePress(const sf::Event& e)
 {
-
+	return false;
 }
 
-void UIElement::onMouseRelease(const sf::Event& e)
+bool UIElement::onMouseRelease(const sf::Event& e)
 {
+	return false;
+}
 
+bool UIElement::onMouseScroll(const sf::Event& e)
+{
+	return false;
 }
 
 void UIElement::onKeyPress(const sf::Event& e)

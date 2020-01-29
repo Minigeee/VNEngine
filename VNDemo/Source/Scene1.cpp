@@ -56,7 +56,7 @@ void onSubmit(TextInput* input)
 	std::cout << input->getText().getString().toAnsiString() << "\n";
 }
 
-void onValueChanged(Slider* slider)
+void onValueChanged(Slider* slider, bool dragged)
 {
 	std::cout << slider->getValue() << "\n";
 }
@@ -73,7 +73,7 @@ void Scene1::onInit()
 	mUI.setDefaultFont(Resource<sf::Font>::get("SegoeUI"));
 
 	Button* button = mUI.create<Button>("PlayBtn");
-	button->setPosition(-30.0f, 370.0f);
+	button->setPosition(-30.0f, 1470.0f);
 	button->setSize(150.0f, 60.0f);
 	button->getLabel().setCharacterSize(25);
 	button->getLabel().setString("Play");
@@ -123,7 +123,7 @@ void Scene1::onInit()
 	scroll->getScrollBar()->getSlider().setFillColor(sf::Color(70, 70, 80));
 	mUI.addToRoot(scroll);
 
-	scroll->getContainer()->addChild(mUI.get<Button>("PlayBtn"));
+	scroll->addToView(mUI.get<Button>("PlayBtn"));
 }
 
 // ============================================================================

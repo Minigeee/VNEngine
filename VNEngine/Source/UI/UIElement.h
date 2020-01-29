@@ -218,6 +218,12 @@ public:
 	const sf::Vector2f& getAnchor() const;
 
 	/// <summary>
+	/// Returns element's global bounds
+	/// </summary>
+	/// <returns>Bounds of element</returns>
+	const sf::FloatRect& getBounds();
+
+	/// <summary>
 	/// Returns true if element is visible
 	/// </summary>
 	/// <returns>Visibility</returns>
@@ -318,6 +324,12 @@ public:
 	void setMouseReleaseFunc(const UICallback& func);
 
 	/// <summary>
+	/// Set callback for mouse scroll event
+	/// </summary>
+	/// <param name="func">UI callback</param>
+	void setMouseScrollFunc(const UICallback& func);
+
+	/// <summary>
 	/// Set callback for key press event
 	/// </summary>
 	/// <param name="func">UI callback</param>
@@ -399,19 +411,29 @@ protected:
 	/// Called when mouse moves within element
 	/// </summary>
 	/// <param name="e">SFML event</param>
-	virtual void onMouseMove(const sf::Event& e, const sf::Vector2f& localPos);
+	/// <returns>True if event has been handled</returns>
+	virtual bool onMouseMove(const sf::Event& e, const sf::Vector2f& localPos);
 
 	/// <summary>
 	/// Called when mouse button is pressed within element
 	/// </summary>
 	/// <param name="e">SFML event</param>
-	virtual void onMousePress(const sf::Event& e);
+	/// <returns>True if event has been handled</returns>
+	virtual bool onMousePress(const sf::Event& e);
 
 	/// <summary>
 	/// Called when mouse button is released
 	/// </summary>
 	/// <param name="e">SFML event</param>
-	virtual void onMouseRelease(const sf::Event& e);
+	/// <returns>True if event has been handled</returns>
+	virtual bool onMouseRelease(const sf::Event& e);
+
+	/// <summary>
+	/// Called when mouse is scrolled in element
+	/// </summary>
+	/// <param name="e">SFML event</param>
+	/// <returns>True if event has been handled</returns>
+	virtual bool onMouseScroll(const sf::Event& e);
 
 	/// <summary>
 	/// Called when key is pressed while element has hover or focus
@@ -496,6 +518,11 @@ protected:
 	sf::Vector2f mAnchor;
 
 	/// <summary>
+	/// Global bounds (includes position, rotation, size)
+	/// </summary>
+	sf::FloatRect mBounds;
+
+	/// <summary>
 	/// True if element is visible
 	/// </summary>
 	bool mIsVisible;
@@ -556,6 +583,11 @@ protected:
 	/// Called when mouse button is released
 	/// </summary>
 	UICallback mMouseReleaseFunc;
+
+	/// <summary>
+	/// Called when mouse wheel is scrolled
+	/// </summary>
+	UICallback mMouseScrollFunc;
 
 	/// <summary>
 	/// Called when key is pressed and element has hover or focus

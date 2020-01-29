@@ -65,7 +65,7 @@ void Slider::setValue(float value)
 		mValue = newValue;
 
 		if (mValueChangedFunc)
-			mValueChangedFunc(this);
+			mValueChangedFunc(this, false);
 	}
 }
 
@@ -74,7 +74,7 @@ float Slider::getValue() const
 	return mValue;
 }
 
-void Slider::setValueChangedFunc(const std::function<void(Slider*)>& func)
+void Slider::setValueChangedFunc(const std::function<void(Slider*, bool)>& func)
 {
 	mValueChangedFunc = func;
 }
@@ -122,7 +122,7 @@ void Slider::draw(sf::RenderTarget& target, sf::RenderStates states) const
 // ============================================================================
 // ============================================================================
 
-void Slider::onMousePress(const sf::Event& e)
+bool Slider::onMousePress(const sf::Event& e)
 {
 	sf::Vector2f p = screenToLocal(sf::Vector2i(e.mouseButton.x, e.mouseButton.y));
 	sf::FloatRect sliderBox = mSlider.getLocalBounds();
@@ -152,18 +152,24 @@ void Slider::onMousePress(const sf::Event& e)
 		mSliderPressed = true;
 		mPressOffset = 0.5f * mSlider.getSize().x;
 	}
+
+	// Event handled
+	return true;
 }
 
 // ============================================================================
 
-void Slider::onMouseRelease(const sf::Event& e)
+bool Slider::onMouseRelease(const sf::Event& e)
 {
 	mSliderPressed = false;
+
+	// Event handled
+	return true;
 }
 
 // ============================================================================
 
-void Slider::onMouseMove(const sf::Event& e, const sf::Vector2f& p)
+bool Slider::onMouseMove(const sf::Event& e, const sf::Vector2f& p)
 {
 	if (mSliderPressed)
 	{
@@ -186,12 +192,15 @@ void Slider::onMouseMove(const sf::Event& e, const sf::Vector2f& p)
 				mValue = newValue;
 
 				if (mValueChangedFunc)
-					mValueChangedFunc(this);
+					mValueChangedFunc(this, true);
 
 				mDrawablesChanged = true;
 			}
 		}
 	}
+
+	// Event handled
+	return true;
 }
 
 // ============================================================================

@@ -197,7 +197,7 @@ void TextInput::onMouseExit(const sf::Event& e)
 	Cursor::setCursor(sf::Cursor::Arrow);
 }
 
-void TextInput::onMousePress(const sf::Event& e)
+bool TextInput::onMousePress(const sf::Event& e)
 {
 	// Reset selection
 	mSelectIndex = -1;
@@ -243,9 +243,12 @@ void TextInput::onMousePress(const sf::Event& e)
 	// Needs update
 	mTextCursor->mAnimationTime = 0.0f;
 	mDrawablesChanged = true;
+
+	// Event handled
+	return true;
 }
 
-void TextInput::onMouseMove(const sf::Event& e, const sf::Vector2f& p)
+bool TextInput::onMouseMove(const sf::Event& e, const sf::Vector2f& p)
 {
 	if (mIsMousePressed)
 	{
@@ -286,6 +289,9 @@ void TextInput::onMouseMove(const sf::Event& e, const sf::Vector2f& p)
 			mDrawablesChanged = true;
 		}
 	}
+
+	// Event handled
+	return true;
 }
 
 void TextInput::onKeyPress(const sf::Event& e)
