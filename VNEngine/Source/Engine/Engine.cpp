@@ -75,6 +75,9 @@ bool Engine::init(const EngineParams& params)
 
 void Engine::run()
 {
+	// Poll events once before starting
+	pollEvents();
+
 	sf::Clock clock;
 
 	// Game loop

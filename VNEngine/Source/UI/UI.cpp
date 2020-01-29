@@ -125,11 +125,6 @@ void UI::setFocus(UIElement* element)
 
 bool UI::relayMouseEvent(UIElement* element, const sf::Event& e)
 {
-
-	/* TODO : Add handled events so that not every element will need to be checked */
-	/* Mouse and key pressing / releasing can be shortened to single check */
-	/* Mouse movement events and hovering still need to be checked by every element */
-
 	bool handled = false;
 
 	// Relay event to children first
@@ -137,8 +132,9 @@ bool UI::relayMouseEvent(UIElement* element, const sf::Event& e)
 	for (int i = children.size() - 1; i >= 0 && !handled; --i)
 		handled |= relayMouseEvent(children[i], e);
 
-	// Quit early if event handled
+	// Quit early if event handled or not visible
 	if (handled) return true;
+	if (!element->isVisible()) return false;
 
 
 	// Update transforms
@@ -232,9 +228,9 @@ void UI::handleEvent(const sf::Event& e)
 	{
 		relayMouseEvent(mRootElement, e);
 
-		if(mCurrentPress)
+		if(mCurrentPress && mCurrentPress != mCurrentHover)
 		{
-			// Also give move event to current pressed
+			// Also give move event to current pressed, if it is not the current hover
 			sf::Vector2f p = mCurrentPress->screenToLocal(sf::Vector2i(e.mouseMove.x, e.mouseMove.y));
 
 			mCurrentPress->onMouseMove(e, p);
