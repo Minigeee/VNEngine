@@ -53,6 +53,12 @@ public:
 	void addToView(UIElement* element);
 
 	/// <summary>
+	/// Set the clip area margins for the horizontal and vertical components. (Default 5.0f, 5.0f)
+	/// </summary>
+	/// <param name="margin">Margin</param>
+	void setClipMargins(const sf::Vector2f& margin);
+
+	/// <summary>
 	/// Set the speed the scroll view moves when the mouse wheel is scrolled (Default 50.0f)
 	/// </summary>
 	/// <param name="speed">Speed in coordinate space units per scroll tick</param>
@@ -128,6 +134,21 @@ protected:
 	Slider* mScrollBar;
 
 	/// <summary>
+	/// How much view moves per scroll tick
+	/// </summary>
+	float mScrollSpeed;
+
+	/// <summary>
+	/// How much smaller the clipping area should be than the actual size
+	/// </summary>
+	sf::Vector2f mClipMargins;
+
+	/// <summary>
+	/// Called when the scroll view moves, either manually or using setScrollPos()
+	/// </summary>
+	std::function<void(ScrollView*, bool)> mViewMovedFunc;
+
+	/// <summary>
 	/// Min value of coordinates in view
 	/// </summary>
 	sf::Vector2f mMinVal;
@@ -142,16 +163,6 @@ protected:
 	/// When the view is not being dragged, this value is negative.
 	/// </summary>
 	float mPrevMousePos;
-
-	/// <summary>
-	/// How much view moves per scroll tick
-	/// </summary>
-	float mScrollSpeed;
-
-	/// <summary>
-	/// Called when the scroll view moves, either manually or using setScrollPos()
-	/// </summary>
-	std::function<void(ScrollView*, bool)> mViewMovedFunc;
 };
 
 // ============================================================================

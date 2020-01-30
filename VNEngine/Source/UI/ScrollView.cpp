@@ -12,10 +12,11 @@ using namespace vne;
 ScrollView::ScrollView() :
 	mContainer		(0),
 	mScrollBar		(0),
-	mMinVal			(0.0f, 0.0f),
-	mMaxVal			(0.0f, 0.0f),
+	mClipMargins	(5.0f, 5.0f),
 	mScrollSpeed	(50.0f),
-	mPrevMousePos	(-1.0f)
+	mPrevMousePos	(-1.0f),
+	mMinVal			(0.0f, 0.0f),
+	mMaxVal			(0.0f, 0.0f)
 {
 
 }
@@ -89,6 +90,12 @@ void ScrollView::addToView(UIElement* element)
 
 // ============================================================================
 
+void ScrollView::setClipMargins(const sf::Vector2f& margins)
+{
+	mClipMargins = margins;
+	mDrawablesChanged = true;
+}
+
 void ScrollView::setScrollSpeed(float speed)
 {
 	mScrollSpeed = speed;
@@ -144,7 +151,7 @@ void ScrollView::update(float dt)
 		updateAbsTransforms();
 
 		// Update clip bounds
-		mContainer->setClipBounds(sf::FloatRect(mAbsPosition, mSize));
+		mContainer->setClipBounds(sf::FloatRect(mAbsPosition + mClipMargins, mSize - 2.0f * mClipMargins));
 
 		// Set background position and size
 		mBackground.setPosition(mAbsPosition);

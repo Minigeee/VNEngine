@@ -21,17 +21,11 @@ class Text : public sf::Text
 public:
 	Text();
 
-	// Remove scale functions
-	void setScale(float, float) = delete;
-	void setScale(const sf::Vector2f&) = delete;
-	void scale(float, float) = delete;
-	void scale(const sf::Vector2f&) = delete;
-
 	/// <summary>
 	/// Override sf::Text::setCharacterSize.
 	/// This adjusts the actual character size to best fit the current desktop resolution
 	/// </summary>
-	/// <param name="size"></param>
+	/// <param name="size">Character size</param>
 	void setCharacterSize(Uint32 size);
 
 	/// <summary>

@@ -282,6 +282,12 @@ void UIElement::setClipBounds(const sf::FloatRect& bounds)
 	mClipEnabled = true;
 	mClipBounds = bounds;
 
+	// Clamp size
+	if (mClipBounds.width < 0.0f)
+		mClipBounds.width = 0.0f;
+	if (mClipBounds.height < 0.0f)
+		mClipBounds.height = 0.0f;
+
 	for (Uint32 i = 0; i < mChildren.size(); ++i)
 		mChildren[i]->setClipBounds(bounds);
 }

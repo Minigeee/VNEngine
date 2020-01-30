@@ -73,7 +73,7 @@ void Scene1::onInit()
 	mUI.setDefaultFont(Resource<sf::Font>::get("SegoeUI"));
 
 	Button* button = mUI.create<Button>("PlayBtn");
-	button->setPosition(-30.0f, 1470.0f);
+	button->setPosition(-60.0f, 1470.0f);
 	button->setSize(150.0f, 60.0f);
 	button->getLabel().setCharacterSize(25);
 	button->getLabel().setString("Play");
@@ -117,7 +117,8 @@ void Scene1::onInit()
 	mUI.addToRoot(slider);
 
 	ScrollView* scroll = mUI.create<ScrollView>("ScrollView");
-	scroll->setPosition(400.0f, 10.0f);
+	scroll->setPosition(-310.0f, -410.0f);
+	scroll->setAnchor(1.0f, 1.0f);
 	scroll->setSize(300.0f, 400.0f);
 	scroll->getBackground().setFillColor(sf::Color(25, 25, 30));
 	scroll->getScrollBar()->getSlider().setFillColor(sf::Color(70, 70, 80));

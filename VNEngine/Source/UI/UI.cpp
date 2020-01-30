@@ -21,7 +21,6 @@ UI::UI(Engine* engine) :
 	mCurrentKeyPress	(0)
 {
 	mRootElement = create<UIContainer>("RootElement");
-	mRootElement->setSize(mEngine->getWindow().getView().getSize());
 
 	memset(mIsKeyPressed, false, sf::Keyboard::KeyCount);
 
@@ -370,6 +369,11 @@ void UI::updateElement(UIElement* element, float dt)
 
 void UI::update(float dt)
 {
+	// Make sure root element size matches view size
+	const sf::Vector2f& viewSize = mEngine->getWindow().getView().getSize();
+	if (mRootElement->getSize() != viewSize)
+		mRootElement->setSize(viewSize);
+
 	// Update UI animations
 	for (Uint32 i = 0; i < mAnimations.size(); ++i)
 	{
@@ -400,15 +404,15 @@ void UI::drawElement(UIElement* element, sf::RenderTarget& target, const sf::Ren
 	if (startClipping)
 	{
 		const sf::FloatRect& bounds = element->getClipBounds();
+		const sf::FloatRect& prevViewport = prevView.getViewport();
 
-		// Calculate normalized bounds for viewport
-		sf::RenderWindow& window = mEngine->getWindow();
+		// Calculate normalized position
+		sf::Vector2f normPos(bounds.left, bounds.top);
+		normPos = normPos / prevView.getSize() * prevViewport.getSize() + prevViewport.getPosition();
 
-		sf::Vector2f normPos =
-			(sf::Vector2f)window.mapCoordsToPixel(bounds.getPosition()) / (sf::Vector2f)window.getSize();
-		sf::Vector2f normSize = 
-			(sf::Vector2f)(window.mapCoordsToPixel(bounds.getSize()) - window.mapCoordsToPixel(sf::Vector2f(0.0f, 0.0f)))
-				/ (sf::Vector2f)window.getSize();
+		// Calculate normalized size
+		sf::Vector2f normSize(bounds.width, bounds.height);
+		normSize = normSize / prevView.getSize() * prevViewport.getSize();
 
 		// Set new view
 		sf::View view(bounds);
