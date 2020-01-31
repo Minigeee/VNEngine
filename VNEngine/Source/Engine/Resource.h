@@ -6,6 +6,7 @@
 
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 #include <unordered_map>
 #include <unordered_set>
@@ -292,6 +293,9 @@ inline bool Resource<sf::Texture>::load(sf::Texture* object, const sf::String& f
 
 // ============================================================================
 
+/// <summary>
+/// Load SFML font
+/// </summary>
 template <>
 inline bool Resource<sf::Font>::load(sf::Font* object, const sf::String& fname, Uint8*& data)
 {
@@ -300,6 +304,40 @@ inline bool Resource<sf::Font>::load(sf::Font* object, const sf::String& fname, 
 	if (!data || !size) return false;
 
 	return object->loadFromMemory(data, size);
+}
+
+// ============================================================================
+
+/// <summary>
+/// Load SFML sound buffer, which is used to play Sound
+/// </summary>
+template <>
+inline bool Resource<sf::SoundBuffer>::load(sf::SoundBuffer* object, const sf::String& fname, Uint8*& data)
+{
+	Uint32 size = 0;
+	data = ResourceFolder::open(fname, size);
+	if (!data || !size) return false;
+
+	bool success = object->loadFromMemory(data, size);
+	std::free(data);
+	data = 0;
+
+	return success;
+}
+
+// ============================================================================
+
+/// <summary>
+/// Load SFML music
+/// </summary>
+template <>
+inline bool Resource<sf::Music>::load(sf::Music* object, const sf::String& fname, Uint8*& data)
+{
+	Uint32 size = 0;
+	data = ResourceFolder::open(fname, size);
+	if (!data || !size) return false;
+
+	return object->openFromMemory(data, size);
 }
 
 // ============================================================================

@@ -96,6 +96,8 @@ void Engine::run()
 	// Free all SFML resources
 	Resource<sf::Texture>::free();
 	Resource<sf::Font>::free();
+	Resource<sf::SoundBuffer>::free();
+	Resource<sf::Music>::free();
 }
 
 // ============================================================================
