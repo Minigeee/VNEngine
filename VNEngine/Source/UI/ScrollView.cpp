@@ -232,7 +232,7 @@ bool ScrollView::onMouseRelease(const sf::Event& e)
 bool ScrollView::onMouseMove(const sf::Event& e, const sf::Vector2f& p)
 {
 	// Only move if there is more stuff to see
-	if (mPrevMousePos >= 0.0f && mSize.y < mMaxVal.y - mMinVal.y)
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && mSize.y < mMaxVal.y - mMinVal.y)
 	{
 		sf::Vector2f pos = mContainer->getRelPosition();
 		pos.y += p.y - mPrevMousePos;

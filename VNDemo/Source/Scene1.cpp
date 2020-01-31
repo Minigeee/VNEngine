@@ -8,6 +8,7 @@
 #include <UI/TextInupt.h>
 #include <UI/Slider.h>
 #include <UI/ScrollView.h>
+#include <UI/ListContainer.h>
 
 using namespace vne;
 
@@ -72,8 +73,10 @@ void Scene1::onInit()
 
 	mUI.setDefaultFont(Resource<sf::Font>::get("SegoeUI"));
 
+	ListContainer* list = mUI.create<ListContainer>("List");
+
 	Button* button = mUI.create<Button>("PlayBtn");
-	button->setPosition(-60.0f, 1470.0f);
+	button->setPosition(0.0f, 1470.0f);
 	button->setSize(150.0f, 60.0f);
 	button->getLabel().setCharacterSize(25);
 	button->getLabel().setString("Play");
@@ -81,7 +84,17 @@ void Scene1::onInit()
 	button->setHoverStateFunc(&hoverState);
 	button->setPressStateFunc(&pressState);
 	button->setFocusFunc(&onFocus);
-	// mUI.addToRoot(button);
+	list->addChild(button);
+
+	list->addChild(mUI.copy<Button>("PlayBtn2", "PlayBtn"));
+	list->addChild(mUI.copy<Button>("PlayBtn3", "PlayBtn"));
+	list->addChild(mUI.copy<Button>("PlayBtn4", "PlayBtn"));
+	list->addChild(mUI.copy<Button>("PlayBtn5", "PlayBtn"));
+	list->addChild(mUI.copy<Button>("PlayBtn6", "PlayBtn"));
+	list->addChild(mUI.copy<Button>("PlayBtn7", "PlayBtn"));
+	list->addChild(mUI.copy<Button>("PlayBtn8", "PlayBtn"));
+	list->addChild(mUI.copy<Button>("PlayBtn9", "PlayBtn"));
+	list->addChild(mUI.copy<Button>("PlayBtn10", "PlayBtn"));
 
 	button = mUI.copy<Button>("TestBtn", "PlayBtn");
 	button->setPosition(50.0f, 50.0f);
@@ -124,7 +137,7 @@ void Scene1::onInit()
 	scroll->getScrollBar()->getSlider().setFillColor(sf::Color(70, 70, 80));
 	mUI.addToRoot(scroll);
 
-	scroll->addToView(mUI.get<Button>("PlayBtn"));
+	scroll->addToView(list);
 }
 
 // ============================================================================

@@ -56,7 +56,18 @@ UIElement::UIElement(const UIElement& other) :
 	mDrawablesChanged	(false),
 	mHasFocus			(false),
 	mHasHover			(false),
-	mIsMousePressed		(false)
+	mIsMousePressed		(false),
+	mFocusFunc			(other.mFocusFunc),
+	mUnfocusFunc		(other.mUnfocusFunc),
+	mMouseEnterFunc		(other.mMouseEnterFunc),
+	mMouseExitFunc		(other.mMouseExitFunc),
+	mMouseMoveFunc		(other.mMouseMoveFunc),
+	mMousePressFunc		(other.mMousePressFunc),
+	mMouseReleaseFunc	(other.mMouseReleaseFunc),
+	mMouseScrollFunc	(other.mMouseScrollFunc),
+	mKeyPressFunc		(other.mKeyPressFunc),
+	mKeyReleaseFunc		(other.mKeyReleaseFunc),
+	mTextEnteredFunc	(other.mTextEnteredFunc)
 {
 	// Just reset parent and name
 }
@@ -81,6 +92,17 @@ UIElement& UIElement::operator=(const UIElement& other)
 		mHasFocus = false;
 		mHasHover = false;
 		mIsMousePressed = false;
+		mFocusFunc = other.mFocusFunc;
+		mUnfocusFunc = other.mUnfocusFunc;
+		mMouseEnterFunc = other.mMouseEnterFunc;
+		mMouseExitFunc = other.mMouseExitFunc;
+		mMouseMoveFunc = other.mMouseMoveFunc;
+		mMousePressFunc = other.mMousePressFunc;
+		mMouseReleaseFunc = other.mMouseReleaseFunc;
+		mMouseScrollFunc = other.mMouseScrollFunc;
+		mKeyPressFunc = other.mKeyPressFunc;
+		mKeyReleaseFunc = other.mKeyReleaseFunc;
+		mTextEnteredFunc = other.mTextEnteredFunc;
 	}
 
 	return *this;
