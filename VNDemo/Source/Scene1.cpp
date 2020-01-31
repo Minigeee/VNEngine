@@ -137,7 +137,7 @@ void Scene1::onInit()
 	scroll->getScrollBar()->getSlider().setFillColor(sf::Color(70, 70, 80));
 	mUI.addToRoot(scroll);
 
-	scroll->addToView(list);
+	scroll->addChild(list);
 }
 
 // ============================================================================

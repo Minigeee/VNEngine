@@ -44,8 +44,8 @@ void ScrollView::onInit(UI* ui)
 	mScrollBar->getBody().setFillColor(sf::Color::Transparent);
 
 	// Add as children
-	addChild(mContainer);
-	addChild(mScrollBar);
+	UIElement::addChild(mContainer);
+	UIElement::addChild(mScrollBar);
 }
 
 // ============================================================================
@@ -66,7 +66,7 @@ Slider* ScrollView::getScrollBar() const
 	return mScrollBar;
 }
 
-void ScrollView::addToView(UIElement* element)
+void ScrollView::addChild(UIElement* element)
 {
 	mContainer->addChild(element);
 
@@ -83,9 +83,17 @@ void ScrollView::addToView(UIElement* element)
 		mMaxVal.x = bounds.left + bounds.width;
 
 	if (bounds.top < mMinVal.y)
+	{
 		mMinVal.y = bounds.top;
+		// Update min element
+		mMinElement = element;
+	}
 	if (bounds.top + bounds.height > mMaxVal.y)
+	{
 		mMaxVal.y = bounds.top + bounds.height;
+		// Update max element
+		mMaxElement = element;
+	}
 }
 
 // ============================================================================

@@ -47,10 +47,9 @@ public:
 	/// <summary>
 	/// Add a UI element to the scrollable container.
 	/// Elements added using this function will be scrollable.
-	/// Items added using <code>addChild()</code> will be overlayed over the scroll view
 	/// </summary>
 	/// <param name="element">UI Element</param>
-	void addToView(UIElement* element);
+	void addChild(UIElement* element);
 
 	/// <summary>
 	/// Set the clip area margins for the horizontal and vertical components. (Default 5.0f, 5.0f)
@@ -157,6 +156,16 @@ protected:
 	/// Max value of coordinates in view
 	/// </summary>
 	sf::Vector2f mMaxVal;
+
+	/// <summary>
+	/// Element that has the min bounds value in y-direction
+	/// </summary>
+	UIElement* mMinElement;
+
+	/// <summary>
+	/// Element that has the max bounds value in y-direction
+	/// </summary>
+	UIElement* mMaxElement;
 
 	/// <summary>
 	/// The y-coordinate of the previous mouse position.
