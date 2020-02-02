@@ -220,14 +220,15 @@ public:
 	/// </summary>
 	static void free()
 	{
-		// Free all resource data
+		sResourcePool.free();
+
+		// Free all resource data after clearing resource objects
 		for (auto it = sResourceMap.begin(); it != sResourceMap.end(); ++it)
 		{
 			if (it->second.mData)
 				std::free(it->second.mData);
 		}
 
-		sResourcePool.free();
 		sResourceMap.clear();
 	}
 

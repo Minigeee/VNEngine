@@ -9,6 +9,7 @@
 #include <UI/Slider.h>
 #include <UI/ScrollView.h>
 #include <UI/ListContainer.h>
+#include <UI/Image.h>
 
 using namespace vne;
 
@@ -48,8 +49,7 @@ void pressState(Button* btn, Button::State prevState)
 
 void onFocus(UIElement* element)
 {
-	Button* btn = (Button*)element;
-	std::cout << btn->getLabel().getString().toAnsiString() << " focused\n";
+	std::cout << element->getName().toAnsiString() << " focused\n";
 }
 
 void onSubmit(TextInput* input)
@@ -138,6 +138,12 @@ void Scene1::onInit()
 	mUI.addToRoot(scroll);
 
 	scroll->addChild(list);
+
+	Image* img = mUI.create<Image>("YourName");
+	img->setTexture(Resource<sf::Texture>::get("YourName"));
+	img->setSize(1600, 900);
+	img->setFocusFunc(&onFocus);
+	mUI.addToRoot(img);
 }
 
 // ============================================================================
