@@ -149,6 +149,7 @@
     <ClCompile Include="Source\UI\ScrollView.cpp" />
     <ClCompile Include="Source\UI\Slider.cpp" />
     <ClCompile Include="Source\UI\Text.cpp" />
+    <ClCompile Include="Source\UI\TextBox.cpp" />
     <ClCompile Include="Source\UI\TextCursor.cpp" />
     <ClCompile Include="Source\UI\TextInput.cpp" />
     <ClCompile Include="Source\UI\UI.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="Source\UI\ScrollView.h" />
     <ClInclude Include="Source\UI\Slider.h" />
     <ClInclude Include="Source\UI\Text.h" />
+    <ClInclude Include="Source\UI\TextBox.h" />
     <ClInclude Include="Source\UI\TextCursor.h" />
     <ClInclude Include="Source\UI\TextInupt.h" />
     <ClInclude Include="Source\UI\UI.h" />

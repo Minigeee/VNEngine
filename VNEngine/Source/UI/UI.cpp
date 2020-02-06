@@ -122,6 +122,8 @@ void UI::setFocus(UIElement* element)
 
 // ============================================================================
 
+#include <iostream>
+
 bool UI::relayMouseEvent(UIElement* element, const sf::Event& e)
 {
 	bool handled = false;
@@ -204,14 +206,18 @@ bool UI::relayMouseEvent(UIElement* element, const sf::Event& e)
 		// Pass event until at root or handled
 		// The event isn't necessarily passed to elements directly underneath this element
 		// Also not passed to any siblings
-		while (!handled && current->mParent)
+		do
 		{
-			handled = element->onMouseMove(e, p);
-			if (element->mMouseMoveFunc)
-				element->mMouseMoveFunc(element, e);
+			handled = current->onMouseMove(e, p);
+			if (current->mMouseMoveFunc)
+				current->mMouseMoveFunc(current, e);
 
 			current = current->mParent;
-		}
+
+			if (current)
+				p = current->screenToLocal(sf::Vector2i(e.mouseMove.x, e.mouseMove.y));
+
+		} while (!handled && current);
 
 		// Mark event as handled
 		handled = true;
@@ -245,50 +251,54 @@ void UI::handleEvent(const sf::Event& e)
 
 		if (mCurrentHover && !mCurrentPress)
 		{
-			// Update state
-			mCurrentHover->mIsMousePressed = true;
-			mCurrentPress = mCurrentHover;
-
-			// This element now has focus
-			setFocus(mCurrentHover);
-
-			UIElement* current = mCurrentPress;
+			UIElement* current = mCurrentHover;
 			bool handled = false;
 
 			// Pass event until at root or handled
 			// The event isn't necessarily passed to elements directly underneath this element
 			// Also not passed to any siblings
-			while (!handled && current->mParent)
+			do
 			{
+				// Update state
+				current->mIsMousePressed = true;
+
 				handled = current->onMousePress(e);
 				if (current->mMousePressFunc)
 					current->mMousePressFunc(current, e);
 
+				if (handled)
+				{
+					mCurrentPress = current;
+
+					// This element now has focus
+					setFocus(current);
+				}
+
 				current = current->mParent;
-			}
+			} while (!handled && current);
 		}
 	}
 	else if (e.type == sf::Event::MouseButtonReleased)
 	{
 		if (mCurrentPress)
 		{
-			// Update state
-			mCurrentPress->mIsMousePressed = false;
-
 			UIElement* current = mCurrentPress;
 			bool handled = false;
 
 			// Pass event until at root or handled
 			// The event isn't necessarily passed to elements directly underneath this element
 			// Also not passed to any siblings
-			while (!handled && current->mParent)
+			do
 			{
+				// Update state
+				current->mIsMousePressed = false;
+
 				handled = current->onMouseRelease(e);
 				if (current->mMouseReleaseFunc)
 					current->mMouseReleaseFunc(current, e);
 
 				current = current->mParent;
-			}
+			} while (!handled && current);
 
 			// Reset current pressed
 			mCurrentPress = 0;
@@ -305,14 +315,14 @@ void UI::handleEvent(const sf::Event& e)
 			// Pass event until at root or handled
 			// The event isn't necessarily passed to elements directly underneath this element
 			// Also not passed to any siblings
-			while (!handled && current->mParent)
+			do
 			{
 				handled = current->onMouseScroll(e);
 				if (current->mMouseScrollFunc)
 					current->mMouseScrollFunc(current, e);
 
 				current = current->mParent;
-			}
+			} while (!handled && current);
 		}
 	}
 

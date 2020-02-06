@@ -237,6 +237,8 @@ bool ScrollView::onMouseRelease(const sf::Event& e)
 	return true;
 }
 
+#include <iostream>
+
 bool ScrollView::onMouseMove(const sf::Event& e, const sf::Vector2f& p)
 {
 	// Only move if there is more stuff to see

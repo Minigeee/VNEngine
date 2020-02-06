@@ -78,6 +78,9 @@
     <ClCompile Include="Source\UI\Image.cpp">
       <Filter>Source\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Source\UI\TextBox.cpp">
+      <Filter>Source\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\Engine.h">
@@ -144,6 +147,9 @@
       <Filter>Include\UI</Filter>
     </ClInclude>
     <ClInclude Include="Source\UI\Image.h">
+      <Filter>Include\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\TextBox.h">
       <Filter>Include\UI</Filter>
     </ClInclude>
   </ItemGroup>

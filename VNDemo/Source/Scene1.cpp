@@ -10,6 +10,7 @@
 #include <UI/ScrollView.h>
 #include <UI/ListContainer.h>
 #include <UI/Image.h>
+#include <UI/TextBox.h>
 
 using namespace vne;
 
@@ -66,10 +67,6 @@ void Scene1::onInit()
 {
 	Resource<sf::Font>::addLocation("Fonts/segoeui/segoeui.ttf", "SegoeUI");
 	Resource<sf::Texture>::addLocation("Textures/YourName.jpg", "YourName");
-
-	Text text;
-	text.setView(&mEngine->getWindow().getView());
-	text.setCharacterSize(30);
 
 	mUI.setDefaultFont(Resource<sf::Font>::get("SegoeUI"));
 
@@ -137,13 +134,19 @@ void Scene1::onInit()
 	scroll->getScrollBar()->getSlider().setFillColor(sf::Color(70, 70, 80));
 	mUI.addToRoot(scroll);
 
-	scroll->addChild(list);
-
 	Image* img = mUI.create<Image>("YourName");
 	img->setTexture(Resource<sf::Texture>::get("YourName"));
-	img->setSize(1600, 900);
+	img->setSize(800, 450);
 	img->setFocusFunc(&onFocus);
-	mUI.addToRoot(img);
+	list->addChild(img);
+
+	TextBox* text = mUI.create<TextBox>("TextBox");
+	text->setPosition(10.0f, 10.0f);
+	text->setString("Hello World! The quick brown fox jumps over the lazy dog");
+	text->setWordWrap(300.0f);
+	list->addChild(text);
+
+	scroll->addChild(list);
 }
 
 // ============================================================================
