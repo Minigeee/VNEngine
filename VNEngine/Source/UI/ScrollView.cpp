@@ -5,6 +5,8 @@
 
 #include <UI/UI.h>
 
+#include <iostream>
+
 using namespace vne;
 
 // ============================================================================
@@ -116,16 +118,19 @@ void ScrollView::setViewPos(float y)
 		sf::Vector2f pos = mContainer->getRelPosition();
 		pos.y = -y;
 
+		float min = mMinVal.y - mClipMargins.y;
+		float max = mMaxVal.y - mSize.y + mClipMargins.y;
+
 		// Clamp value
-		if (-pos.y < mMinVal.y)
-			pos.y = -mMinVal.y;
-		else if (-pos.y > mMaxVal.y - mSize.y)
-			pos.y = -mMaxVal.y + mSize.y;
+		if (-pos.y < min)
+			pos.y = -min;
+		else if (-pos.y > max)
+			pos.y = -max;
 
 		// Move container
 		mContainer->setPosition(pos);
 		// Update scrollbar
-		mScrollBar->setValue(-(pos.y + mMinVal.y) / (mMaxVal.y - mMinVal.y - mSize.y));
+		mScrollBar->setValue(-(pos.y + min) / (max - min));
 
 		// Callback
 		if (mViewMovedFunc)
@@ -173,7 +178,7 @@ void ScrollView::update(float dt)
 		mScrollBar->setRotation(90.0f);
 		mScrollBar->setSize(mSize.y, mScrollBar->getSize().y);
 
-		if (mSize.y > mMaxVal.y - mMinVal.y)
+		if (mSize.y > mMaxVal.y - mMinVal.y - 2.0f * mClipMargins.y)
 		{
 			// Scroll bar shouldn't be visible
 			mScrollBar->setVisible(false);
@@ -182,7 +187,7 @@ void ScrollView::update(float dt)
 		{
 			mScrollBar->setVisible(true);
 			// Set the size of the scrollbar slider
-			mScrollBar->setSliderWidth(mSize.y * mSize.y / (mMaxVal.y - mMinVal.y));
+			mScrollBar->setSliderWidth(mSize.y * mSize.y / (mMaxVal.y - mMinVal.y + 2.0f * mClipMargins.y));
 		}
 
 		mDrawablesChanged = false;
@@ -207,7 +212,8 @@ void ScrollView::onScrollBarMoved(Slider* slider, bool dragged)
 		float value = slider->getValue();
 
 		const sf::Vector2f& p = mContainer->getRelPosition();
-		float offset = value * (mMaxVal.y - mSize.y);
+		float range = value * (mMaxVal.y - mSize.y - mMinVal.y + 2.0f * mClipMargins.y);
+		float offset = range + mMinVal.y - mClipMargins.y;
 		mContainer->setPosition(p.x, -offset);
 
 		// Callback
@@ -237,12 +243,10 @@ bool ScrollView::onMouseRelease(const sf::Event& e)
 	return true;
 }
 
-#include <iostream>
-
 bool ScrollView::onMouseMove(const sf::Event& e, const sf::Vector2f& p)
 {
 	// Only move if there is more stuff to see
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && mSize.y < mMaxVal.y - mMinVal.y)
+	if (mIsMousePressed && mSize.y < mMaxVal.y - mMinVal.y)
 	{
 		sf::Vector2f pos = mContainer->getRelPosition();
 		pos.y += p.y - mPrevMousePos;
@@ -250,16 +254,19 @@ bool ScrollView::onMouseMove(const sf::Event& e, const sf::Vector2f& p)
 		// Update mouse position
 		mPrevMousePos = p.y;
 
+		float min = mMinVal.y - mClipMargins.y;
+		float max = mMaxVal.y - mSize.y + mClipMargins.y;
+
 		// Clamp value
-		if (-pos.y < mMinVal.y)
-			pos.y = -mMinVal.y;
-		else if (-pos.y > mMaxVal.y - mSize.y)
-			pos.y = -mMaxVal.y + mSize.y;
+		if (-pos.y < min)
+			pos.y = -min;
+		else if (-pos.y > max)
+			pos.y = -max;
 
 		// Move container
 		mContainer->setPosition(pos);
 		// Update scrollbar
-		mScrollBar->setValue(-(pos.y + mMinVal.y) / (mMaxVal.y - mMinVal.y - mSize.y));
+		mScrollBar->setValue(-(pos.y + min) / (max - min));
 
 		// Callback
 		if (mViewMovedFunc)
@@ -281,16 +288,19 @@ bool ScrollView::onMouseScroll(const sf::Event& e)
 		sf::Vector2f pos = mContainer->getRelPosition();
 		pos.y += mScrollSpeed * e.mouseWheelScroll.delta;
 
+		float min = mMinVal.y - mClipMargins.y;
+		float max = mMaxVal.y - mSize.y + mClipMargins.y;
+
 		// Clamp value
-		if (-pos.y < mMinVal.y)
-			pos.y = -mMinVal.y;
-		else if (-pos.y > mMaxVal.y - mSize.y)
-			pos.y = -mMaxVal.y + mSize.y;
+		if (-pos.y < min)
+			pos.y = -min;
+		else if (-pos.y > max)
+			pos.y = -max;
 
 		// Move container
 		mContainer->setPosition(pos);
 		// Update scrollbar
-		mScrollBar->setValue(-(pos.y + mMinVal.y) / (mMaxVal.y - mMinVal.y - mSize.y));
+		mScrollBar->setValue(-(pos.y + min) / (max - min));
 
 		// Callback
 		if (mViewMovedFunc)
