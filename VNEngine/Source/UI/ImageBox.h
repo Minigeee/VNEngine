@@ -10,11 +10,11 @@ namespace vne
 
 // ============================================================================
 
-class Image : public UIElement
+class ImageBox : public UIElement
 {
 public:
-	Image();
-	virtual ~Image();
+	ImageBox();
+	virtual ~ImageBox();
 
 	/// <summary>
 	/// Set the texture to display.

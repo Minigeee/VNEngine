@@ -1,4 +1,4 @@
-#include <UI/Image.h>
+#include <UI/ImageBox.h>
 
 #include <Core/Math.h>
 
@@ -7,12 +7,12 @@ using namespace vne;
 // ============================================================================
 // ============================================================================
 
-Image::Image()
+ImageBox::ImageBox()
 {
 
 }
 
-Image::~Image()
+ImageBox::~ImageBox()
 {
 
 }
@@ -20,7 +20,7 @@ Image::~Image()
 // ============================================================================
 // ============================================================================
 
-void Image::setTexture(const sf::Texture* texture)
+void ImageBox::setTexture(const sf::Texture* texture)
 {
 	mImage.setTexture(*texture);
 
@@ -28,7 +28,7 @@ void Image::setTexture(const sf::Texture* texture)
 	setSize((sf::Vector2f)texture->getSize());
 }
 
-void Image::setTextureRect(const sf::IntRect& rect, bool resize)
+void ImageBox::setTextureRect(const sf::IntRect& rect, bool resize)
 {
 	mImage.setTextureRect(rect);
 
@@ -37,34 +37,34 @@ void Image::setTextureRect(const sf::IntRect& rect, bool resize)
 		setSize((sf::Vector2f)rect.getSize());
 }
 
-void Image::setColor(const sf::Color& c)
+void ImageBox::setColor(const sf::Color& c)
 {
 	mImage.setColor(c);
 }
 
-const sf::Texture* Image::getTexture() const
+const sf::Texture* ImageBox::getTexture() const
 {
 	return mImage.getTexture();
 }
 
-const sf::IntRect& Image::getTextureRect() const
+const sf::IntRect& ImageBox::getTextureRect() const
 {
 	return mImage.getTextureRect();
 }
 
-const sf::Color& Image::getColor() const
+const sf::Color& ImageBox::getColor() const
 {
 	return mImage.getColor();
 }
 
 // ============================================================================
 
-void Image::onInit(UI* ui)
+void ImageBox::onInit(UI* ui)
 {
 
 }
 
-void Image::update(float dt)
+void ImageBox::update(float dt)
 {
 	if (mDrawablesChanged)
 	{
@@ -83,7 +83,7 @@ void Image::update(float dt)
 
 // ============================================================================
 
-void Image::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void ImageBox::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(mImage);
 }

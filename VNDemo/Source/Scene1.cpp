@@ -9,7 +9,7 @@
 #include <UI/Slider.h>
 #include <UI/ScrollView.h>
 #include <UI/ListContainer.h>
-#include <UI/Image.h>
+#include <UI/ImageBox.h>
 #include <UI/TextBox.h>
 
 using namespace vne;
@@ -134,7 +134,7 @@ void Scene1::onInit()
 	scroll->getScrollBar()->getSlider().setFillColor(sf::Color(70, 70, 80));
 	mUI.addToRoot(scroll);
 
-	Image* img = mUI.create<Image>("YourName");
+	ImageBox* img = mUI.create<ImageBox>("YourName");
 	img->setTexture(Resource<sf::Texture>::get("YourName"));
 	img->setSize(800, 450);
 	img->setFocusFunc(&onFocus);
