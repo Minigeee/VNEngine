@@ -9,6 +9,34 @@
 using namespace vne;
 
 // ============================================================================
+
+sf::Vector2f getVecFromPos(UIPosition pos)
+{
+	switch (pos)
+	{
+	case vne::UIPosition::TopLeft:
+		return sf::Vector2f(0.0f, 0.0f);
+	case vne::UIPosition::TopCenter:
+		return sf::Vector2f(0.5f, 0.0f);
+	case vne::UIPosition::TopRight:
+		return sf::Vector2f(1.0f, 0.0f);
+	case vne::UIPosition::Left:
+		return sf::Vector2f(0.0f, 0.5f);
+	case vne::UIPosition::Center:
+		return sf::Vector2f(0.5f, 0.5f);
+	case vne::UIPosition::Right:
+		return sf::Vector2f(1.0f, 0.5f);
+	case vne::UIPosition::BotLeft:
+		return sf::Vector2f(0.0f, 1.0f);
+	case vne::UIPosition::BotCenter:
+		return sf::Vector2f(0.5f, 1.0f);
+	case vne::UIPosition::BotRight:
+		return sf::Vector2f(1.0f, 1.0f);
+	default:
+		return sf::Vector2f(0.0f, 0.0f);
+	}
+}
+
 // ============================================================================
 
 UIElement::UIElement() :
@@ -258,6 +286,12 @@ void UIElement::setOrigin(float x, float y)
 	transformDirty();
 }
 
+void UIElement::setOrigin(UIPosition pos)
+{
+	mOrigin = getVecFromPos(pos);
+	transformDirty();
+}
+
 // ============================================================================
 
 void UIElement::setAnchor(const sf::Vector2f& anchor)
@@ -269,6 +303,12 @@ void UIElement::setAnchor(const sf::Vector2f& anchor)
 void UIElement::setAnchor(float x, float y)
 {
 	mAnchor = sf::Vector2f(x, y);
+	transformDirty();
+}
+
+void UIElement::setAnchor(UIPosition pos)
+{
+	mAnchor = getVecFromPos(pos);
 	transformDirty();
 }
 

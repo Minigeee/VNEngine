@@ -14,6 +14,21 @@ namespace vne
 
 // ============================================================================
 
+enum class UIPosition
+{
+	TopLeft,
+	TopCenter,
+	TopRight,
+	Left,
+	Center,
+	Right,
+	BotLeft,
+	BotCenter,
+	BotRight
+};
+
+// ============================================================================
+
 class UI;
 class Engine;
 
@@ -111,6 +126,12 @@ public:
 	void setOrigin(float x, float y);
 
 	/// <summary>
+	/// Set the origin using a predefined position
+	/// </summary>
+	/// <param name="pos">UI position</param>
+	void setOrigin(UIPosition pos);
+
+	/// <summary>
 	/// Set anchor position from 0 to 1.
 	/// (0, 0) is top-left of parent element and (1, 1) is bottom-right of parent element.
 	/// The anchor is considered the center of the coordinate system for this element
@@ -124,6 +145,12 @@ public:
 	/// The anchor is considered the center of the coordinate system for this element
 	/// </summary>
 	void setAnchor(float x, float y);
+
+	/// <summary>
+	/// Set the anchor using a predefined position
+	/// </summary>
+	/// <param name="pos">UI position</param>
+	void setAnchor(UIPosition pos);
 
 	/// <summary>
 	/// Set visibility of element.
