@@ -179,6 +179,18 @@ void Engine::close()
 // ============================================================================
 // ============================================================================
 
+void Engine::addCharacter(const Character& character)
+{
+	mCharacters[character.getName().toUtf32()] = character;
+}
+
+Character& Engine::getCharacter(const sf::String& name)
+{
+	return mCharacters[name.toUtf32()];
+}
+
+// ============================================================================
+
 sf::RenderWindow& Engine::getWindow()
 {
 	return mWindow;

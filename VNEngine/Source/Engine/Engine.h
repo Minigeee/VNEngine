@@ -6,6 +6,8 @@
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 
+#include <Engine/Character.h>
+
 namespace vne
 {
 
@@ -97,6 +99,19 @@ public:
 	/// <param name="h">Height of the coordinate space</param>
 	void setViewSize(Uint32 w, Uint32 h);
 
+	/// <summary>
+	/// Add a character for access during scenes
+	/// </summary>
+	/// <param name="character">Character</param>
+	void addCharacter(const Character& character);
+
+	/// <summary>
+	/// Get a character by name
+	/// </summary>
+	/// <param name="name">Name of character</param>
+	/// <returns>Character object</returns>
+	Character& getCharacter(const sf::String& name);
+
 
 	/// <summary>
 	/// Get main game window
@@ -136,6 +151,8 @@ private:
 	/// Main view used to rescale all renderables to fit in window
 	/// </summary>
 	sf::View mView;
+
+	std::unordered_map<std::basic_string<Uint32>, Character> mCharacters;
 };
 
 // ============================================================================
