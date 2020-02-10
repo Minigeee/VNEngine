@@ -163,6 +163,30 @@ void UIElement::addChild(UIElement* child)
 	mChildren.push_back(child);
 }
 
+void UIElement::removeChild(UIElement* child)
+{
+	for (Uint32 i = 0; i < mChildren.size(); ++i)
+	{
+		if (mChildren[i] == child)
+		{
+			mChildren.erase(mChildren.begin() + i);
+			return;
+		}
+	}
+}
+
+void UIElement::removeChild(const sf::String& name)
+{
+	for (Uint32 i = 0; i < mChildren.size(); ++i)
+	{
+		if (mChildren[i]->mName == name)
+		{
+			mChildren.erase(mChildren.begin() + i);
+			return;
+		}
+	}
+}
+
 // ============================================================================
 
 void UIElement::moveToFront()

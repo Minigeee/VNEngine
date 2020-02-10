@@ -66,6 +66,18 @@ public:
 	void addChild(UIElement* child);
 
 	/// <summary>
+	/// Remove child using pointer to element
+	/// </summary>
+	/// <param name="child">Pointer to UI element</param>
+	void removeChild(UIElement* child);
+
+	/// <summary>
+	/// Remove child using name
+	/// </summary>
+	/// <param name="name">Child element name</param>
+	void removeChild(const sf::String& name);
+
+	/// <summary>
 	/// Move element to be in front of all other siblings
 	/// Sets z-index to max
 	/// </summary>
