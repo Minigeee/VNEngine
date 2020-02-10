@@ -163,6 +163,7 @@
     <ClInclude Include="Source\Core\Macros.h" />
     <ClInclude Include="Source\Core\Math.h" />
     <ClInclude Include="Source\Core\ObjectPool.h" />
+    <ClInclude Include="Source\Core\Variant.h" />
     <ClInclude Include="Source\Engine\Character.h" />
     <ClInclude Include="Source\Engine\Cursor.h" />
     <ClInclude Include="Source\Engine\Engine.h" />

@@ -158,5 +158,8 @@
     <ClInclude Include="Source\Engine\Character.h">
       <Filter>Include\Engine</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Core\Variant.h">
+      <Filter>Include\Core</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

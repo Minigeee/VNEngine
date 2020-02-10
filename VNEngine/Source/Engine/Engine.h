@@ -2,6 +2,7 @@
 #define ENGINE_H
 
 #include <Core/DataTypes.h>
+#include <Core/Variant.h>
 
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
@@ -99,6 +100,7 @@ public:
 	/// <param name="h">Height of the coordinate space</param>
 	void setViewSize(Uint32 w, Uint32 h);
 
+
 	/// <summary>
 	/// Add a character for access during scenes
 	/// </summary>
@@ -111,6 +113,28 @@ public:
 	/// <param name="name">Name of character</param>
 	/// <returns>Character object</returns>
 	Character& getCharacter(const sf::String& name);
+
+	/// <summary>
+	/// Set a game variable
+	/// <param name="name">Name of the variable</param>
+	/// <param name="val">Value of the variable</param>
+	/// </summary>
+	template <typename T>
+	void setVariable(const sf::String& name, const T& val)
+	{
+		mVariables[name.toUtf32()] = val;
+	}
+
+	/// <summary>
+	/// Get a reference to a game variable
+	/// <param name="name">Name of the variable to retrieve</param>
+	/// <returns>Reference to the variable</returns>
+	/// </summary>
+	template <typename T>
+	T getVariable(const sf::String& name)
+	{
+		return (T)mVariables[name.toUtf32()];
+	}
 
 
 	/// <summary>
@@ -152,7 +176,15 @@ private:
 	/// </summary>
 	sf::View mView;
 
+	/// <summary>
+	/// Map of game characters
+	/// </summary>
 	std::unordered_map<std::basic_string<Uint32>, Character> mCharacters;
+
+	/// <summary>
+	/// Map of global game variables (i.e. to keep track of affection points)
+	/// </summary>
+	std::unordered_map<std::basic_string<Uint32>, Variant> mVariables;
 };
 
 // ============================================================================
