@@ -9,7 +9,9 @@ using namespace vne;
 // ============================================================================
 
 Engine::Engine() :
+	mSetupScene		(0),
 	mScene			(0),
+	mNextScene		(0),
 	mView			(sf::FloatRect(0.0f, 0.0f, 1920.0f, 1080.0f))
 {
 
@@ -62,9 +64,9 @@ bool Engine::init(const EngineParams& params)
 	Cursor::init(&mWindow);
 
 
-	// Setup first scene
-	mScene = params.mStartScene;
-	mScene->init();
+	// Setup scene
+	mSetupScene = params.mSetupScene;
+	mSetupScene->init();
 
 
 	return true;
@@ -75,6 +77,15 @@ bool Engine::init(const EngineParams& params)
 
 void Engine::run()
 {
+	// Set next scene to current scene, and reset
+	mScene = mNextScene;
+	mNextScene = 0;
+
+	// Initialize all scenes
+	for (auto it = mScenes.begin(); it != mScenes.end(); ++it)
+		it->second->init();
+
+
 	// Poll events once before starting
 	pollEvents();
 
@@ -91,6 +102,13 @@ void Engine::run()
 
 		// Render scene
 		render();
+
+		// If scene switch is requested, then switch scenes
+		if (mNextScene)
+		{
+			mScene = mNextScene;
+			mNextScene = 0;
+		}
 	}
 
 	// Free all SFML resources
@@ -189,6 +207,36 @@ Character& Engine::getCharacter(const sf::String& name)
 	return mCharacters[name.toUtf32()];
 }
 
+bool Engine::variableExists(const sf::String& name) const
+{
+	return mVariables.find(name.toUtf32()) != mVariables.end();
+}
+
+void Engine::addScene(const sf::String& name, Scene* scene)
+{
+	mScenes[name.toUtf32()] = scene;
+}
+
+Scene* Engine::getScene(const sf::String& name) const
+{
+	auto it = mScenes.find(name.toUtf32());
+	if (it != mScenes.end())
+		return it->second;
+	return 0;
+}
+
+void Engine::gotoScene(const sf::String& name)
+{
+	Scene* scene = getScene(name);
+	if (scene)
+		mNextScene = scene;
+}
+
+std::unordered_map<std::basic_string<Uint32>, Scene*>& Engine::getSceneMap()
+{
+	return mScenes;
+}
+
 // ============================================================================
 
 sf::RenderWindow& Engine::getWindow()
@@ -205,7 +253,7 @@ EngineParams::EngineParams() :
 	mWindowTitle		("VN Game"),
 	mFullscreen			(false),
 	mResizable			(true),
-	mStartScene			(0)
+	mSetupScene			(0)
 {
 
 }

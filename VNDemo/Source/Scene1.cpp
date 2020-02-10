@@ -65,10 +65,7 @@ void onValueChanged(Slider* slider, bool dragged)
 
 void Scene1::onInit()
 {
-	Resource<sf::Font>::addLocation("Fonts/segoeui/segoeui.ttf", "SegoeUI");
-	Resource<sf::Texture>::addLocation("Textures/YourName.jpg", "YourName");
-
-	mUI.setDefaultFont(Resource<sf::Font>::get("SegoeUI"));
+	mUI.setDefaultFont(Resource<sf::Font>::get("segoeui"));
 
 	ListContainer* list = mUI.create<ListContainer>("List");
 
@@ -135,7 +132,7 @@ void Scene1::onInit()
 	mUI.addToRoot(scroll);
 
 	ImageBox* img = mUI.create<ImageBox>("YourName");
-	img->setTexture(Resource<sf::Texture>::get("YourName"));
+	img->setTexture(Resource<sf::Texture>::get("your_name"));
 	img->setSize(800, 450);
 	img->setFocusFunc(&onFocus);
 	list->addChild(img);

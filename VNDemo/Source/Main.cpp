@@ -3,7 +3,7 @@
 #include <Engine/Engine.h>
 #include <Engine/Resource.h>
 
-#include <Scene1.h>
+#include <Setup.h>
 
 #include <iostream>
 
@@ -39,14 +39,14 @@ int main()
 	ResourceFolder::setPath("Assets");
 
 	Engine engine;
-	Scene1 scene(&engine);
+	Setup setup(&engine);
 
 	EngineParams params;
 	params.mWindowWidth = 1280;
 	params.mWindowHeight = 720;
 	params.mWindowTitle = "VN Demo";
 	params.mFullscreen = false;
-	params.mStartScene = &scene;
+	params.mSetupScene = &setup;
 
 	bool success = engine.init(params);
 	if (success)

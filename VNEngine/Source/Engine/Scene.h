@@ -58,6 +58,53 @@ protected:
 // ============================================================================
 
 /// <summary>
+/// Very first scene that is initialized, and is meant to initialize resources,
+/// characters, and variables for all other scenes
+/// </summary>
+class SetupScene : public Scene
+{
+public:
+	SetupScene(Engine* engine);
+	virtual ~SetupScene();
+
+	/// <summary>
+	/// Do all initialization for game
+	/// </summary>
+	void init() override;
+
+	/// <summary>
+	/// Does nothing
+	/// </summary>
+	/// <param name="e"></param>
+	void handleEvent(const sf::Event& e) override;
+
+	/// <summary>
+	/// Does nothing
+	/// </summary>
+	/// <param name="dt">Time elapsed since last frame</param>
+	void update(float dt) override;
+
+	/// <summary>
+	/// Does nothing
+	/// </summary>
+	void render() override;
+
+protected:
+	/// <summary>
+	/// This is where all resources, scenes, variables, and characters should be setup
+	/// </summary>
+	virtual void onInit() = 0;
+
+	/// <summary>
+	/// Override this to have custom first scenes.
+	/// The default first scene is the main menu
+	/// </summary>
+	virtual void gotoFirstScene();
+};
+
+// ============================================================================
+
+/// <summary>
 /// A scene specialized for visual novel story / text
 /// </summary>
 class NovelScene : public Scene

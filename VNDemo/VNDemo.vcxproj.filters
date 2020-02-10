@@ -17,9 +17,15 @@
     <ClCompile Include="Source\Scene1.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Setup.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Scene1.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Setup.h">
       <Filter>Include</Filter>
     </ClInclude>
   </ItemGroup>

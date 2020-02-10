@@ -7,14 +7,11 @@
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 
+#include <Engine/Scene.h>
 #include <Engine/Character.h>
 
 namespace vne
 {
-
-// ============================================================================
-
-class Scene;
 
 // ============================================================================
 
@@ -51,10 +48,9 @@ struct EngineParams
 	bool mResizable;
 
 	/// <summary>
-	/// Use this to specify the initial scene.
-	/// Leave this as NULL to start at the main menu
+	/// Use this to specify the setup scene.
 	/// </summary>
-	Scene* mStartScene;
+	SetupScene* mSetupScene;
 };
 
 // ============================================================================
@@ -115,10 +111,10 @@ public:
 	Character& getCharacter(const sf::String& name);
 
 	/// <summary>
-	/// Set a game variable
+	/// Set a global game variable (i.e. to keep track of affection points)
+	/// </summary>
 	/// <param name="name">Name of the variable</param>
 	/// <param name="val">Value of the variable</param>
-	/// </summary>
 	template <typename T>
 	void setVariable(const sf::String& name, const T& val)
 	{
@@ -127,14 +123,50 @@ public:
 
 	/// <summary>
 	/// Get a reference to a game variable
+	/// </summary>
 	/// <param name="name">Name of the variable to retrieve</param>
 	/// <returns>Reference to the variable</returns>
-	/// </summary>
 	template <typename T>
-	T getVariable(const sf::String& name)
+	T getVariable(const sf::String& name) const
 	{
-		return (T)mVariables[name.toUtf32()];
+		auto it = mVariables.find(name.toUtf32());
+		if (it != mVariables.end())
+			return it->second;
+		return T();
 	}
+
+	/// <summary>
+	/// Returns true if variable exists or has been created
+	/// </summary>
+	/// <param name="name">Name of the variable</param>
+	/// <returns>Boolean</returns>
+	bool variableExists(const sf::String& name) const;
+
+	/// <summary>
+	/// Add a scene to the engine
+	/// </summary>
+	/// <param name="name">Name of scene</param>
+	/// <param name="scene">Pointer to scene</param>
+	void addScene(const sf::String& name, Scene* scene);
+
+	/// <summary>
+	/// Gets pointer to scene
+	/// </summary>
+	/// <param name="name">Name of scene</param>
+	/// <returns>Pointer to scene</returns>
+	Scene* getScene(const sf::String& name) const;
+
+	/// <summary>
+	/// Switches current scene
+	/// </summary>
+	/// <param name="name">Name of scene to switch to</param>
+	void gotoScene(const sf::String& name);
+
+	/// <summary>
+	/// Get unordered map of scenes, scene name is mapped to scene pointer
+	/// </summary>
+	/// <returns>The map of scenes</returns>
+	std::unordered_map<std::basic_string<Uint32>, Scene*>& getSceneMap();
 
 
 	/// <summary>
@@ -167,9 +199,20 @@ private:
 	sf::RenderWindow mWindow;
 
 	/// <summary>
+	/// The very first scene that is called, it sets up all resources,
+	/// characters, variables, and other scenes.
+	/// </summary>
+	Scene* mSetupScene;
+
+	/// <summary>
 	/// Current scene
 	/// </summary>
 	Scene* mScene;
+
+	/// <summary>
+	/// This is where scenes are queued, so that scene switching doesn't occur in the middle of a game loop
+	/// </summary>
+	Scene* mNextScene;
 
 	/// <summary>
 	/// Main view used to rescale all renderables to fit in window
@@ -182,9 +225,14 @@ private:
 	std::unordered_map<std::basic_string<Uint32>, Character> mCharacters;
 
 	/// <summary>
-	/// Map of global game variables (i.e. to keep track of affection points)
+	/// Map of global game variables
 	/// </summary>
 	std::unordered_map<std::basic_string<Uint32>, Variant> mVariables;
+
+	/// <summary>
+	/// Map of game scenes
+	/// </summary>
+	std::unordered_map<std::basic_string<Uint32>, Scene*> mScenes;
 };
 
 // ============================================================================
