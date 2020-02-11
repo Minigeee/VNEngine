@@ -187,6 +187,11 @@ void UIElement::removeChild(const sf::String& name)
 	}
 }
 
+void UIElement::removeAllChildren()
+{
+	mChildren.clear();
+}
+
 // ============================================================================
 
 void UIElement::moveToFront()

@@ -3,6 +3,7 @@
 #include <Engine/Engine.h>
 
 // All scenes
+#include <MainMenu.h>
 #include <Scene1.h>
 
 using namespace vne;
@@ -20,6 +21,7 @@ Setup::Setup(Engine* engine) :
 void Setup::onInit()
 {
 	// Add all scenes
+	mEngine->addScene("main_menu", new MainMenu(mEngine));
 	mEngine->addScene("s1", new Scene1(mEngine));
 
 	// Add all resources
@@ -35,7 +37,7 @@ void Setup::onInit()
 
 void Setup::gotoFirstScene()
 {
-	mEngine->gotoScene("s1");
+	mEngine->gotoScene("main_menu");
 }
 
 // ============================================================================

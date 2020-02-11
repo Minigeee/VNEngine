@@ -2,6 +2,7 @@
 #define SCENE_H
 
 #include <UI/UI.h>
+#include <UI/Button.h>
 
 #include <SFML/Window.hpp>
 
@@ -28,6 +29,12 @@ public:
 	/// Called once on scene initialization
 	/// </summary>
 	virtual void init() = 0;
+
+	/// <summary>
+	/// Used to cleanup any UI elements or resources that were used, or just as a custom callback.
+	/// Called when the scene switches from being the current to noncurrent
+	/// </summary>
+	virtual void cleanup() = 0;
 
 	/// <summary>
 	/// Handle window input
@@ -75,6 +82,11 @@ public:
 	/// <summary>
 	/// Does nothing
 	/// </summary>
+	void cleanup() override;
+
+	/// <summary>
+	/// Does nothing
+	/// </summary>
 	/// <param name="e"></param>
 	void handleEvent(const sf::Event& e) override;
 
@@ -104,6 +116,124 @@ protected:
 
 // ============================================================================
 
+class MainMenuScene : public Scene
+{
+public:
+	MainMenuScene(Engine* engine);
+	virtual ~MainMenuScene();
+
+	/// <summary>
+	/// Setup UI
+	/// </summary>
+	void init() override;
+
+	/// <summary>
+	/// Cleans UI resources
+	/// </summary>
+	void cleanup() override;
+
+	/// <summary>
+	/// Handle window input for UI
+	/// </summary>
+	/// <param name="e"></param>
+	void handleEvent(const sf::Event& e) override;
+
+	/// <summary>
+	/// Do animation updates, update displayed text
+	/// </summary>
+	/// <param name="dt">Time elapsed since last frame</param>
+	void update(float dt) override;
+
+	/// <summary>
+	/// Render UI and sprites
+	/// </summary>
+	void render() override;
+
+protected:
+	/// <summary>
+	/// This is where the actions list should be populated
+	/// </summary>
+	virtual void onInit();
+
+	/// <summary>
+	/// Use this function to implement any extra features needed
+	/// </summary>
+	virtual void onUpdate(float dt);
+
+	/// <summary>
+	/// Called when menu buttons enter their default state
+	/// </summary>
+	/// <param name="btn">Button that entered default state</param>
+	/// <param name="prevState">The state it switched from</param>
+	virtual void onDefaultBtn(Button* btn, Button::State prevState);
+
+	/// <summary>
+	/// Called when menu buttons enter their hover state
+	/// </summary>
+	/// <param name="btn">Button that entered hover state</param>
+	/// <param name="prevState">The state it switched from</param>
+	virtual void onHoverBtn(Button* btn, Button::State prevState);
+
+	/// <summary>
+	/// Called when menu buttons enter their press state
+	/// </summary>
+	/// <param name="btn">Button that entered press state</param>
+	/// <param name="prevState">The state it switched from</param>
+	virtual void onPressBtn(Button* btn, Button::State prevState);
+
+	/// <summary>
+	/// Called when "New" button is pressed
+	/// </summary>
+	/// <param name="btn">Button</param>
+	virtual void onNewGame(UIElement* btn, const sf::Event& e);
+
+	/// <summary>
+	/// Called when "Load" button is pressed
+	/// </summary>
+	/// <param name="btn">Button</param>
+	virtual void onLoadGame(UIElement* btn, const sf::Event& e);
+
+	/// <summary>
+	/// Called when "Settings" button is pressed
+	/// </summary>
+	/// <param name="btn">Button</param>
+	virtual void onSettingsBtn(UIElement* btn, const sf::Event& e);
+
+	/// <summary>
+	/// Called when "Exit" button is pressed
+	/// </summary>
+	/// <param name="btn">Button</param>
+	virtual void onExitBtn(UIElement* btn, const sf::Event& e);
+
+protected:
+	/// <summary>
+	/// UI system
+	/// </summary>
+	UI mUI;
+
+	/// <summary>
+	/// The new game button
+	/// </summary>
+	Button* mNewBtn;
+
+	/// <summary>
+	/// The load game button
+	/// </summary>
+	Button* mLoadBtn;
+
+	/// <summary>
+	/// The settings button
+	/// </summary>
+	Button* mSettingsBtn;
+
+	/// <summary>
+	/// The exit button
+	/// </summary>
+	Button* mExitBtn;
+};
+
+// ============================================================================
+
 /// <summary>
 /// A scene specialized for visual novel story / text
 /// </summary>
@@ -117,6 +247,11 @@ public:
 	/// Load resources, setup UI
 	/// </summary>
 	void init() override;
+
+	/// <summary>
+	/// Cleans UI resources
+	/// </summary>
+	void cleanup() override;
 
 	/// <summary>
 	/// Handle window input for UI

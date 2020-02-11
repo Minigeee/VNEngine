@@ -78,6 +78,11 @@ public:
 	void removeChild(const sf::String& name);
 
 	/// <summary>
+	/// Remove all children from current element
+	/// </summary>
+	void removeAllChildren();
+
+	/// <summary>
 	/// Move element to be in front of all other siblings
 	/// Sets z-index to max
 	/// </summary>

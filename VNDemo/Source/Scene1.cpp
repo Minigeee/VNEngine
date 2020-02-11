@@ -144,6 +144,8 @@ void Scene1::onInit()
 	list->addChild(text);
 
 	scroll->addChild(list);
+
+	std::cout << mEngine->getVariable<int>("test") << "\n";
 }
 
 // ============================================================================

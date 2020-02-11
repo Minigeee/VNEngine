@@ -122,8 +122,6 @@ void UI::setFocus(UIElement* element)
 
 // ============================================================================
 
-#include <iostream>
-
 bool UI::relayMouseEvent(UIElement* element, const sf::Event& e)
 {
 	bool handled = false;

@@ -79,11 +79,8 @@ void Engine::run()
 {
 	// Set next scene to current scene, and reset
 	mScene = mNextScene;
+	mScene->init();
 	mNextScene = 0;
-
-	// Initialize all scenes
-	for (auto it = mScenes.begin(); it != mScenes.end(); ++it)
-		it->second->init();
 
 
 	// Poll events once before starting
@@ -94,6 +91,20 @@ void Engine::run()
 	// Game loop
 	while (mWindow.isOpen())
 	{
+		// If scene switch is requested, then switch scenes
+		if (mNextScene)
+		{
+			// Cleanup old scene
+			if (mScene)
+				mScene->cleanup();
+
+			mScene = mNextScene;
+			mNextScene = 0;
+
+			// Initialize new scene
+			mScene->init();
+		}
+
 		// Handle input
 		pollEvents();
 
@@ -102,13 +113,6 @@ void Engine::run()
 
 		// Render scene
 		render();
-
-		// If scene switch is requested, then switch scenes
-		if (mNextScene)
-		{
-			mScene = mNextScene;
-			mNextScene = 0;
-		}
 	}
 
 	// Free all SFML resources
