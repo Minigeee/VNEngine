@@ -1,6 +1,7 @@
 #include <Scene1.h>
 
 #include <Engine/Engine.h>
+#include <Engine/Action.h>
 
 #include <UI/UIAnimation.h>
 #include <UI/Text.h>
@@ -145,7 +146,9 @@ void Scene1::onInit()
 
 	scroll->addChild(list);
 
-	std::cout << mEngine->getVariable<int>("test") << "\n";
+	ActionGroup action;
+	action.setCondition([&]() -> bool { return mEngine->getVariable<int>("test") >= 100; });
+	action.run();
 }
 
 // ============================================================================

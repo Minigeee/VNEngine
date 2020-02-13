@@ -139,6 +139,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\Allocate.cpp" />
+    <ClCompile Include="Source\Engine\Action.cpp" />
     <ClCompile Include="Source\Engine\Character.cpp" />
     <ClCompile Include="Source\Engine\Cursor.cpp" />
     <ClCompile Include="Source\Engine\Engine.cpp" />
@@ -164,6 +165,7 @@
     <ClInclude Include="Source\Core\Math.h" />
     <ClInclude Include="Source\Core\ObjectPool.h" />
     <ClInclude Include="Source\Core\Variant.h" />
+    <ClInclude Include="Source\Engine\Action.h" />
     <ClInclude Include="Source\Engine\Character.h" />
     <ClInclude Include="Source\Engine\Cursor.h" />
     <ClInclude Include="Source\Engine\Engine.h" />

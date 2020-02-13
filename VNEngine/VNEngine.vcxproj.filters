@@ -84,6 +84,9 @@
     <ClCompile Include="Source\Engine\Character.cpp">
       <Filter>Source\Engine</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Engine\Action.cpp">
+      <Filter>Source\Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\Engine.h">
@@ -160,6 +163,9 @@
     </ClInclude>
     <ClInclude Include="Source\Core\Variant.h">
       <Filter>Include\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Action.h">
+      <Filter>Include\Engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
