@@ -17,6 +17,20 @@ public:
 	virtual ~ImageBox();
 
 	/// <summary>
+	/// Get the internal image body.
+	/// Outline and color values are modifiable.
+	/// Position, scale, and rotation are not modifiable.
+	/// </summary>
+	/// <returns>SFML Rectangle Shape</returns>
+	sf::RectangleShape& getBody();
+
+	/// <summary>
+	/// Get the internal image body.
+	/// </summary>
+	/// <returns>SFML Rectangle Shape</returns>
+	const sf::RectangleShape& getBody() const;
+
+	/// <summary>
 	/// Set the texture to display.
 	/// This will change the size of the element to be the size of the texture
 	/// </summary>
@@ -67,9 +81,9 @@ protected:
 
 protected:
 	/// <summary>
-	/// Uses sprite internally
+	/// Uses rectangle shape internally
 	/// </summary>
-	sf::Sprite mImage;
+	sf::RectangleShape mImage;
 };
 
 // ============================================================================

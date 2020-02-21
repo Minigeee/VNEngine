@@ -96,6 +96,18 @@ public:
 	/// <param name="h">Height of the coordinate space</param>
 	void setViewSize(Uint32 w, Uint32 h);
 
+	/// <summary>
+	/// Set the default font for the engine
+	/// </summary>
+	/// <param name="font">Font ptr</param>
+	void setDefaultFont(sf::Font* font);
+
+	/// <summary>
+	/// Get the default engine font
+	/// </summary>
+	/// <returns>Default font</returns>
+	sf::Font* getDefaultFont() const;
+
 
 	/// <summary>
 	/// Add a character for access during scenes
@@ -218,6 +230,11 @@ private:
 	/// Main view used to rescale all renderables to fit in window
 	/// </summary>
 	sf::View mView;
+
+	/// <summary>
+	/// The default font to use
+	/// </summary>
+	sf::Font* mFont;
 
 	/// <summary>
 	/// Map of game characters

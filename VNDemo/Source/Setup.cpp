@@ -31,6 +31,9 @@ void Setup::onInit()
 	// Default variable values
 	if (!mEngine->variableExists("test"))
 		mEngine->setVariable("test", 100);
+
+	// Set default font
+	mEngine->setDefaultFont(Resource<sf::Font>::get("segoeui"));
 }
 
 // ============================================================================

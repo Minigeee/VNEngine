@@ -148,9 +148,6 @@ void MainMenuScene::onExitBtn(UIElement* btn, const sf::Event& e)
 
 void MainMenuScene::init()
 {
-	// Must set default font
-	mUI.setDefaultFont(Resource<sf::Font>::get("segoeui"));
-
 	// Get view size
 	const sf::Vector2f& viewSize = mEngine->getWindow().getView().getSize();
 

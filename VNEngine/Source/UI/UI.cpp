@@ -58,8 +58,11 @@ void UI::addAnimation(I_UIAnimation* anim)
 	mAnimations.push_back(anim);
 }
 
-sf::Font* UI::getDefaultFont() const
+sf::Font* UI::getDefaultFont()
 {
+	if (!mDefaultFont)
+		mDefaultFont = mEngine->getDefaultFont();
+
 	return mDefaultFont;
 }
 

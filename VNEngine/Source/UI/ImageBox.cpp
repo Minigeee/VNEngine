@@ -20,9 +20,22 @@ ImageBox::~ImageBox()
 // ============================================================================
 // ============================================================================
 
+sf::RectangleShape& ImageBox::getBody()
+{
+	mDrawablesChanged = true;
+	return mImage;
+}
+
+const sf::RectangleShape& ImageBox::getBody() const
+{
+	return mImage;
+}
+
+// ============================================================================
+
 void ImageBox::setTexture(const sf::Texture* texture)
 {
-	mImage.setTexture(*texture);
+	mImage.setTexture(texture);
 
 	// Set size
 	setSize((sf::Vector2f)texture->getSize());
@@ -39,7 +52,7 @@ void ImageBox::setTextureRect(const sf::IntRect& rect, bool resize)
 
 void ImageBox::setColor(const sf::Color& c)
 {
-	mImage.setColor(c);
+	mImage.setFillColor(c);
 }
 
 const sf::Texture* ImageBox::getTexture() const
@@ -54,7 +67,7 @@ const sf::IntRect& ImageBox::getTextureRect() const
 
 const sf::Color& ImageBox::getColor() const
 {
-	return mImage.getColor();
+	return mImage.getFillColor();
 }
 
 // ============================================================================

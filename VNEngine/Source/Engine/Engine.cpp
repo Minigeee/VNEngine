@@ -66,8 +66,11 @@ bool Engine::init(const EngineParams& params)
 
 	// Setup scene
 	mSetupScene = params.mSetupScene;
+	if (!mSetupScene) return false;
 	mSetupScene->init();
 
+	// Make sure the setup scene set a default font
+	if (!mFont) return false;
 
 	return true;
 }
@@ -123,8 +126,6 @@ void Engine::run()
 }
 
 // ============================================================================
-
-#include <iostream>
 
 void Engine::pollEvents()
 {
@@ -196,6 +197,19 @@ void Engine::render()
 void Engine::close()
 {
 	mWindow.close();
+}
+
+// ============================================================================
+// ============================================================================
+
+void Engine::setDefaultFont(sf::Font* font)
+{
+	mFont = font;
+}
+
+sf::Font* Engine::getDefaultFont() const
+{
+	return mFont;
 }
 
 // ============================================================================

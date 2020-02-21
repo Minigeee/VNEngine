@@ -84,7 +84,7 @@ public:
 	/// Get default text font
 	/// </summary>
 	/// <returns>SFML font</returns>
-	sf::Font* getDefaultFont() const;
+	sf::Font* getDefaultFont();
 
 	/// <summary>
 	/// Get the UI text cursor
