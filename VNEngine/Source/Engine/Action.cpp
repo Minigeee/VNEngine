@@ -42,8 +42,6 @@ ActionGroup::~ActionGroup()
 
 // ============================================================================
 
-#include <iostream>
-
 void ActionGroup::run()
 {
 	if (!conditionMet()) return;
@@ -51,8 +49,6 @@ void ActionGroup::run()
 	// Run all actions
 	for (Uint32 i = 0; i < mActions.size(); ++i)
 		mActions[i]->run();
-
-	std::cout << "Run\n";
 }
 
 // ============================================================================

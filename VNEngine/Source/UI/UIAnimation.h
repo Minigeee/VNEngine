@@ -454,42 +454,42 @@ protected:
 #include <Core/Macros.h>
 
 #define ANIMATE_POS(element, start_val, end_val, duration) \
-new Vec2Animation( \
+this->alloc<Vec2Animation>( \
 	std::bind( \
 		static_cast<void(std::remove_pointer<decltype(element)>::type::*)(const sf::Vector2f&)>(&std::remove_pointer<decltype(element)>::type::setPosition), \
 	element, std::placeholders::_1), \
 	start_val, end_val, duration)
 
 #define ANIMATE_ROT(element, start_val, end_val, duration) \
-new FloatAnimation( \
+this->alloc<FloatAnimation>( \
 	std::bind( \
 		static_cast<void(std::remove_pointer<decltype(element)>::type::*)(float)>(&std::remove_pointer<decltype(element)>::type::setRotation), \
 	element, std::placeholders::_1), \
 	start_val, end_val, duration)
 
 #define ANIMATE_SIZE(element, start_val, end_val, duration) \
-new Vec2Animation( \
+this->alloc<Vec2Animation>( \
 	std::bind( \
 		static_cast<void(std::remove_pointer<decltype(element)>::type::*)(const sf::Vector2f&)>(&std::remove_pointer<decltype(element)>::type::setSize), \
 	element, std::placeholders::_1), \
 	start_val, end_val, duration)
 
 #define ANIMATE_FLOAT(element, prop_name, start_val, end_val, duration) \
-new FloatAnimation( \
+this->alloc<FloatAnimation>( \
 	std::bind( \
 		static_cast<void(std::remove_pointer<decltype(element)>::type::*)(float)>(CONCAT(&std::remove_pointer<decltype(element)>::type::set, prop_name)), \
 	element, std::placeholders::_1), \
 	start_val, end_val, duration)
 
 #define ANIMATE_VEC2(element, prop_name, start_val, end_val, duration) \
-new Vec2Animation( \
+this->alloc<Vec2Animation>( \
 	std::bind( \
 		static_cast<void(std::remove_pointer<decltype(element)>::type::*)(const sf::Vector2f&)>(CONCAT(&std::remove_pointer<decltype(element)>::type::set, prop_name)), \
 	element, std::placeholders::_1), \
 	start_val, end_val, duration)
 
 #define ANIMATE_COLOR(element, prop_name, start_val, end_val, duration) \
-new ColorAnimation( \
+this->alloc<ColorAnimation>( \
 	std::bind( \
 		static_cast<void(std::remove_pointer<decltype(element)>::type::*)(const sf::Color&)>(CONCAT(&std::remove_pointer<decltype(element)>::type::set, prop_name)), \
 	element, std::placeholders::_1), \

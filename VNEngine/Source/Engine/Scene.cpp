@@ -19,7 +19,18 @@ Scene::Scene(Engine* engine) :
 
 Scene::~Scene()
 {
+	// Remove all object pools
+	for (auto it = mObjectPools.begin(); it != mObjectPools.end(); ++it)
+		delete it->second;
+}
 
+// ============================================================================
+
+void Scene::cleanup()
+{
+	// Remove all objects from object pools
+	for (auto it = mObjectPools.begin(); it != mObjectPools.end(); ++it)
+		it->second->free();
 }
 
 // ============================================================================
@@ -57,7 +68,7 @@ void SetupScene::gotoFirstScene()
 
 void SetupScene::cleanup()
 {
-
+	Scene::cleanup();
 }
 
 void SetupScene::handleEvent(const sf::Event& e)
@@ -194,6 +205,8 @@ void MainMenuScene::onInit()
 
 void MainMenuScene::cleanup()
 {
+	Scene::cleanup();
+
 	// Detach all children element from root
 	mUI.getRoot()->removeAllChildren();
 }
@@ -255,6 +268,8 @@ void NovelScene::init()
 
 void NovelScene::cleanup()
 {
+	Scene::cleanup();
+
 	// Detach all children element from root
 	mUI.getRoot()->removeAllChildren();
 }

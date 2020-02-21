@@ -30,10 +30,6 @@ UI::UI(Engine* engine) :
 
 UI::~UI()
 {
-	// Remove all animations
-	for (Uint32 i = 0; i < mAnimations.size(); ++i)
-		delete mAnimations[i];
-
 	Resource<UIContainer>::free();
 	Resource<Button>::free();
 }
@@ -392,7 +388,6 @@ void UI::update(float dt)
 		// Remove if finished
 		if (anim->isFinished())
 		{
-			delete anim;
 			mAnimations[i--] = mAnimations.back();
 			mAnimations.pop_back();
 		}

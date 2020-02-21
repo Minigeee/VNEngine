@@ -6,6 +6,10 @@
 
 #include <SFML/Window.hpp>
 
+#include <unordered_map>
+#include <typeinfo>
+#include <typeindex>
+
 namespace vne
 {
 
@@ -34,7 +38,7 @@ public:
 	/// Used to cleanup any UI elements or resources that were used, or just as a custom callback.
 	/// Called when the scene switches from being the current to noncurrent
 	/// </summary>
-	virtual void cleanup() = 0;
+	virtual void cleanup();
 
 	/// <summary>
 	/// Handle window input
@@ -55,11 +59,44 @@ public:
 	/// </summary>
 	virtual void render() = 0;
 
+	/// <summary>
+	/// Allocate an object from the scene's managed memory
+	/// </summary>
+	template <typename T, typename... Args>
+	T* alloc(Args&&... args)
+	{
+		std::type_index typeID = typeid(T);
+
+		IObjectPool*& pool = mObjectPools[typeID];
+		if (!pool)
+			pool = new ObjectPool<T>();
+
+		return ((ObjectPool<T>*)pool)->create(std::forward<Args>(args)...);
+	}
+
+	/// <summary>
+	/// Free an object that was allocated with the scene's managed memory
+	/// </summary>
+	template <typename T>
+	void free(T* ptr)
+	{
+		std::type_index typeID = typeid(T);
+
+		void*& pool = mObjectPools[typeID];
+		if (pool)
+			((ObjectPool<T>*)pool)->free(ptr);
+	}
+
 protected:
 	/// <summary>
 	/// Access to main engine
 	/// </summary>
 	Engine* mEngine;
+
+	/// <summary>
+	/// Map of object pool for various types
+	/// </summary>
+	std::unordered_map<std::type_index, IObjectPool*> mObjectPools;
 };
 
 // ============================================================================

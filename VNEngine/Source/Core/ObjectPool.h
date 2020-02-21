@@ -29,9 +29,21 @@ struct PageHeader
 };
 }
 
+/// <summary>
+/// Base object pool class (just for the virtual destructor)
+/// </summary>
+class IObjectPool
+{
+public:
+	IObjectPool() { }
+	virtual ~IObjectPool() { }
+
+	virtual void free() = 0;
+};
+
 /* Paged pool allocator */
 template <typename T>
-class ObjectPool
+class ObjectPool : public IObjectPool
 {
 public:
 	ObjectPool() :
@@ -125,7 +137,8 @@ public:
 	}
 
 	/* Create new object */
-	T* create()
+	template <typename... Args>
+	T* create(Args&&... args)
 	{
 		if (!mStart || !mCurrent)
 		{
@@ -183,7 +196,7 @@ public:
 		header->mNextFree = (void**)(*header->mNextFree);
 
 		// Initialize object
-		new(ptr)T();
+		new(ptr)T(std::forward<Args>(args)...);
 
 		return ptr;
 	}

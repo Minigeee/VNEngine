@@ -70,6 +70,9 @@ void Scene1::onInit()
 
 	ListContainer* list = mUI.create<ListContainer>("List");
 
+	Uint32* aaa = alloc<Uint32>(2);
+	int a = 0;
+
 	Button* button = mUI.create<Button>("PlayBtn");
 	button->setPosition(0.0f, 1470.0f);
 	button->setSize(150.0f, 60.0f);
@@ -145,10 +148,6 @@ void Scene1::onInit()
 	list->addChild(text);
 
 	scroll->addChild(list);
-
-	ActionGroup action;
-	action.setCondition([&]() -> bool { return mEngine->getVariable<int>("test") >= 100; });
-	action.run();
 }
 
 // ============================================================================
