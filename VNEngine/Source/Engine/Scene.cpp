@@ -258,6 +258,44 @@ NovelScene::~NovelScene()
 
 void NovelScene::init()
 {
+	// Get view size
+	const sf::Vector2f& viewSize = mEngine->getWindow().getView().getSize();
+
+	mBackground = mUI.create<ImageBox>("Background");
+	mBackground->setSize(viewSize);
+	mBackground->setColor(sf::Color::White);
+	mUI.addToRoot(mBackground);
+
+	mDialogueBox = mUI.create<ImageBox>("DialogueBox");
+	mDialogueBox->setSize(viewSize.x * 0.8f, viewSize.y * 0.25f);
+	mDialogueBox->setOrigin(UIPosition::BotCenter);
+	mDialogueBox->setAnchor(UIPosition::BotCenter);
+	mDialogueBox->setPosition(0.0f, -10.0f);
+	mDialogueBox->setColor(sf::Color(25, 25, 30, 120));
+	mUI.addToRoot(mDialogueBox);
+
+	mNameBox = mUI.create<ImageBox>("NameBox");
+	mNameBox->setSize(250.0f, 60.0f);
+	mNameBox->setOrigin(UIPosition::BotLeft);
+	mNameBox->setAnchor(UIPosition::TopLeft);
+	mNameBox->setPosition(0.0f, 0.0f);
+	mNameBox->setColor(sf::Color(40, 40, 45, 120));
+	mDialogueBox->addChild(mNameBox);
+
+	mDialogueText = mUI.create<TextBox>("DialogueText");
+	mDialogueText->setPosition(20.0f, 20.0f);
+	mDialogueText->setString("Hello World! The quick brown fox jumps over the lazy dog.");
+	mDialogueText->setCharacterSize(35);
+	mDialogueBox->addChild(mDialogueText);
+
+	mNameText = mUI.create<TextBox>("NameText");
+	mNameText->setOrigin(UIPosition::Left);
+	mNameText->setAnchor(UIPosition::Left);
+	mNameText->setPosition(20.0f, -3.0f);
+	mNameText->setString("Name");
+	mNameText->setCharacterSize(35);
+	mNameBox->addChild(mNameText);
+
 	onInit();
 }
 

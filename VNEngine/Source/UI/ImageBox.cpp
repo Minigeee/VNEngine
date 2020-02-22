@@ -85,10 +85,8 @@ void ImageBox::update(float dt)
 
 		mImage.setPosition(mAbsPosition);
 		mImage.setRotation(mAbsRotation);
+		mImage.setSize(mSize);
 		mImage.setOrigin(mOrigin * mSize);
-
-		// Change scale
-		mImage.setScale(mSize / (sf::Vector2f)mImage.getTexture()->getSize());
 
 		mDrawablesChanged = false;
 	}

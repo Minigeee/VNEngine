@@ -488,7 +488,9 @@ void UIElement::updateAbsTransforms()
 		if (mParent)
 		{
 			mParent->updateAbsTransforms();
-			mAbsPosition += mParent->mAbsPosition + mAnchor * mParent->mSize;
+
+			sf::Vector2f parentOrigin = mParent->mOrigin * mParent->mSize;
+			mAbsPosition += mParent->mAbsPosition - parentOrigin + mAnchor * mParent->mSize;
 			mAbsRotation += mParent->mAbsRotation;
 		}
 

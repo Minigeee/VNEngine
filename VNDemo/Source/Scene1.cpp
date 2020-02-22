@@ -34,7 +34,7 @@ Scene1::~Scene1()
 
 void Scene1::onInit()
 {
-
+	mBackground->setTexture(Resource<sf::Texture>::get("your_name"));
 }
 
 // ============================================================================

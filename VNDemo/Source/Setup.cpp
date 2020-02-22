@@ -40,7 +40,7 @@ void Setup::onInit()
 
 void Setup::gotoFirstScene()
 {
-	mEngine->gotoScene("main_menu");
+	mEngine->gotoScene("s1");
 }
 
 // ============================================================================

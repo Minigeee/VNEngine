@@ -2,7 +2,10 @@
 #define SCENE_H
 
 #include <UI/UI.h>
+#include <UI/UIContainer.h>
 #include <UI/Button.h>
+#include <UI/ImageBox.h>
+#include <UI/TextBox.h>
 
 #include <SFML/Window.hpp>
 
@@ -323,8 +326,16 @@ protected:
 	/// UI system
 	/// </summary>
 	UI mUI;
-	
-	
+
+	ImageBox* mBackground;
+
+	ImageBox* mNameBox;
+
+	TextBox* mNameText;
+
+	ImageBox* mDialogueBox;
+
+	TextBox* mDialogueText;
 };
 
 // ============================================================================
