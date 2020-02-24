@@ -37,6 +37,13 @@ UI::~UI()
 // ============================================================================
 // ============================================================================
 
+void UI::init()
+{
+	mRootElement->setSize(mEngine->getWindow().getView().getSize());
+}
+
+// ============================================================================
+
 void UI::addToRoot(UIElement* element)
 {
 	mRootElement->addChild(element);
@@ -223,7 +230,7 @@ bool UI::relayMouseEvent(UIElement* element, const sf::Event& e)
 	return handled;
 }
 
-void UI::handleEvent(const sf::Event& e)
+bool UI::handleEvent(const sf::Event& e)
 {
 	// Handle mouse events
 	if (e.type == sf::Event::MouseMoved)
@@ -239,6 +246,10 @@ void UI::handleEvent(const sf::Event& e)
 			if (mCurrentPress->mMouseMoveFunc)
 				mCurrentPress->mMouseMoveFunc(mCurrentPress, e);
 		}
+
+		// Always unhandled because mouse movements should always be visible to other components
+
+		return false;
 	}
 
 	// Handle mouse button events
@@ -273,6 +284,8 @@ void UI::handleEvent(const sf::Event& e)
 
 				current = current->mParent;
 			} while (!handled && current);
+
+			return handled;
 		}
 	}
 	else if (e.type == sf::Event::MouseButtonReleased)
@@ -299,6 +312,8 @@ void UI::handleEvent(const sf::Event& e)
 
 			// Reset current pressed
 			mCurrentPress = 0;
+
+			return handled;
 		}
 	}
 
@@ -320,6 +335,8 @@ void UI::handleEvent(const sf::Event& e)
 
 				current = current->mParent;
 			} while (!handled && current);
+
+			return handled;
 		}
 	}
 
@@ -338,6 +355,8 @@ void UI::handleEvent(const sf::Event& e)
 			if (mCurrentFocus->mKeyPressFunc)
 				mCurrentFocus->mKeyPressFunc(mCurrentFocus, e);
 		}
+
+		return (bool)mCurrentFocus;
 	}
 	else if (e.type == sf::Event::KeyReleased && e.key.code >= 0)
 	{
@@ -350,6 +369,8 @@ void UI::handleEvent(const sf::Event& e)
 			if (mCurrentKeyPress->mKeyReleaseFunc)
 				mCurrentKeyPress->mKeyReleaseFunc(mCurrentKeyPress, e);
 		}
+
+		return (bool)mCurrentKeyPress;
 	}
 
 	// Handle text input
@@ -361,7 +382,11 @@ void UI::handleEvent(const sf::Event& e)
 			if (mCurrentFocus->mTextEnteredFunc)
 				mCurrentFocus->mTextEnteredFunc(mCurrentFocus, e);
 		}
+
+		return (bool)mCurrentFocus;
 	}
+
+	return false;
 }
 
 // ============================================================================

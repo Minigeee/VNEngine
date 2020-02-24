@@ -1,6 +1,8 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+#include <Engine/Action.h>
+
 #include <UI/UI.h>
 #include <UI/UIContainer.h>
 #include <UI/Button.h>
@@ -54,13 +56,20 @@ public:
 	/// Called once a frame
 	/// </summary>
 	/// <param name="dt">Time elapsed since last frame</param>
-	virtual void update(float dt) = 0;
+	virtual void update(float dt);
 
 	/// <summary>
 	/// Render any sprites or UI elements to screen.
 	/// Called after scene update
 	/// </summary>
 	virtual void render() = 0;
+
+	/// <summary>
+	/// Add a scene action
+	/// </summary>
+	/// <param name="action">Action</param>
+	void addAction(Action* action);
+
 
 	/// <summary>
 	/// Allocate an object from the scene's managed memory
@@ -100,6 +109,16 @@ protected:
 	/// Map of object pool for various types
 	/// </summary>
 	std::unordered_map<std::type_index, IObjectPool*> mObjectPools;
+
+	/// <summary>
+	/// List of actions
+	/// </summary>
+	std::vector<Action*> mActions;
+
+	/// <summary>
+	/// Index of current action
+	/// </summary>
+	int mActionIndex;
 };
 
 // ============================================================================
@@ -310,6 +329,36 @@ public:
 	/// </summary>
 	void render() override;
 
+	/// <summary>
+	/// Get the background
+	/// </summary>
+	/// <returns>UI image box</returns>
+	ImageBox* getBackground() const;
+
+	/// <summary>
+	/// Get the dialogue box
+	/// </summary>
+	/// <returns>UI image box</returns>
+	ImageBox* getDialogueBox() const;
+
+	/// <summary>
+	/// Get the dialouge text
+	/// </summary>
+	/// <returns>UI text box</returns>
+	TextBox* getDialogueText() const;
+
+	/// <summary>
+	/// Get the name box
+	/// </summary>
+	/// <returns>UI image box</returns>
+	ImageBox* getNameBox() const;
+
+	/// <summary>
+	/// Get the name text
+	/// </summary>
+	/// <returns>UI text box</returns>
+	TextBox* getNameText() const;
+
 protected:
 	/// <summary>
 	/// This is where the actions list should be populated
@@ -327,14 +376,29 @@ protected:
 	/// </summary>
 	UI mUI;
 
+	/// <summary>
+	/// Background image
+	/// </summary>
 	ImageBox* mBackground;
 
+	/// <summary>
+	/// Box that surround name text
+	/// </summary>
 	ImageBox* mNameBox;
 
+	/// <summary>
+	/// Name label
+	/// </summary>
 	TextBox* mNameText;
 
+	/// <summary>
+	/// Box that surrounds dialogue text
+	/// </summary>
 	ImageBox* mDialogueBox;
 
+	/// <summary>
+	/// Dialogue text
+	/// </summary>
 	TextBox* mDialogueText;
 };
 

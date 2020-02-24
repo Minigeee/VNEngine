@@ -25,6 +25,11 @@ public:
 	~UI();
 
 	/// <summary>
+	/// Initialize UI system
+	/// </summary>
+	void init();
+
+	/// <summary>
 	/// Create UI element of type T
 	/// </summary>
 	template <typename T>
@@ -109,7 +114,8 @@ public:
 	/// Handle input events
 	/// </summary>
 	/// <param name="e">SFML event</param>
-	void handleEvent(const sf::Event& e);
+	/// <returns>True if event was handled by an element other than the root element</returns>
+	bool handleEvent(const sf::Event& e);
 
 	/// <summary>
 	/// Update UI animations and transforms

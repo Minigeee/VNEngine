@@ -12,7 +12,8 @@ using namespace vne;
 // ============================================================================
 
 Scene::Scene(Engine* engine) :
-	mEngine			(engine)
+	mEngine			(engine),
+	mActionIndex	(-1)
 {
 
 }
@@ -26,11 +27,43 @@ Scene::~Scene()
 
 // ============================================================================
 
+void Scene::addAction(Action* action)
+{
+	action->setScene(this);
+	mActions.push_back(action);
+}
+
+// ============================================================================
+
+void Scene::update(float dt)
+{
+	if (mActions.size())
+	{
+		if (mActionIndex >= 0 && mActionIndex < mActions.size())
+			mActions[mActionIndex]->update(dt);
+
+		if (mActionIndex < 0)
+		{
+			mActions[0]->run();
+			mActionIndex = 0;
+		}
+		else if (mActionIndex < mActions.size() - 1)
+		{
+			if (mActions[mActionIndex]->isComplete())
+				// Once previous action completes, start next one
+				mActions[++mActionIndex]->run();
+		}
+	}
+}
+
 void Scene::cleanup()
 {
 	// Remove all objects from object pools
 	for (auto it = mObjectPools.begin(); it != mObjectPools.end(); ++it)
 		it->second->free();
+
+	// Clear actions list
+	mActions.clear();
 }
 
 // ============================================================================
@@ -78,7 +111,7 @@ void SetupScene::handleEvent(const sf::Event& e)
 
 void SetupScene::update(float dt)
 {
-
+	// No actions in setup scene
 }
 
 void SetupScene::render()
@@ -148,6 +181,8 @@ void MainMenuScene::onExitBtn(UIElement* btn, const sf::Event& e)
 
 void MainMenuScene::init()
 {
+	mUI.init();
+
 	// Get view size
 	const sf::Vector2f& viewSize = mEngine->getWindow().getView().getSize();
 
@@ -219,6 +254,8 @@ void MainMenuScene::handleEvent(const sf::Event& e)
 
 void MainMenuScene::update(float dt)
 {
+	Scene::update(dt);
+
 	// Custom update comes first
 	onUpdate(dt);
 
@@ -258,6 +295,8 @@ NovelScene::~NovelScene()
 
 void NovelScene::init()
 {
+	mUI.init();
+
 	// Get view size
 	const sf::Vector2f& viewSize = mEngine->getWindow().getView().getSize();
 
@@ -313,13 +352,18 @@ void NovelScene::cleanup()
 
 void NovelScene::handleEvent(const sf::Event& e)
 {
-	mUI.handleEvent(e);
+	bool handled = mUI.handleEvent(e);
+
+	if (mActionIndex >= 0 && !handled)
+		mActions[mActionIndex]->handleEvent(e);
 }
 
 // ============================================================================
 
 void NovelScene::update(float dt)
 {
+	Scene::update(dt);
+
 	// Custom update comes first
 	onUpdate(dt);
 
@@ -329,6 +373,33 @@ void NovelScene::update(float dt)
 void NovelScene::onUpdate(float dt)
 {
 
+}
+
+// ============================================================================
+
+ImageBox* NovelScene::getBackground() const
+{
+	return mBackground;
+}
+
+ImageBox* NovelScene::getDialogueBox() const
+{
+	return mDialogueBox;
+}
+
+TextBox* NovelScene::getDialogueText() const
+{
+	return mDialogueText;
+}
+
+ImageBox* NovelScene::getNameBox() const
+{
+	return mNameBox;
+}
+
+TextBox* NovelScene::getNameText() const
+{
+	return mNameText;
 }
 
 // ============================================================================
