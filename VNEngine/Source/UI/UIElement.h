@@ -27,6 +27,26 @@ enum class UIPosition
 	BotRight
 };
 
+enum class ClipMode
+{
+	/// <summary>
+	/// When this is the clip mode, object clipping won't occur
+	/// </summary>
+	Disabled,
+
+	/// <summary>
+	/// When this is the clip mode, a single axis-aligned rectangular region is used for clipping.
+	/// This uses a scissor test internally
+	/// </summary>
+	Region,
+
+	/// <summary>
+	/// When this is the clip mode, multiple custom shaped objects can be used to define the clipping regions.
+	/// This uses a stencil buffer internally
+	/// </summary>
+	Shapes
+};
+
 // ============================================================================
 
 class UI;
@@ -177,19 +197,28 @@ public:
 	void setVisible(bool visible, bool recursive = true);
 
 	/// <summary>
-	/// Enable or disable clipping for this element and all children
+	/// Set the clip mode for this element and all its children (Default Disabled).
 	/// </summary>
-	/// <param name="enabled">Boolean for clip state</param>
-	void setClipEnabled(bool enabled);
+	/// <param name="mode">The clip mode</param>
+	void setClipMode(ClipMode mode);
 
 	/// <summary>
-	/// Set the clipping boundaries for this element and all children.
-	/// This is the area that will be rendered onto the screen.
-	/// Any part of the element that is outside this area will be cut off and not rendered.
-	/// The rectangle is defined in coordinate space, not pixels.
+	/// Set the rectangular clipping region that affects this element and all its children.
+	/// Everything outside this region will be discarded and not rendered.
+	/// The rectangle is measured in coordinate space units, not pixels.
+	/// This automatically sets the clip mode to Region
 	/// </summary>
-	/// <param name="bounds">Rectangle defining boundary</param>
-	void setClipBounds(const sf::FloatRect& bounds);
+	/// <param name="region">Rectangle region</param>
+	void setClipRegion(const sf::FloatRect& region);
+
+	/// <summary>
+	/// Add a drawable to the lists of clipping shapes.
+	/// The clipping shapes will affect this element and all its children.
+	/// Anything that is outside the clipping shapes will be discarded and not rendered.
+	/// This automatically sets the clip mode to Shapes
+	/// </summary>
+	/// <param name="shape"></param>
+	void addClipShape(const sf::Drawable* shape);
 
 	/// <summary>
 	/// Add offset to current local position
@@ -280,10 +309,22 @@ public:
 	bool isClipEnabled() const;
 
 	/// <summary>
-	/// Returns clipping boundaries
+	/// Get the clipping mode
 	/// </summary>
-	/// <returns>Clip bounds</returns>
-	const sf::FloatRect& getClipBounds() const;
+	/// <returns>Clip mode</returns>
+	ClipMode getClipMode() const;
+
+	/// <summary>
+	/// Returns the rectangular clipping region
+	/// </summary>
+	/// <returns>Clip region</returns>
+	const sf::FloatRect& getClipRegion() const;
+
+	/// <summary>
+	/// Returns the list of clipping shapes
+	/// </summary>
+	/// <returns>Clip shapes</returns>
+	const std::vector<const sf::Drawable*>& getClipShapes() const;
 
 	/// <summary>
 	/// Get element name
@@ -572,14 +613,19 @@ protected:
 	bool mIsVisible;
 
 	/// <summary>
-	/// True if element has clipping enabled
+	/// The clip mode
 	/// </summary>
-	bool mClipEnabled;
+	ClipMode mClipMode;
 
 	/// <summary>
-	/// The rectangle defining clip boundaries if it is enabled
+	/// Rectangle defining the clip region
 	/// </summary>
-	sf::FloatRect mClipBounds;
+	sf::FloatRect mClipRegion;
+
+	/// <summary>
+	/// List of shapes that define the clipping regions
+	/// </summary>
+	std::vector<const sf::Drawable*> mClipShapes;
 
 	/// <summary>
 	/// This is true if element's orientation was changed

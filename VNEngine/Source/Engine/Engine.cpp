@@ -43,9 +43,10 @@ bool Engine::init(const EngineParams& params)
 	if (!params.mResizable)
 		style = style & ~sf::Style::Resize;
 
-	// Enable anti-aliasing
+	// Enable anti-aliasing and stencil buffer
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 4;
+	settings.stencilBits = 8;
 
 	// Create window
 	mWindow.create(

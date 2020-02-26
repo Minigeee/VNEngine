@@ -158,11 +158,6 @@ private:
 	/// Dialogue the speaker is saying
 	/// </summary>
 	sf::String mDialogue;
-
-	/// <summary>
-	/// Keeps track of the number of visible characters
-	/// </summary>
-	Uint32 mNumChars;
 };
 
 // ============================================================================

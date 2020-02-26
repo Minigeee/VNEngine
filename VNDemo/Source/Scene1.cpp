@@ -35,6 +35,16 @@ Scene1::~Scene1()
 void Scene1::onInit()
 {
 	mBackground->setTexture(Resource<sf::Texture>::get("your_name"));
+
+	DialogueAction* d1 = alloc<DialogueAction>();
+	d1->setName("Mollusk");
+	d1->setDialogue("Hello! My name is Bello. I like to play the cello. My favorite food is jello. Bananas are yellow.");
+	addAction(d1);
+
+	DialogueAction* d2 = alloc<DialogueAction>();
+	d2->setName("Fabefabe");
+	d2->setDialogue("I is awesome!");
+	addAction(d2);
 }
 
 // ============================================================================

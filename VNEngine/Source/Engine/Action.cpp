@@ -87,8 +87,7 @@ void ActionGroup::addAction(Action* action)
 // ============================================================================
 // ============================================================================
 
-DialogueAction::DialogueAction() :
-	mNumChars		(0)
+DialogueAction::DialogueAction()
 {
 
 }
@@ -103,20 +102,18 @@ DialogueAction::~DialogueAction()
 void DialogueAction::run()
 {
 	NovelScene* scene = static_cast<NovelScene*>(mScene);
+	TextBox* dialogueText = scene->getDialogueText();
 
-	// Set name
+	// Set strings
 	scene->getNameText()->setString(mName);
-
-	// Reset to empty dialogue string
-	scene->getDialogueText()->setString("");
+	dialogueText->setString(mDialogue);
 }
 
 void DialogueAction::update(float dt)
 {
 	NovelScene* scene = static_cast<NovelScene*>(mScene);
 
-	if (++mNumChars % 1 == 0)
-		scene->getDialogueText()->setString(mDialogue.substring(0, mNumChars / 1));
+
 }
 
 void DialogueAction::handleEvent(const sf::Event& e)

@@ -51,8 +51,8 @@ UIElement::UIElement() :
 	mOrigin				(0.0f, 0.0f),
 	mAnchor				(0.0f, 0.0f),
 	mIsVisible			(true),
-	mClipEnabled		(false),
-	mClipBounds			(0.0f, 0.0f, 0.0f, 0.0f),
+	mClipMode			(ClipMode::Disabled),
+	mClipRegion			(0.0f, 0.0f, 0.0f, 0.0f),
 	mTransformChanged	(false),
 	mDrawablesChanged	(false),
 	mHasFocus			(false),
@@ -357,30 +357,37 @@ void UIElement::setVisible(bool visible, bool recursive)
 	}
 }
 
-void UIElement::setClipEnabled(bool enabled)
+void UIElement::setClipMode(ClipMode mode)
 {
-	if (enabled != mClipEnabled)
+	if (mode != mClipMode)
 	{
-		mClipEnabled = enabled;
+		mClipMode = mode;
 
 		for (Uint32 i = 0; i < mChildren.size(); ++i)
-			mChildren[i]->setClipEnabled(enabled);
+			mChildren[i]->setClipMode(mode);
 	}
 }
 
-void UIElement::setClipBounds(const sf::FloatRect& bounds)
+void UIElement::setClipRegion(const sf::FloatRect& region)
 {
-	mClipEnabled = true;
-	mClipBounds = bounds;
+	// Change clip mode
+	setClipMode(ClipMode::Region);
+
+	mClipRegion = region;
 
 	// Clamp size
-	if (mClipBounds.width < 0.0f)
-		mClipBounds.width = 0.0f;
-	if (mClipBounds.height < 0.0f)
-		mClipBounds.height = 0.0f;
+	if (mClipRegion.width < 0.0f)
+		mClipRegion.width = 0.0f;
+	if (mClipRegion.height < 0.0f)
+		mClipRegion.height = 0.0f;
+}
 
-	for (Uint32 i = 0; i < mChildren.size(); ++i)
-		mChildren[i]->setClipBounds(bounds);
+void UIElement::addClipShape(const sf::Drawable* shape)
+{
+	// Change clip mode
+	setClipMode(ClipMode::Shapes);
+
+	mClipShapes.push_back(shape);
 }
 
 // ============================================================================
@@ -435,12 +442,22 @@ bool UIElement::isVisible() const
 
 bool UIElement::isClipEnabled() const
 {
-	return mClipEnabled;
+	return mClipMode != ClipMode::Disabled;
 }
 
-const sf::FloatRect& UIElement::getClipBounds() const
+ClipMode UIElement::getClipMode() const
 {
-	return mClipBounds;
+	return mClipMode;
+}
+
+const sf::FloatRect& UIElement::getClipRegion() const
+{
+	return mClipRegion;
+}
+
+const std::vector<const sf::Drawable*>& UIElement::getClipShapes() const
+{
+	return mClipShapes;
 }
 
 const sf::String& UIElement::getName() const

@@ -45,6 +45,9 @@ void ScrollView::onInit(UI* ui)
 	mScrollBar->setSliderWidth(200.0f);
 	mScrollBar->getBody().setFillColor(sf::Color::Transparent);
 
+	// Setup container
+	mContainer->setPosition(mClipMargins);
+
 	// Add as children
 	UIElement::addChild(mContainer);
 	UIElement::addChild(mScrollBar);
@@ -104,6 +107,9 @@ void ScrollView::setClipMargins(const sf::Vector2f& margins)
 {
 	mClipMargins = margins;
 	mDrawablesChanged = true;
+
+	// Update x-position
+	mContainer->setPosition(margins.x, mContainer->getRelPosition().y);
 }
 
 void ScrollView::setScrollSpeed(float speed)
@@ -164,7 +170,7 @@ void ScrollView::update(float dt)
 		updateAbsTransforms();
 
 		// Update clip bounds
-		mContainer->setClipBounds(sf::FloatRect(mAbsPosition + mClipMargins, mSize - 2.0f * mClipMargins));
+		mContainer->setClipRegion(sf::FloatRect(mAbsPosition + mClipMargins, mSize - 2.0f * mClipMargins));
 
 		// Set background position and size
 		mBackground.setPosition(mAbsPosition);

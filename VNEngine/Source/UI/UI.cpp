@@ -6,6 +6,8 @@
 
 #include <Engine/Engine.h>
 
+#include <SFML/OpenGL.hpp>
+
 using namespace vne;
 
 // ============================================================================
@@ -161,7 +163,7 @@ bool UI::relayMouseEvent(UIElement* element, const sf::Event& e)
 	if (element->isClipEnabled())
 	{
 		sf::Vector2f coordSpace = mEngine->getWindow().mapPixelToCoords(sf::Vector2i(e.mouseMove.x, e.mouseMove.y));
-		inside &= element->getClipBounds().contains(coordSpace);
+		inside &= element->getClipRegion().contains(coordSpace);
 	}
 
 	// Test mouse enter
@@ -429,26 +431,61 @@ void UI::update(float dt)
 void UI::drawElement(UIElement* element, sf::RenderTarget& target, const sf::RenderStates& states) const
 {
 	// Start clipping if this element has clipping enabled, but not parent
-	bool startClipping = element->isClipEnabled() && (!element->getParent() || !element->getParent()->isClipEnabled());
-	sf::View prevView = target.getView();
+	bool clipping = element->isClipEnabled() && (!element->getParent() || !element->getParent()->isClipEnabled());
 
-	if (startClipping)
+	// Handle region mode
+	if (clipping && element->getClipMode() == ClipMode::Region)
 	{
-		const sf::FloatRect& bounds = element->getClipBounds();
-		const sf::FloatRect& prevViewport = prevView.getViewport();
-
-		// Calculate normalized position
-		sf::Vector2f normPos(bounds.left, bounds.top);
-		normPos = normPos / prevView.getSize() * prevViewport.getSize() + prevViewport.getPosition();
+		const sf::FloatRect& region = element->getClipRegion();
+		const sf::View& view = target.getView();
+		const sf::FloatRect& viewport = view.getViewport();
 
 		// Calculate normalized size
-		sf::Vector2f normSize(bounds.width, bounds.height);
-		normSize = normSize / prevView.getSize() * prevViewport.getSize();
+		sf::Vector2f pixelSize(region.width, region.height);
+		pixelSize = pixelSize / view.getSize() * viewport.getSize();
+		pixelSize *= (sf::Vector2f)target.getSize();
 
-		// Set new view
-		sf::View view(bounds);
-		view.setViewport(sf::FloatRect(normPos, normSize));
-		target.setView(view);
+		// Calculate pixel position
+		sf::Vector2f pixelPos(region.left, region.top);
+		pixelPos = pixelPos / view.getSize() * viewport.getSize() + viewport.getPosition();
+		pixelPos.y = 1.0f - pixelPos.y;
+		pixelPos *= (sf::Vector2f)target.getSize();
+		pixelPos.y -= pixelSize.y;
+
+		glEnable(GL_SCISSOR_TEST);
+		glScissor((int)pixelPos.x, (int)pixelPos.y, (int)pixelSize.x, (int)pixelSize.y);
+	}
+
+	// Handle shapes mode
+	else if (clipping && element->getClipMode() == ClipMode::Shapes)
+	{
+		// Enable stencil
+		glEnable(GL_STENCIL_TEST);
+
+		// Clear stencil buffer
+		glStencilMask(0xFF);
+		glClear(GL_STENCIL_BUFFER_BIT);
+
+		// Stencil functions
+		glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+
+		// Disable other buffers
+		glColorMask(false, false, false, false);
+		glDepthMask(false);
+
+		// Draw shapes
+		const std::vector<const sf::Drawable*>& shapes = element->getClipShapes();
+		for (int i = 0; i < shapes.size(); ++i)
+			target.draw(*shapes[i]);
+
+		// Reenable other buffers
+		glColorMask(true, true, true, true);
+		glDepthMask(true);
+
+		// Draw in areas
+		glStencilMask(0x00);
+		glStencilFunc(GL_EQUAL, 1, 0xFF);
 	}
 
 
@@ -462,9 +499,10 @@ void UI::drawElement(UIElement* element, sf::RenderTarget& target, const sf::Ren
 		drawElement(children[i], target, states);
 
 
-	// Reset view if clipping
-	if (startClipping)
-		target.setView(prevView);
+	if (clipping && element->getClipMode() == ClipMode::Region)
+		glDisable(GL_SCISSOR_TEST);
+	else if (clipping && element->getClipMode() == ClipMode::Shapes)
+		glDisable(GL_STENCIL_TEST);
 }
 
 void UI::draw(sf::RenderTarget& target, sf::RenderStates states) const
