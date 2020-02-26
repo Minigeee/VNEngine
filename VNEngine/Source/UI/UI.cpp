@@ -475,7 +475,7 @@ void UI::drawElement(UIElement* element, sf::RenderTarget& target, const sf::Ren
 		glDepthMask(false);
 
 		// Draw shapes
-		const std::vector<const sf::Drawable*>& shapes = element->getClipShapes();
+		const std::vector<sf::Drawable*>& shapes = element->getClipShapes();
 		for (int i = 0; i < shapes.size(); ++i)
 			target.draw(*shapes[i]);
 

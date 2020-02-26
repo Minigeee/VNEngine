@@ -106,10 +106,23 @@ Uint32 TextBox::getStyle() const
 	return mText.getStyle();
 }
 
+float TextBox::getLineLength(Uint32 num) const
+{
+	return num >= mLineLengths.size() ? -1.0f : mLineLengths[num];
+}
+
+const std::vector<float>& TextBox::getLineLengths() const
+{
+	return mLineLengths;
+}
+
 // ============================================================================
 
 void TextBox::applyString(sf::String str)
 {
+	// Clear list of line lengths
+	mLineLengths.clear();
+
 	// Add newlines if word wrap is enabled
 	if (mWordWrap > 0.0f)
 	{
@@ -127,10 +140,15 @@ void TextBox::applyString(sf::String str)
 			Uint32 c = str[i];
 			const sf::Glyph& glyph = font->getGlyph(c, characterSize, bold, outlineThickness);
 
+			x += glyph.advance * scale;
+
 			if (c == L'\n')
+			{
+				// Record line length
+				mLineLengths.push_back(x);
+				// Reset x
 				x = 0.0f;
-			else
-				x += glyph.advance * scale;
+			}
 
 			// Once at the end of a word, and if length of line is over word wrap, the find previous space
 			if ((c == L' ' || i == str.getSize() - 1) && x > mWordWrap)
@@ -141,20 +159,60 @@ void TextBox::applyString(sf::String str)
 				if (j < 0)
 				{
 					if (i < str.getSize() - 1)
+					{
 						// If couldn't find a space, then set the current space to a newline and continue
 						str[i] = L'\n';
+
+						mLineLengths.push_back(x);
+					}
 				}
 				else
 				{
 					// Set previous space to new line, and reset iterator to this word
 					str[j] = L'\n';
 					i = j;
+
+					mLineLengths.push_back(x);
 				}
 
 				// Reset line
 				x = 0.0f;
 			}
 		}
+
+		// Add final line length
+		mLineLengths.push_back(x);
+	}
+	else
+	{
+		// If word wrap is off, go through string and search for new lines
+		const sf::Font* font = mText.getFont();
+		Uint32 characterSize = mText.getCharacterSize();
+		bool bold = mText.getStyle() & sf::Text::Bold;
+		float outlineThickness = mText.getOutlineThickness();
+		float scale = mText.getScale().x;
+
+		// Keep track of current local x
+		float x = 0.0f;
+
+		for (Uint32 i = 0; i < str.getSize(); ++i)
+		{
+			Uint32 c = str[i];
+			const sf::Glyph& glyph = font->getGlyph(c, characterSize, bold, outlineThickness);
+
+			x += glyph.advance * scale;
+
+			if (c == L'\n')
+			{
+				// Record line length
+				mLineLengths.push_back(x);
+				// Reset x
+				x = 0.0f;
+			}
+		}
+
+		// Add final line length
+		mLineLengths.push_back(x);
 	}
 
 	// Set new string

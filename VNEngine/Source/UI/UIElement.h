@@ -218,7 +218,7 @@ public:
 	/// This automatically sets the clip mode to Shapes
 	/// </summary>
 	/// <param name="shape"></param>
-	void addClipShape(const sf::Drawable* shape);
+	void addClipShape(sf::Drawable* shape);
 
 	/// <summary>
 	/// Add offset to current local position
@@ -324,7 +324,7 @@ public:
 	/// Returns the list of clipping shapes
 	/// </summary>
 	/// <returns>Clip shapes</returns>
-	const std::vector<const sf::Drawable*>& getClipShapes() const;
+	const std::vector<sf::Drawable*>& getClipShapes() const;
 
 	/// <summary>
 	/// Get element name
@@ -625,7 +625,7 @@ protected:
 	/// <summary>
 	/// List of shapes that define the clipping regions
 	/// </summary>
-	std::vector<const sf::Drawable*> mClipShapes;
+	std::vector<sf::Drawable*> mClipShapes;
 
 	/// <summary>
 	/// This is true if element's orientation was changed

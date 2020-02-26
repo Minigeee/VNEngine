@@ -159,7 +159,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\Allocate.h" />
-    <ClInclude Include="Source\Core\Callback.h" />
     <ClInclude Include="Source\Core\DataTypes.h" />
     <ClInclude Include="Source\Core\Macros.h" />
     <ClInclude Include="Source\Core\Math.h" />

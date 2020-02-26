@@ -382,7 +382,7 @@ void UIElement::setClipRegion(const sf::FloatRect& region)
 		mClipRegion.height = 0.0f;
 }
 
-void UIElement::addClipShape(const sf::Drawable* shape)
+void UIElement::addClipShape(sf::Drawable* shape)
 {
 	// Change clip mode
 	setClipMode(ClipMode::Shapes);
@@ -455,7 +455,7 @@ const sf::FloatRect& UIElement::getClipRegion() const
 	return mClipRegion;
 }
 
-const std::vector<const sf::Drawable*>& UIElement::getClipShapes() const
+const std::vector<sf::Drawable*>& UIElement::getClipShapes() const
 {
 	return mClipShapes;
 }

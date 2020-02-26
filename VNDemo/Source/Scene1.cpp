@@ -38,7 +38,7 @@ void Scene1::onInit()
 
 	DialogueAction* d1 = alloc<DialogueAction>();
 	d1->setName("Mollusk");
-	d1->setDialogue("Hello! My name is Bello. I like to play the cello. My favorite food is jello. Bananas are yellow.");
+	d1->setDialogue("Hello! My name is Bello.\nI like to play the cello.\nMy favorite food is jello.\nBananas are yellow.");
 	addAction(d1);
 
 	DialogueAction* d2 = alloc<DialogueAction>();

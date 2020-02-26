@@ -26,7 +26,7 @@ void Text::setCharacterSize(Uint32 size)
 		const sf::Vector2f& viewSize = mView->getSize();
 
 		// Calculate aspect ratios
-		float desktopAR = mode.width / mode.height;
+		float desktopAR = (float)mode.width / mode.height;
 		float viewAR = viewSize.x / viewSize.y;
 
 		// Calculate font scale based on AR

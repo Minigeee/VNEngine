@@ -158,6 +158,8 @@ private:
 	/// Dialogue the speaker is saying
 	/// </summary>
 	sf::String mDialogue;
+
+	Uint32 mCurrentLine;
 };
 
 // ============================================================================

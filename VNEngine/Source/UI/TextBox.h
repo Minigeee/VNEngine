@@ -105,6 +105,20 @@ public:
 	/// <returns>Style</returns>
 	Uint32 getStyle() const;
 
+	/// <summary>
+	/// Get the length of a line of text (from newline or beggining to the next newline).
+	/// This returns a negative number if the line number is out of bounds
+	/// </summary>
+	/// <param name="num">The line number</param>
+	/// <returns>Length of line of text in coordinate space units</returns>
+	float getLineLength(Uint32 num) const;
+
+	/// <summary>
+	/// Get the entire list of line lengths in coordinate space units
+	/// </summary>
+	/// <returns>List of text line lengths</returns>
+	const std::vector<float>& getLineLengths() const;
+
 protected:
 	void onInit(UI* ui) override;
 	void update(float dt) override;
@@ -126,6 +140,11 @@ protected:
 	/// Width of word wrap region
 	/// </summary>
 	float mWordWrap;
+
+	/// <summary>
+	/// List of line lengths
+	/// </summary>
+	std::vector<float> mLineLengths;
 };
 
 // ============================================================================
