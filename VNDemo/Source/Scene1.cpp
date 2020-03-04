@@ -36,6 +36,8 @@ void Scene1::onInit()
 {
 	mBackground->setTexture(Resource<sf::Texture>::get("your_name"));
 
+	mDialogueText->setOutlineThickness(5.0f);
+
 	DialogueAction* d1 = alloc<DialogueAction>();
 	d1->setName("Mollusk");
 	d1->setDialogue("Hello! My name is Bello.\nI like to play the cello.\nMy favorite food is jello.\nBananas are yellow.");

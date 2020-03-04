@@ -88,7 +88,8 @@ void ActionGroup::addAction(Action* action)
 // ============================================================================
 
 DialogueAction::DialogueAction() :
-	mCurrentLine		(0)
+	mCurrentLine		(0),
+	mTextSpeed			(500.0f)
 {
 
 }
@@ -109,23 +110,46 @@ void DialogueAction::run()
 	scene->getNameText()->setString(mName);
 	dialogueText->setString(mDialogue);
 
+	const std::vector<sf::Drawable*>& clipShapes = dialogueText->getClipShapes();
+	const sf::Vector2f& textPos = dialogueText->getAbsPosition();
+	int numLines = (int)dialogueText->getLineLengths().size();
+	float outlineThickness = dialogueText->getOutlineThickness();
+
+	// Calculate the height of each line
+	const sf::FloatRect& textBounds = dialogueText->getBounds();
+	// The actual position of the text is at a slight offset from the absolute position
+	float textOffset = textBounds.top + outlineThickness - textPos.y;
+	float lineHeight = (textBounds.height - 2.0f * outlineThickness + textOffset) / numLines;
+	float outlineScale = outlineThickness / lineHeight;
+
 	// Reset clip shapes
-	for (int i = 0; i < dialogueText->getClipShapes().size(); ++i)
+	for (int i = 1; i < dialogueText->getClipShapes().size(); ++i)
 	{
-		sf::RectangleShape* rect =
-			static_cast<sf::RectangleShape*>(dialogueText->getClipShapes()[i]);
+		sf::RectangleShape* rect = static_cast<sf::RectangleShape*>(clipShapes[i]);
 		rect->setScale(0.0f, 1.0f);
 	}
 
 	// Create any clipping shapes if necessary
-	float charSize = dialogueText->getBounds().height / dialogueText->getLineLengths().size();
-	for (int i = dialogueText->getClipShapes().size(); i < dialogueText->getLineLengths().size(); ++i)
+	for (int i = dialogueText->getClipShapes().size(); i < numLines; ++i)
 	{
 		sf::RectangleShape* rect = scene->alloc<sf::RectangleShape>();
-		rect->setSize(sf::Vector2f(60.0f, charSize));
-		rect->setPosition(dialogueText->getAbsPosition() + sf::Vector2f(0.0f, i * charSize));
+		rect->setSize(sf::Vector2f(1.0f, lineHeight + textOffset * 0.5f));
+		rect->setPosition(textPos + sf::Vector2f(-outlineThickness, i * lineHeight));
 		rect->setScale(0.0f, 1.0f);
+
 		dialogueText->addClipShape(rect);
+	}
+
+	// Change first shape
+	sf::RectangleShape* first = static_cast<sf::RectangleShape*>(clipShapes[0]);
+	first->setScale(0.0f, 1.0f + outlineScale * (numLines == 1 ? 2.0f : 1.0f));
+	first->setPosition(textPos + sf::Vector2f(-outlineThickness, -outlineThickness));
+
+	// Change last shape
+	if (numLines > 1)
+	{
+		sf::RectangleShape* first = static_cast<sf::RectangleShape*>(clipShapes[numLines - 1]);
+		first->setScale(0.0f, 1.0f + outlineScale);
 	}
 }
 
@@ -139,7 +163,7 @@ void DialogueAction::update(float dt)
 	{
 		sf::RectangleShape* rect =
 			static_cast<sf::RectangleShape*>(dialogueText->getClipShapes()[mCurrentLine]);
-		rect->setScale(rect->getScale().x + 6.0f * dt, 1.0f);
+		rect->setScale(rect->getScale() + sf::Vector2f(mTextSpeed * dt, 0.0f));
 
 		// If reach the end of line, go to next one
 		if (rect->getScale().x * rect->getSize().x > dialogueText->getLineLength(mCurrentLine))
@@ -166,6 +190,11 @@ void DialogueAction::setName(const sf::String& name)
 void DialogueAction::setDialogue(const sf::String& dialogue)
 {
 	mDialogue = dialogue;
+}
+
+void DialogueAction::setTextSpeed(float speed)
+{
+	mTextSpeed = speed;
 }
 
 // ============================================================================

@@ -215,6 +215,10 @@ void TextBox::applyString(sf::String str)
 		mLineLengths.push_back(x);
 	}
 
+	// Add outline thickness to lin lengths
+	for (Uint32 i = 0; i < mLineLengths.size(); ++i)
+		mLineLengths[i] += 2.0f * getOutlineThickness();
+
 	// Set new string
 	mText.setString(str);
 
@@ -222,10 +226,31 @@ void TextBox::applyString(sf::String str)
 	sf::FloatRect bounds = mText.getLocalBounds();
 	const sf::Vector2f& s = mText.getScale();
 
-	mSize.x = (bounds.left + bounds.width) * s.x;
-	mSize.y = (bounds.top + bounds.height) * s.y;
+	mSize.x = ((bounds.left > 0.0f ? bounds.left : 0.0f) + bounds.width) * s.x;
+	mSize.y = ((bounds.top > 0.0f ? bounds.top : 0.0f) + bounds.height) * s.y;
 
 	transformDirty();
+}
+
+// ============================================================================
+
+void TextBox::updateBounds()
+{
+	// Create transform, based on SFML Transformable
+	float angle = -mAbsRotation * 3.141592654f / 180.f;
+	float c = static_cast<float>(std::cos(angle));
+	float s = static_cast<float>(std::sin(angle));
+	float ox = mOrigin.x * mSize.x;
+	float oy = mOrigin.y * mSize.y;
+	float tx = -ox * c - oy * s + mAbsPosition.x;
+	float ty = ox * s - oy * c + mAbsPosition.y;
+
+	sf::Transform t(c, s, tx,
+		-s, c, ty,
+		0.f, 0.f, 1.f);
+
+	// Update bounds
+	mBounds = t.transformRect(mText.getLocalBounds());
 }
 
 // ============================================================================

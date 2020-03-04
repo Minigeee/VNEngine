@@ -459,6 +459,11 @@ protected:
 	void updateAbsTransforms();
 
 	/// <summary>
+	/// Update element bounds because each element may have different bounds
+	/// </summary>
+	virtual void updateBounds();
+
+	/// <summary>
 	/// Recursively mark transform dirty for all children
 	/// </summary>
 	void transformDirty();

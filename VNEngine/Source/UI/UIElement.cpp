@@ -513,24 +513,30 @@ void UIElement::updateAbsTransforms()
 
 		mAbsRotation = fmodf(mAbsRotation, 360.0f);
 
-		// Create transform, based on SFML Transformable
-		float angle = -mAbsRotation * 3.141592654f / 180.f;
-		float c = static_cast<float>(std::cos(angle));
-		float s = static_cast<float>(std::sin(angle));
-		float ox = mOrigin.x * mSize.x;
-		float oy = mOrigin.y * mSize.y;
-		float tx = -ox * c - oy * s + mAbsPosition.x;
-		float ty = ox * s - oy * c + mAbsPosition.y;
-
-		sf::Transform t(c, s, tx,
-			-s, c, ty,
-			0.f, 0.f, 1.f);
-
-		// Update bounds
-		mBounds = t.transformRect(sf::FloatRect(sf::Vector2f(0.0f, 0.0f), mSize));
+		// Update bounding box
+		updateBounds();
 
 		mTransformChanged = false;
 	}
+}
+
+void UIElement::updateBounds()
+{
+	// Create transform, based on SFML Transformable
+	float angle = -mAbsRotation * 3.141592654f / 180.f;
+	float c = static_cast<float>(std::cos(angle));
+	float s = static_cast<float>(std::sin(angle));
+	float ox = mOrigin.x * mSize.x;
+	float oy = mOrigin.y * mSize.y;
+	float tx = -ox * c - oy * s + mAbsPosition.x;
+	float ty = ox * s - oy * c + mAbsPosition.y;
+
+	sf::Transform t(c, s, tx,
+		-s, c, ty,
+		0.f, 0.f, 1.f);
+
+	// Update bounds
+	mBounds = t.transformRect(sf::FloatRect(sf::Vector2f(0.0f, 0.0f), mSize));
 }
 
 // ============================================================================

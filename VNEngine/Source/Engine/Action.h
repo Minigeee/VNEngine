@@ -148,6 +148,13 @@ public:
 	/// <param name="dialogue">Dialogue</param>
 	void setDialogue(const sf::String& dialogue);
 
+	/// <summary>
+	/// Set the speed the text is displayed / revealed,
+	/// in coordinate space units per second
+	/// </summary>
+	/// <param name="speed">Speed of text reveal</param>
+	void setTextSpeed(float speed);
+
 private:
 	/// <summary>
 	/// Name of the speaker
@@ -159,7 +166,15 @@ private:
 	/// </summary>
 	sf::String mDialogue;
 
+	/// <summary>
+	/// Keeps track of current line that is being printed
+	/// </summary>
 	Uint32 mCurrentLine;
+
+	/// <summary>
+	/// The speed the text is displayed
+	/// </summary>
+	float mTextSpeed;
 };
 
 // ============================================================================

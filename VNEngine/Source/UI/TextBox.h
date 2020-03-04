@@ -125,6 +125,11 @@ protected:
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 	/// <summary>
+	/// The text will have a certain offset from the actual position, so custom bounds are needed
+	/// </summary>
+	void updateBounds();
+
+	/// <summary>
 	/// Apply string and modify depending on word wrap
 	/// </summary>
 	/// <param name="str">String to apply word wrap</param>
