@@ -28,6 +28,14 @@ void Setup::onInit()
 	Resource<sf::Font>::addLocation("Fonts/segoeui/segoeui.ttf", "segoeui");
 	Resource<sf::Texture>::addLocation("Textures/YourName.jpg", "your_name");
 
+	// Characters
+	mEngine->addCharacter(Character("Mollusk"));
+	mEngine->addCharacter(Character("Uncle Bob"));
+	mEngine->addCharacter(Character("Uncle Billy"));
+	mEngine->addCharacter(Character("Dr. Evil Webkie"));
+	mEngine->addCharacter(Character("Fafa"));
+	mEngine->addCharacter(Character("Bebe"));
+
 	// Default variable values
 	if (!mEngine->variableExists("test"))
 		mEngine->setVariable("test", 100);

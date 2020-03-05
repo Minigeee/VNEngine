@@ -89,7 +89,8 @@ void ActionGroup::addAction(Action* action)
 
 DialogueAction::DialogueAction() :
 	mCurrentLine		(0),
-	mTextSpeed			(500.0f)
+	mTextSpeed			(600.0f),
+	mStyle				(sf::Text::Regular)
 {
 
 }
@@ -106,8 +107,22 @@ void DialogueAction::run()
 	NovelScene* scene = static_cast<NovelScene*>(mScene);
 	TextBox* dialogueText = scene->getDialogueText();
 
+	// Hide name box
+	if (mName.getSize() == 0)
+	{
+		scene->getNameBox()->setVisible(false);
+	}
+	else
+	{
+		scene->getNameText()->setString(mName);
+		scene->getNameBox()->setVisible(true);
+	}
+
+	// Change text style
+	if (dialogueText->getStyle() != mStyle)
+		dialogueText->setStyle(mStyle);
+
 	// Set strings
-	scene->getNameText()->setString(mName);
 	dialogueText->setString(mDialogue);
 
 	const std::vector<sf::Drawable*>& clipShapes = dialogueText->getClipShapes();
@@ -195,6 +210,11 @@ void DialogueAction::setDialogue(const sf::String& dialogue)
 void DialogueAction::setTextSpeed(float speed)
 {
 	mTextSpeed = speed;
+}
+
+void DialogueAction::setTextStyle(Uint32 style)
+{
+	mStyle = style;
 }
 
 // ============================================================================

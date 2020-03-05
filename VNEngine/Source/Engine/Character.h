@@ -13,6 +13,8 @@ namespace vne
 
 // ============================================================================
 
+class Scene;
+
 class Character
 {
 public:
@@ -23,6 +25,12 @@ public:
 	/// </summary>
 	/// <param name="name">Name string</param>
 	Character(const sf::String& name);
+
+	/// <summary>
+	/// Set the current scene
+	/// </summary>
+	/// <param name="scene">Scene pointer</param>
+	void setScene(Scene* scene);
 
 	/// <summary>
 	/// Set the character name
@@ -53,7 +61,27 @@ public:
 	/// <returns>Pointer to image texture</returns>
 	sf::Texture* getImage(const sf::String& label) const;
 
+	/// <summary>
+	/// Convenience function to add a dialogue action for character.
+	/// This will automatically enclose the dialogue message with quotation symbols
+	/// </summary>
+	/// <param name="dialogue">Dialogue string</param>
+	void say(const sf::String& dialogue);
+
+	/// <summary>
+	/// Convenience function to add dialogue action for character.
+	/// This will not add qutation symbols to the dialogue, and it will italicize
+	/// the dialogue to indicate that the dialogue is happening in the character's head.
+	/// </summary>
+	/// <param name="dialogue">Dialogue string</param>
+	void think(const sf::String& dialogue);
+
 private:
+	/// <summary>
+	/// Access to current scene for all convenience functions
+	/// </summary>
+	Scene* mScene;
+
 	/// <summary>
 	/// The characters name
 	/// </summary>

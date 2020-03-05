@@ -79,12 +79,27 @@ bool Engine::init(const EngineParams& params)
 // ============================================================================
 // ============================================================================
 
+void Engine::switchScenes()
+{
+	// Cleanup old scene
+	if (mScene)
+		mScene->cleanup();
+
+	mScene = mNextScene;
+	mNextScene = 0;
+
+	// Update current scene for all characters
+	for (auto it = mCharacters.begin(); it != mCharacters.end(); ++it)
+		it->second.setScene(mScene);
+
+	// Initialize new scene
+	mScene->init();
+}
+
 void Engine::run()
 {
 	// Set next scene to current scene, and reset
-	mScene = mNextScene;
-	mScene->init();
-	mNextScene = 0;
+	switchScenes();
 
 
 	// Poll events once before starting
@@ -97,17 +112,7 @@ void Engine::run()
 	{
 		// If scene switch is requested, then switch scenes
 		if (mNextScene)
-		{
-			// Cleanup old scene
-			if (mScene)
-				mScene->cleanup();
-
-			mScene = mNextScene;
-			mNextScene = 0;
-
-			// Initialize new scene
-			mScene->init();
-		}
+			switchScenes();
 
 		// Handle input
 		pollEvents();

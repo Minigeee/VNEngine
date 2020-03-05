@@ -16,6 +16,14 @@ namespace vne
 // ============================================================================
 
 /// <summary>
+/// The quotation mark symbol.
+/// Putting it in a variable so it can be adjusted for other languages.
+/// </summary>
+static Uint32 gQuotationSymbol = L'\"';
+
+// ============================================================================
+
+/// <summary>
 /// This contains parameters used when starting the engine.
 /// </summary>
 struct EngineParams
@@ -203,6 +211,11 @@ private:
 	/// Render all UI elements, sprites, textures...
 	/// </summary>
 	void render();
+
+	/// <summary>
+	/// Called whenever a scene switch is requested
+	/// </summary>
+	void switchScenes();
 
 private:
 	/// <summary>

@@ -325,6 +325,7 @@ void NovelScene::init()
 	mDialogueText->setPosition(20.0f, 20.0f);
 	mDialogueText->setString("Hello World! The quick brown fox jumps over the lazy dog.");
 	mDialogueText->setCharacterSize(35);
+	mDialogueText->setWordWrap(viewSize.x * 0.8f - 40.0f);
 	mDialogueBox->addChild(mDialogueText);
 
 	mNameText = mUI.create<TextBox>("NameText");
@@ -400,6 +401,15 @@ ImageBox* NovelScene::getNameBox() const
 TextBox* NovelScene::getNameText() const
 {
 	return mNameText;
+}
+
+void NovelScene::narrate(const sf::String& dialogue)
+{
+	DialogueAction* action = alloc<DialogueAction>();
+	action->setName("");
+	action->setDialogue(dialogue);
+	action->setTextStyle(sf::Text::Regular);
+	addAction(action);
 }
 
 // ============================================================================

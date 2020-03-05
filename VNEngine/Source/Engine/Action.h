@@ -134,16 +134,13 @@ public:
 
 	/// <summary>
 	/// Set the speaker name.
-	/// If an empty string is provided, the name box is hidden,
-	/// and quotation symbols aren't used
+	/// If an empty string is provided, the name box is hidden
 	/// </summary>
 	/// <param name="name">Speaker name</param>
 	void setName(const sf::String& name);
 
 	/// <summary>
 	/// Set the dialogue string.
-	/// This string will automatically be surrounded by quotation symbols,
-	/// unless an empty name string is set.
 	/// </summary>
 	/// <param name="dialogue">Dialogue</param>
 	void setDialogue(const sf::String& dialogue);
@@ -154,6 +151,12 @@ public:
 	/// </summary>
 	/// <param name="speed">Speed of text reveal</param>
 	void setTextSpeed(float speed);
+
+	/// <summary>
+	/// Set the style of the text to use when this dialogue action is run (i.e. italics, bold, strikethrough)
+	/// </summary>
+	/// <param name="style">SFML text style flags</param>
+	void setTextStyle(Uint32 style);
 
 private:
 	/// <summary>
@@ -175,6 +178,11 @@ private:
 	/// The speed the text is displayed
 	/// </summary>
 	float mTextSpeed;
+
+	/// <summary>
+	/// Text style
+	/// </summary>
+	Uint32 mStyle;
 };
 
 // ============================================================================

@@ -359,6 +359,13 @@ public:
 	/// <returns>UI text box</returns>
 	TextBox* getNameText() const;
 
+	/// <summary>
+	/// Convenience function that adds dialogue action for narration.
+	/// The dialogue action will be nameless, and dialogue will not autmatically add qutation symbols
+	/// </summary>
+	/// <param name="diaogue"></param>
+	void narrate(const sf::String& diaogue);
+
 protected:
 	/// <summary>
 	/// This is where the actions list should be populated
