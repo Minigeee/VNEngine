@@ -106,6 +106,7 @@ void DialogueAction::run()
 {
 	NovelScene* scene = static_cast<NovelScene*>(mScene);
 	TextBox* dialogueText = scene->getDialogueText();
+	dialogueText->setClipMode(ClipMode::Shapes);
 
 	// Hide name box
 	if (mName.getSize() == 0)
@@ -166,6 +167,10 @@ void DialogueAction::run()
 		sf::RectangleShape* first = static_cast<sf::RectangleShape*>(clipShapes[numLines - 1]);
 		first->setScale(0.0f, 1.0f + outlineScale);
 	}
+
+
+	// Set number of lines
+	mNumLines = numLines;
 }
 
 void DialogueAction::update(float dt)
@@ -174,7 +179,7 @@ void DialogueAction::update(float dt)
 	TextBox* dialogueText = scene->getDialogueText();
 
 	// Only do update if there are still lines left to display
-	if (mCurrentLine < dialogueText->getClipShapes().size())
+	if (mCurrentLine < mNumLines)
 	{
 		sf::RectangleShape* rect =
 			static_cast<sf::RectangleShape*>(dialogueText->getClipShapes()[mCurrentLine]);
@@ -188,11 +193,29 @@ void DialogueAction::update(float dt)
 
 void DialogueAction::handleEvent(const sf::Event& e)
 {
-	if (e.type == sf::Event::MouseButtonPressed)
-		mIsComplete = true;
+	NovelScene* scene = static_cast<NovelScene*>(mScene);
+	TextBox* dialogueText = scene->getDialogueText();
 
+	if (e.type == sf::Event::MouseButtonPressed)
+	{
+		if (mCurrentLine < mNumLines)
+		{
+			mCurrentLine = mNumLines;
+			dialogueText->setClipMode(ClipMode::Disabled);
+		}
+		else
+			mIsComplete = true;
+	}
 	else if (e.type == sf::Event::KeyPressed && e.key.code == sf::Keyboard::Space)
-		mIsComplete = true;
+	{
+		if (mCurrentLine < mNumLines)
+		{
+			mCurrentLine = mNumLines;
+			dialogueText->setClipMode(ClipMode::Disabled);
+		}
+		else
+			mIsComplete = true;
+	}
 }
 
 // ============================================================================

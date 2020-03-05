@@ -175,6 +175,12 @@ private:
 	Uint32 mCurrentLine;
 
 	/// <summary>
+	/// The number of text lines in the dialogue.
+	/// This is just for convenience
+	/// </summary>
+	Uint32 mNumLines;
+
+	/// <summary>
 	/// The speed the text is displayed
 	/// </summary>
 	float mTextSpeed;

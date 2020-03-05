@@ -31,14 +31,20 @@ void TextBox::setString(const sf::String& str)
 
 void TextBox::setFont(const sf::Font* font)
 {
-	mText.setFont(*font);
-	applyString(mText.getString());
+	if (font != mText.getFont() && mText.getString().getSize())
+	{
+		mText.setFont(*font);
+		applyString(mText.getString());
+	}
 }
 
 void TextBox::setCharacterSize(Uint32 size)
 {
-	mText.setCharacterSize(size);
-	applyString(mText.getString());
+	if (size != mText.getCharacterSize() && mText.getString().getSize())
+	{
+		mText.setCharacterSize(size);
+		applyString(mText.getString());
+	}
 }
 
 void TextBox::setFillColor(const sf::Color& c)
@@ -53,20 +59,29 @@ void TextBox::setOutlineColor(const sf::Color& c)
 
 void TextBox::setOutlineThickness(float thickness)
 {
-	mText.setOutlineThickness(thickness);
-	applyString(mText.getString());
+	if (thickness != mText.getOutlineThickness() && mText.getString().getSize())
+	{
+		mText.setOutlineThickness(thickness);
+		applyString(mText.getString());
+	}
 }
 
 void TextBox::setStyle(Uint32 style)
 {
-	mText.setStyle(style);
-	applyString(mText.getString());
+	if (style != mText.getStyle() && mText.getString().getSize())
+	{
+		mText.setStyle(style);
+		applyString(mText.getString());
+	}
 }
 
 void TextBox::setWordWrap(float width)
 {
-	mWordWrap = width;
-	applyString(mText.getString());
+	if (width != mWordWrap && mText.getString().getSize())
+	{
+		mWordWrap = width;
+		applyString(mText.getString());
+	}
 }
 
 // ============================================================================
