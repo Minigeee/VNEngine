@@ -128,7 +128,7 @@ void DialogueAction::run()
 
 	const std::vector<sf::Drawable*>& clipShapes = dialogueText->getClipShapes();
 	const sf::Vector2f& textPos = dialogueText->getAbsPosition();
-	int numLines = (int)dialogueText->getLineLengths().size();
+	int numLines = (int)dialogueText->getNumLines();
 	float outlineThickness = dialogueText->getOutlineThickness();
 
 	// Calculate the height of each line
@@ -138,22 +138,21 @@ void DialogueAction::run()
 	float lineHeight = (textBounds.height - 2.0f * outlineThickness + textOffset) / numLines;
 	float outlineScale = outlineThickness / lineHeight;
 
-	// Reset clip shapes
-	for (int i = 1; i < dialogueText->getClipShapes().size(); ++i)
-	{
-		sf::RectangleShape* rect = static_cast<sf::RectangleShape*>(clipShapes[i]);
-		rect->setScale(0.0f, 1.0f);
-	}
-
 	// Create any clipping shapes if necessary
 	for (int i = dialogueText->getClipShapes().size(); i < numLines; ++i)
 	{
 		sf::RectangleShape* rect = scene->alloc<sf::RectangleShape>();
-		rect->setSize(sf::Vector2f(1.0f, lineHeight + textOffset * 0.5f));
 		rect->setPosition(textPos + sf::Vector2f(-outlineThickness, i * lineHeight));
-		rect->setScale(0.0f, 1.0f);
 
 		dialogueText->addClipShape(rect);
+	}
+
+	// Reset clip shapes
+	for (int i = 0; i < dialogueText->getClipShapes().size(); ++i)
+	{
+		sf::RectangleShape* rect = static_cast<sf::RectangleShape*>(clipShapes[i]);
+		rect->setSize(sf::Vector2f(1.0f, lineHeight + textOffset * 0.5f));
+		rect->setScale(0.0f, 1.0f);
 	}
 
 	// Change first shape
@@ -167,10 +166,6 @@ void DialogueAction::run()
 		sf::RectangleShape* first = static_cast<sf::RectangleShape*>(clipShapes[numLines - 1]);
 		first->setScale(0.0f, 1.0f + outlineScale);
 	}
-
-
-	// Set number of lines
-	mNumLines = numLines;
 }
 
 void DialogueAction::update(float dt)
@@ -179,7 +174,7 @@ void DialogueAction::update(float dt)
 	TextBox* dialogueText = scene->getDialogueText();
 
 	// Only do update if there are still lines left to display
-	if (mCurrentLine < mNumLines)
+	if (mCurrentLine < dialogueText->getNumLines())
 	{
 		sf::RectangleShape* rect =
 			static_cast<sf::RectangleShape*>(dialogueText->getClipShapes()[mCurrentLine]);
@@ -198,9 +193,9 @@ void DialogueAction::handleEvent(const sf::Event& e)
 
 	if (e.type == sf::Event::MouseButtonPressed)
 	{
-		if (mCurrentLine < mNumLines)
+		if (mCurrentLine < dialogueText->getNumLines())
 		{
-			mCurrentLine = mNumLines;
+			mCurrentLine = dialogueText->getNumLines();
 			dialogueText->setClipMode(ClipMode::Disabled);
 		}
 		else
@@ -208,9 +203,9 @@ void DialogueAction::handleEvent(const sf::Event& e)
 	}
 	else if (e.type == sf::Event::KeyPressed && e.key.code == sf::Keyboard::Space)
 	{
-		if (mCurrentLine < mNumLines)
+		if (mCurrentLine < dialogueText->getNumLines())
 		{
-			mCurrentLine = mNumLines;
+			mCurrentLine = dialogueText->getNumLines();
 			dialogueText->setClipMode(ClipMode::Disabled);
 		}
 		else
@@ -238,6 +233,48 @@ void DialogueAction::setTextSpeed(float speed)
 void DialogueAction::setTextStyle(Uint32 style)
 {
 	mStyle = style;
+}
+
+// ============================================================================
+// ============================================================================
+
+BackgroundAction::BackgroundAction() :
+	mTexture		(0),
+	mEffect			(None)
+{
+
+}
+
+BackgroundAction::~BackgroundAction()
+{
+
+}
+
+// ============================================================================
+
+void BackgroundAction::run()
+{
+	NovelScene* scene = static_cast<NovelScene*>(mScene);
+	ImageBox* bg = scene->getBackground();
+
+	// Set the texture
+	bg->setTexture(mTexture);
+
+	mIsComplete = true;
+
+	/* TODO : Implement background transitions */
+}
+
+// ============================================================================
+
+void BackgroundAction::setTexture(sf::Texture* texture)
+{
+	mTexture = texture;
+}
+
+void BackgroundAction::setTransition(Effect effect)
+{
+	mEffect = effect;
 }
 
 // ============================================================================

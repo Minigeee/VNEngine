@@ -366,6 +366,8 @@ public:
 	/// <param name="diaogue"></param>
 	void narrate(const sf::String& diaogue);
 
+	void background(sf::Texture* bg, BackgroundAction::Effect effect = BackgroundAction::None);
+
 protected:
 	/// <summary>
 	/// This is where the actions list should be populated

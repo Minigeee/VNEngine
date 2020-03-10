@@ -119,6 +119,12 @@ public:
 	/// <returns>List of text line lengths</returns>
 	const std::vector<float>& getLineLengths() const;
 
+	/// <summary>
+	/// Get the number of lines (seperated by newline character) in the text
+	/// </summary>
+	/// <returns>Number of lines of text</returns>
+	Uint32 getNumLines() const;
+
 protected:
 	void onInit(UI* ui) override;
 	void update(float dt) override;

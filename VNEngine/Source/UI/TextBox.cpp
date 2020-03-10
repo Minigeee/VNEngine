@@ -131,6 +131,11 @@ const std::vector<float>& TextBox::getLineLengths() const
 	return mLineLengths;
 }
 
+Uint32 TextBox::getNumLines() const
+{
+	return mLineLengths.size();
+}
+
 // ============================================================================
 
 void TextBox::applyString(sf::String str)

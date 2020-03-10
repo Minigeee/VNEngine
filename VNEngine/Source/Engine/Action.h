@@ -4,6 +4,7 @@
 #include <Core/Variant.h>
 
 #include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
 
 #include <functional>
 #include <vector>
@@ -175,12 +176,6 @@ private:
 	Uint32 mCurrentLine;
 
 	/// <summary>
-	/// The number of text lines in the dialogue.
-	/// This is just for convenience
-	/// </summary>
-	Uint32 mNumLines;
-
-	/// <summary>
 	/// The speed the text is displayed
 	/// </summary>
 	float mTextSpeed;
@@ -189,6 +184,58 @@ private:
 	/// Text style
 	/// </summary>
 	Uint32 mStyle;
+};
+
+// ============================================================================
+
+/// <summary>
+/// This action changes the background image
+/// (It does not start an action in the background, or on a seperate thread)
+/// </summary>
+class BackgroundAction : public Action
+{
+public:
+	enum Effect
+	{
+		/// <summary>
+		/// No transition effect. Instantly switches to the new background
+		/// </summary>
+		None,
+
+		/// <summary>
+		/// Fade between the previous background and the new one (Smooth transition)
+		/// </summary>
+		Fade
+	};
+
+public:
+	BackgroundAction();
+	~BackgroundAction();
+
+	/// <summary>
+	/// Show image
+	/// </summary>
+	void run() override;
+
+	/// <summary>
+	/// Set the background texture. If NULL is passed as a value, the background will be hidden
+	/// </summary>
+	/// <param name="texture"></param>
+	void setTexture(sf::Texture* texture);
+
+	/// <summary>
+	/// Set the background transition effect
+	/// </summary>
+	/// <param name="effect">Transition effect</param>
+	void setTransition(Effect effect);
+
+private:
+	/// <summary>
+	/// Background texture
+	/// </summary>
+	sf::Texture* mTexture;
+
+	Effect mEffect;
 };
 
 // ============================================================================

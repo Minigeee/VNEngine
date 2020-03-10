@@ -403,12 +403,22 @@ TextBox* NovelScene::getNameText() const
 	return mNameText;
 }
 
+// ============================================================================
+
 void NovelScene::narrate(const sf::String& dialogue)
 {
 	DialogueAction* action = alloc<DialogueAction>();
 	action->setName("");
 	action->setDialogue(dialogue);
 	action->setTextStyle(sf::Text::Regular);
+	addAction(action);
+}
+
+void NovelScene::background(sf::Texture* bg, BackgroundAction::Effect effect)
+{
+	BackgroundAction* action = alloc<BackgroundAction>();
+	action->setTexture(bg);
+	action->setTransition(effect);
 	addAction(action);
 }
 
