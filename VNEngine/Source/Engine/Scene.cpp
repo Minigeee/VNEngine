@@ -378,6 +378,11 @@ void NovelScene::onUpdate(float dt)
 
 // ============================================================================
 
+UI& NovelScene::getUI()
+{
+	return mUI;
+}
+
 ImageBox* NovelScene::getBackground() const
 {
 	return mBackground;
@@ -414,10 +419,10 @@ void NovelScene::narrate(const sf::String& dialogue)
 	addAction(action);
 }
 
-void NovelScene::background(sf::Texture* bg, BackgroundAction::Effect effect)
+void NovelScene::background(const sf::String& bgName, Transition effect)
 {
 	BackgroundAction* action = alloc<BackgroundAction>();
-	action->setTexture(bg);
+	action->setTexture(Resource<sf::Texture>::get(bgName));
 	action->setTransition(effect);
 	addAction(action);
 }

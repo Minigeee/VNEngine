@@ -330,6 +330,12 @@ public:
 	void render() override;
 
 	/// <summary>
+	/// Get the scene's UI system
+	/// </summary>
+	/// <returns>UI system</returns>
+	UI& getUI();
+
+	/// <summary>
 	/// Get the background
 	/// </summary>
 	/// <returns>UI image box</returns>
@@ -366,7 +372,13 @@ public:
 	/// <param name="diaogue"></param>
 	void narrate(const sf::String& diaogue);
 
-	void background(sf::Texture* bg, BackgroundAction::Effect effect = BackgroundAction::None);
+	/// <summary>
+	/// Convenience function that adds a background transition action.
+	/// The default transition effect is None.
+	/// </summary>
+	/// <param name="bgName">Name of the background image</param>
+	/// <param name="effect">Transition effect</param>
+	void background(const sf::String& bgName, Transition effect = Transition::None);
 
 protected:
 	/// <summary>

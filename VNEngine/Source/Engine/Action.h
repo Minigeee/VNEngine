@@ -14,6 +14,44 @@ namespace vne
 
 class Scene;
 
+class ImageBox;
+
+// ============================================================================
+
+/// <summary>
+/// Transition effects
+/// </summary>
+enum class Transition
+{
+	/// <summary>
+	/// This effect works with images and audio.
+	/// No transition effect. Instantly switches
+	/// </summary>
+	None,
+
+	/// <summary>
+	/// This effect works with images and audio.
+	/// Fade between the previous and the new (smooth transition)
+	/// For fading images, the alpha channel is changed.
+	/// For fading audio, the volume is changed.
+	/// </summary>
+	Fade,
+
+	/// <summary>
+	/// This effect works with image transitions.
+	/// This will always fade the image to the color black,
+	/// and it will ignore any other specified image
+	/// (Meaning that the final background image will be black)
+	/// </summary>
+	FadeToBlack,
+
+	/// <summary>
+	/// This effect works with image transitions.
+	/// This will always fade the image from the color black
+	/// </summary>
+	FadeFromBlack
+};
+
 // ============================================================================
 
 class Action
@@ -51,6 +89,12 @@ public:
 	/// </summary>
 	/// <param name="cond">Function or lambda</param>
 	void setCondition(const std::function<bool()>& cond);
+
+	/// <summary>
+	/// Set the completion status of action
+	/// </summary>
+	/// <param name="complete">Completion status</param>
+	void setComplete(bool complete);
 
 	/// <summary>
 	/// Returns true if action has been completed
@@ -195,20 +239,6 @@ private:
 class BackgroundAction : public Action
 {
 public:
-	enum Effect
-	{
-		/// <summary>
-		/// No transition effect. Instantly switches to the new background
-		/// </summary>
-		None,
-
-		/// <summary>
-		/// Fade between the previous background and the new one (Smooth transition)
-		/// </summary>
-		Fade
-	};
-
-public:
 	BackgroundAction();
 	~BackgroundAction();
 
@@ -227,7 +257,7 @@ public:
 	/// Set the background transition effect
 	/// </summary>
 	/// <param name="effect">Transition effect</param>
-	void setTransition(Effect effect);
+	void setTransition(Transition effect);
 
 private:
 	/// <summary>
@@ -235,7 +265,86 @@ private:
 	/// </summary>
 	sf::Texture* mTexture;
 
-	Effect mEffect;
+	/// <summary>
+	/// The transition effect
+	/// </summary>
+	Transition mTransition;
+};
+
+// ============================================================================
+
+class ImageAction : public Action
+{
+public:
+	enum Mode
+	{
+		/// <summary>
+		/// Show image
+		/// </summary>
+		Show,
+
+		/// <summary>
+		/// Hide image
+		/// </summary>
+		Hide
+	};
+
+public:
+	ImageAction();
+	~ImageAction();
+
+	/// <summary>
+	/// Show or hide an image
+	/// </summary>
+	void run() override;
+
+	/// <summary>
+	/// Set image action mode (either show or hide image).
+	/// If the mode is "Hide" and the image is already hidden, nothing happens.
+	/// If the mode is "Show" and the image is already shown, the new texture is applied to the image box,
+	/// and the transition effect is used
+	/// </summary>
+	/// <param name="mode"></param>
+	void setMode(Mode mode);
+
+	/// <summary>
+	/// Set the new texture to apply to the image box
+	/// </summary>
+	/// <param name="texture">New texture</param>
+	void setTexture(sf::Texture* texture);
+
+	/// <summary>
+	/// Set the transition effect
+	/// </summary>
+	/// <param name="effect"></param>
+	void setTransition(Transition effect);
+
+	/// <summary>
+	/// Set the image box to apply the texture to
+	/// </summary>
+	/// <param name="image">Image box element</param>
+	void setImageBox(ImageBox* image); 
+
+private:
+	/// <summary>
+	/// Show / hide image
+	/// </summary>
+	Mode mMode;
+
+	/// <summary>
+	/// Texture to switch for
+	/// </summary>
+	sf::Texture* mTexture;
+
+	/// <summary>
+	/// Transition effect to use when switching
+	/// </summary>
+	Transition mTransition;
+
+	/// <summary>
+	/// Image box to apply texture to
+	/// </summary>
+	ImageBox* mImageBox;
 };
 
 // ============================================================================

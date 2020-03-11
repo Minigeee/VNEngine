@@ -31,6 +31,11 @@ void Action::setCondition(const std::function<bool()>& cond)
 	mCondition = cond;
 }
 
+void Action::setComplete(bool complete)
+{
+	mIsComplete = complete;
+}
+
 bool Action::isComplete() const
 {
 	return mIsComplete;
@@ -240,7 +245,7 @@ void DialogueAction::setTextStyle(Uint32 style)
 
 BackgroundAction::BackgroundAction() :
 	mTexture		(0),
-	mEffect			(None)
+	mTransition		(Transition::None)
 {
 
 }
@@ -257,12 +262,29 @@ void BackgroundAction::run()
 	NovelScene* scene = static_cast<NovelScene*>(mScene);
 	ImageBox* bg = scene->getBackground();
 
-	// Set the texture
-	bg->setTexture(mTexture);
-
-	mIsComplete = true;
-
 	/* TODO : Implement background transitions */
+	if (mTransition == Transition::Fade)
+	{
+
+	}
+
+	else if (mTransition == Transition::FadeToBlack)
+	{
+
+	}
+
+	else if (mTransition == Transition::FadeFromBlack)
+	{
+
+	}
+
+	else
+	{
+		// Set the texture
+		bg->setTexture(mTexture);
+
+		mIsComplete = true;
+	}
 }
 
 // ============================================================================
@@ -272,9 +294,80 @@ void BackgroundAction::setTexture(sf::Texture* texture)
 	mTexture = texture;
 }
 
-void BackgroundAction::setTransition(Effect effect)
+void BackgroundAction::setTransition(Transition effect)
 {
-	mEffect = effect;
+	mTransition = effect;
+}
+
+// ============================================================================
+// ============================================================================
+
+ImageAction::ImageAction() :
+	mMode		(Show),
+	mTexture	(0),
+	mTransition	(Transition::None),
+	mImageBox	(0)
+{
+
+}
+
+ImageAction::~ImageAction()
+{
+
+}
+
+// ============================================================================
+
+void ImageAction::setMode(Mode mode)
+{
+	mMode = mode;
+}
+
+void ImageAction::setTexture(sf::Texture* texture)
+{
+	mTexture = texture;
+}
+
+void ImageAction::setTransition(Transition effect)
+{
+	mTransition = effect;
+}
+
+void ImageAction::setImageBox(ImageBox* box)
+{
+	mImageBox = box;
+}
+
+// ============================================================================
+
+void ImageAction::run()
+{
+	NovelScene* scene = static_cast<NovelScene*>(mScene);
+	Uint32 zIndex = scene->getDialogueBox()->getZIndex() - 1;
+
+	if (mTransition == Transition::Fade)
+	{
+
+	}
+
+	else if (mTransition == Transition::FadeToBlack)
+	{
+
+	}
+
+	else if (mTransition == Transition::FadeFromBlack)
+	{
+
+	}
+
+	else
+	{
+		// Set the texture
+		mImageBox->setTexture(mTexture);
+		mImageBox->setZIndex(zIndex);
+
+		mIsComplete = true;
+	}
 }
 
 // ============================================================================

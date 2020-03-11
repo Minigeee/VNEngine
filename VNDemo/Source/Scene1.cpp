@@ -34,6 +34,8 @@ Scene1::~Scene1()
 
 void Scene1::onInit()
 {
+	mBackground->setColor(sf::Color::Black);
+
 	Character& m = mEngine->getCharacter("Mollusk");
 	Character& bob = mEngine->getCharacter("Uncle Bob");
 	Character& billy = mEngine->getCharacter("Uncle Billy");
@@ -43,7 +45,7 @@ void Scene1::onInit()
 
 	narrate("I am narrator");
 	m.think("This is a pretty cool picture...");
-	background(Resource<sf::Texture>::get("your_name"));
+	m.show("thing");
 	dr.say("Mwahahahahaha!!!!!!!!!!!! I am here to destroy you!");
 }
 

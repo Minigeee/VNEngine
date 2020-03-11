@@ -6,6 +6,8 @@
 
 #include <Core/DataTypes.h>
 
+#include <Engine/Action.h>
+
 #include <unordered_map>
 
 namespace vne
@@ -76,6 +78,19 @@ public:
 	/// <param name="dialogue">Dialogue string</param>
 	void think(const sf::String& dialogue);
 
+	/// <summary>
+	/// Show a character image with a transition effect
+	/// </summary>
+	/// <param name="image">Name of the character image</param>
+	/// <param name="effect">Transition effect</param>
+	void show(const sf::String& image, Transition effect = Transition::None);
+
+	/// <summary>
+	/// Hide the current character image with a transition effect
+	/// </summary>
+	/// <param name="effect">Transition effect</param>
+	void hide(Transition effect = Transition::None);
+
 private:
 	/// <summary>
 	/// Access to current scene for all convenience functions
@@ -91,6 +106,11 @@ private:
 	/// Map of character images
 	/// </summary>
 	std::unordered_map<std::basic_string<Uint32>, sf::Texture*> mImages;
+
+	/// <summary>
+	/// UI element used to display character
+	/// </summary>
+	ImageBox* mImageBox;
 };
 
 // ============================================================================
