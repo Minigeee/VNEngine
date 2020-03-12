@@ -369,8 +369,17 @@ public:
 	/// Convenience function that adds dialogue action for narration.
 	/// The dialogue action will be nameless, and dialogue will not autmatically add qutation symbols
 	/// </summary>
-	/// <param name="diaogue"></param>
-	void narrate(const sf::String& diaogue);
+	/// <param name="dialogue"></param>
+	void narrate(const sf::String& dialogue);
+
+	/// <summary>
+	/// Convenience function that adds a background transition action.
+	/// The default transition effect is None.
+	/// </summary>
+	/// <param name="texture">Pointer to the background texture</param>
+	/// <param name="effect">Transition effect</param>
+	/// <param name="duration">Duration of transition effect in seconds</param>
+	void background(sf::Texture* texture, Transition effect = Transition::None, float duration = 1.0f);
 
 	/// <summary>
 	/// Convenience function that adds a background transition action.
@@ -378,7 +387,8 @@ public:
 	/// </summary>
 	/// <param name="bgName">Name of the background image</param>
 	/// <param name="effect">Transition effect</param>
-	void background(const sf::String& bgName, Transition effect = Transition::None);
+	/// <param name="duration">Duration of transition effect in seconds</param>
+	void background(const sf::String& bgName, Transition effect = Transition::None, float duration = 1.0f);
 
 protected:
 	/// <summary>

@@ -419,7 +419,15 @@ void NovelScene::narrate(const sf::String& dialogue)
 	addAction(action);
 }
 
-void NovelScene::background(const sf::String& bgName, Transition effect)
+void NovelScene::background(sf::Texture* texture, Transition effect, float duration)
+{
+	BackgroundAction* action = alloc<BackgroundAction>();
+	action->setTexture(texture);
+	action->setTransition(effect);
+	addAction(action);
+}
+
+void NovelScene::background(const sf::String& bgName, Transition effect, float duration)
 {
 	BackgroundAction* action = alloc<BackgroundAction>();
 	action->setTexture(Resource<sf::Texture>::get(bgName));

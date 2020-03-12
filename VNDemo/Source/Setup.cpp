@@ -28,6 +28,7 @@ void Setup::onInit()
 	Resource<sf::Font>::addLocation("Fonts/segoeui/segoeui.ttf", "segoeui");
 	Resource<sf::Texture>::addLocation("Textures/YourName.jpg", "your_name");
 	Resource<sf::Texture>::addLocation("Textures/Thing.png", "thing");
+	Resource<sf::Texture>::addLocation("Textures/Thing2.png", "thing2");
 
 	// Characters
 	mEngine->addCharacter(Character("Mollusk"));
@@ -37,7 +38,8 @@ void Setup::onInit()
 	mEngine->addCharacter(Character("Fafa"));
 	mEngine->addCharacter(Character("Bebe"));
 
-	mEngine->getCharacter("Mollusk").addImage("thing", Resource<sf::Texture>::get("thing"));
+	mEngine->getCharacter("Mollusk").addImage("thing");
+	mEngine->getCharacter("Mollusk").addImage("thing2");
 
 	// Default variable values
 	if (!mEngine->variableExists("test"))

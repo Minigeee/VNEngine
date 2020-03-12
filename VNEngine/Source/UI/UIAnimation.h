@@ -67,7 +67,12 @@ public:
 			if (mRepeat && mDuration != 0.0f)
 				mTime = fmodf(mTime, mDuration) - mDelay;
 			else
+			{
 				mTime = mDuration;
+
+				if (mFinishedFunc)
+					mFinishedFunc();
+			}
 		}
 	}
 
@@ -100,6 +105,17 @@ public:
 	void setRepeat(bool repeat)
 	{
 		mRepeat = repeat;
+	}
+
+	/// <summary>
+	/// Set the animation finished function callback.
+	/// This function will be called when an animation is completed
+	/// (this does not include looped animations or cancelled animations)
+	/// </summary>
+	/// <param name="func">Function callback</param>
+	void setFinishedFunc(const std::function<void()>& func)
+	{
+		mFinishedFunc = func;
 	}
 
 	/// <summary>
@@ -145,6 +161,9 @@ public:
 	void finish()
 	{
 		mTime = mDuration;
+
+		if (mFinishedFunc)
+			mFinishedFunc();
 	}
 
 protected:
@@ -167,6 +186,11 @@ protected:
 	/// True if animation should repeat
 	/// </summary>
 	bool mRepeat;
+
+	/// <summary>
+	/// Function that is called when animation finishes
+	/// </summary>
+	std::function<void()> mFinishedFunc;
 };
 
 // ============================================================================

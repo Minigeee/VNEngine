@@ -299,6 +299,11 @@ void BackgroundAction::setTransition(Transition effect)
 	mTransition = effect;
 }
 
+void BackgroundAction::setDuration(float duration)
+{
+	mDuration = duration;
+}
+
 // ============================================================================
 // ============================================================================
 
@@ -306,6 +311,7 @@ ImageAction::ImageAction() :
 	mMode		(Show),
 	mTexture	(0),
 	mTransition	(Transition::None),
+	mDuration	(1.0f),
 	mImageBox	(0)
 {
 
@@ -333,6 +339,11 @@ void ImageAction::setTransition(Transition effect)
 	mTransition = effect;
 }
 
+void ImageAction::setDuration(float duration)
+{
+	mDuration = duration;
+}
+
 void ImageAction::setImageBox(ImageBox* box)
 {
 	mImageBox = box;
@@ -342,12 +353,45 @@ void ImageAction::setImageBox(ImageBox* box)
 
 void ImageAction::run()
 {
+	if (mMode == Show)
+		show();
+	else
+		hide();
+}
+
+void ImageAction::show()
+{
 	NovelScene* scene = static_cast<NovelScene*>(mScene);
 	Uint32 zIndex = scene->getDialogueBox()->getZIndex() - 1;
+	UI& ui = scene->getUI();
+
+	// Make sure to clamp the z-index
 
 	if (mTransition == Transition::Fade)
 	{
+		// If current image box is not visible
+		if (!mImageBox->isVisible() || !mImageBox->getTexture() || mImageBox->getColor().a == 0)
+		{
+			// Then fade from transparent
+			mImageBox->setZIndex(zIndex);
+			mImageBox->setVisible(true);
+			mImageBox->setTexture(mTexture);
 
+			// Create animation
+			ColorAnimation* anim = scene->alloc<ColorAnimation>(
+				std::bind(&ImageBox::setColor, mImageBox, std::placeholders::_1),
+				sf::Color(255, 255, 255, 0), sf::Color::White,
+				mDuration
+			);
+
+			// Add animation
+			ui.addAnimation(anim);
+		}
+
+		else
+		{
+			// Interpolate between the 2
+		}
 	}
 
 	else if (mTransition == Transition::FadeToBlack)

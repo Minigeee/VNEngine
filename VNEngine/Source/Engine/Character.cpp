@@ -50,6 +50,11 @@ void Character::addImage(const sf::String& label, sf::Texture* image)
 	mImages[label.toUtf32()] = image;
 }
 
+void Character::addImage(const sf::String& resName)
+{
+	addImage(resName, Resource<sf::Texture>::get(resName));
+}
+
 // ============================================================================
 
 const sf::String& Character::getName() const
@@ -89,7 +94,7 @@ void Character::think(const sf::String& dialogue)
 	mScene->addAction(action);
 }
 
-void Character::show(const sf::String& image, Transition effect)
+void Character::show(const sf::String& image, Transition effect, float duration)
 {
 	if (!mScene) return;
 
@@ -97,6 +102,7 @@ void Character::show(const sf::String& image, Transition effect)
 	action->setMode(ImageAction::Show);
 	action->setTexture(mImages[image.toUtf32()]);
 	action->setTransition(effect);
+	action->setDuration(duration);
 	action->setImageBox(mImageBox);
 	mScene->addAction(action);
 }

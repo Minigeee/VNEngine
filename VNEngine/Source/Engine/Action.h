@@ -259,6 +259,12 @@ public:
 	/// <param name="effect">Transition effect</param>
 	void setTransition(Transition effect);
 
+	/// <summary>
+	/// Set the duration of the transition effect in seconds
+	/// </summary>
+	/// <param name="duration">Duration of the transition</param>
+	void setDuration(float duration);
+
 private:
 	/// <summary>
 	/// Background texture
@@ -269,6 +275,11 @@ private:
 	/// The transition effect
 	/// </summary>
 	Transition mTransition;
+
+	/// <summary>
+	/// Duration of transition
+	/// </summary>
+	float mDuration;
 };
 
 // ============================================================================
@@ -320,10 +331,29 @@ public:
 	void setTransition(Transition effect);
 
 	/// <summary>
+	/// Set the duration of the transition effect in seconds
+	/// </summary>
+	/// <param name="duration">Duration of the transition</param>
+	void setDuration(float duration);
+
+	/// <summary>
 	/// Set the image box to apply the texture to
 	/// </summary>
 	/// <param name="image">Image box element</param>
 	void setImageBox(ImageBox* image); 
+
+private:
+	/// <summary>
+	/// Show image mode
+	/// </summary>
+	void show();
+
+	/// <summary>
+	/// Hide image mode
+	/// </summary>
+	void hide();
+
+	void animComplete();
 
 private:
 	/// <summary>
@@ -340,6 +370,11 @@ private:
 	/// Transition effect to use when switching
 	/// </summary>
 	Transition mTransition;
+
+	/// <summary>
+	/// Duration of transition
+	/// </summary>
+	float mDuration;
 
 	/// <summary>
 	/// Image box to apply texture to

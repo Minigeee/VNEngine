@@ -51,6 +51,16 @@ public:
 	void addImage(const sf::String& label, sf::Texture* image);
 
 	/// <summary>
+	/// Add a character image by resource name. The texture will be loaded from the resource system and
+	/// the image will be given a label that will be the same as its resource name.
+	/// These images can include a subsection of the entire character that gets reused for several different poses.
+	/// Ex: "happy" - has a happy image of the character,
+	/// "hand_up_r" - an image of just the character's right hand up in the air.
+	/// </summary>
+	/// <param name="resName">Name of the texture as it was assigned in the resource system</param>
+	void addImage(const sf::String& resName);
+
+	/// <summary>
 	/// Get the characters name
 	/// </summary>
 	/// <returns>Name string</returns>
@@ -83,13 +93,15 @@ public:
 	/// </summary>
 	/// <param name="image">Name of the character image</param>
 	/// <param name="effect">Transition effect</param>
-	void show(const sf::String& image, Transition effect = Transition::None);
+	/// <param name="duration">Duration of the transition effect</param>
+	void show(const sf::String& image, Transition effect = Transition::None, float duration = 1.0f);
 
 	/// <summary>
 	/// Hide the current character image with a transition effect
 	/// </summary>
 	/// <param name="effect">Transition effect</param>
-	void hide(Transition effect = Transition::None);
+	/// <param name="duration">Duration of the transition effect</param>
+	void hide(Transition effect = Transition::None, float duration = 1.0f);
 
 private:
 	/// <summary>
