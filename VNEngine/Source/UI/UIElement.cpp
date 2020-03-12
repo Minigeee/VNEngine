@@ -181,6 +181,8 @@ void UIElement::removeChild(const sf::String& name)
 	{
 		if (mChildren[i]->mName == name)
 		{
+			// Remove parent
+			mChildren[i]->mParent = 0;
 			mChildren.erase(mChildren.begin() + i);
 			return;
 		}
@@ -189,6 +191,9 @@ void UIElement::removeChild(const sf::String& name)
 
 void UIElement::removeAllChildren()
 {
+	for (Uint32 i = 0; i < mChildren.size(); ++i)
+		mChildren[i]->mParent = 0;
+
 	mChildren.clear();
 }
 
