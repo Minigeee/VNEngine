@@ -365,53 +365,140 @@ void ImageAction::show()
 	Uint32 zIndex = scene->getDialogueBox()->getZIndex() - 1;
 	UI& ui = scene->getUI();
 
-	// Make sure to clamp the z-index
+	// Make sure the image is in the right z-position
+	mImageBox->setZIndex(zIndex);
 
 	if (mTransition == Transition::Fade)
 	{
-		// If current image box is not visible
-		if (!mImageBox->isVisible() || !mImageBox->getTexture() || mImageBox->getColor().a == 0)
-		{
-			// Then fade from transparent
-			mImageBox->setZIndex(zIndex);
-			mImageBox->setVisible(true);
-			mImageBox->setTexture(mTexture);
+		// Interpolate between the 2
+		mImageBox->setVisible(true);
 
-			// Create animation
-			ColorAnimation* anim = scene->alloc<ColorAnimation>(
-				std::bind(&ImageBox::setColor, mImageBox, std::placeholders::_1),
-				sf::Color(255, 255, 255, 0), sf::Color::White,
-				mDuration
+		// If transition from image to image, then create a temporary copy to blend between images
+		if (mImageBox->isVisible() && mImageBox->getTexture())
+		{
+			// Create a copy of this image
+			ImageBox* box = ui.copy<ImageBox>(mImageBox->getName() + ".TEMP", mImageBox->getName());
+			ui.addToRoot(box);
+			box->setZIndex(zIndex);
+		}
+
+		// Set the new texture
+		mImageBox->setTexture(mTexture);
+
+		// Create animation
+		ColorAnimation* anim = scene->alloc<ColorAnimation>(
+			std::bind(&ImageBox::setColor, mImageBox, std::placeholders::_1),
+			sf::Color(255, 255, 255, 0), sf::Color::White,
+			mDuration
 			);
+		// Set finish callback
+		anim->setFinishedFunc(std::bind(&ImageAction::onAnimComplete, this));
 
-			// Add animation
-			ui.addAnimation(anim);
-		}
-
-		else
-		{
-			// Interpolate between the 2
-		}
+		// Add animation
+		ui.addAnimation(anim);
 	}
 
 	else if (mTransition == Transition::FadeToBlack)
 	{
+		mImageBox->setVisible(true);
 
+		// Create animation
+		ColorAnimation* anim = scene->alloc<ColorAnimation>(
+			std::bind(&ImageBox::setColor, mImageBox, std::placeholders::_1),
+			sf::Color::White, sf::Color::Black,
+			mDuration
+			);
+		// Set finish callback
+		anim->setFinishedFunc(std::bind(&ImageAction::onAnimComplete, this));
+
+		// Add animation
+		ui.addAnimation(anim);
 	}
 
 	else if (mTransition == Transition::FadeFromBlack)
 	{
+		mImageBox->setVisible(true);
+		mImageBox->setTexture(mTexture);
 
+		// Create animation
+		ColorAnimation* anim = scene->alloc<ColorAnimation>(
+			std::bind(&ImageBox::setColor, mImageBox, std::placeholders::_1),
+			sf::Color::Black, sf::Color::White,
+			mDuration
+			);
+		// Set finish callback
+		anim->setFinishedFunc(std::bind(&ImageAction::onAnimComplete, this));
+
+		// Add animation
+		ui.addAnimation(anim);
 	}
 
 	else
 	{
 		// Set the texture
 		mImageBox->setTexture(mTexture);
-		mImageBox->setZIndex(zIndex);
 
 		mIsComplete = true;
 	}
+}
+
+void ImageAction::hide()
+{
+	NovelScene* scene = static_cast<NovelScene*>(mScene);
+	UI& ui = scene->getUI();
+
+	if (mTransition == Transition::Fade)
+	{
+		// Create animation
+		ColorAnimation* anim = scene->alloc<ColorAnimation>(
+			std::bind(&ImageBox::setColor, mImageBox, std::placeholders::_1),
+			sf::Color::White, sf::Color(255, 255, 255, 0),
+			mDuration
+			);
+		// Set finish callback
+		anim->setFinishedFunc(std::bind(&ImageAction::onAnimComplete, this));
+
+		// Add animation
+		ui.addAnimation(anim);
+	}
+
+	else if (mTransition == Transition::FadeToBlack)
+	{
+		// Create animation
+		ColorAnimation* anim = scene->alloc<ColorAnimation>(
+			std::bind(&ImageBox::setColor, mImageBox, std::placeholders::_1),
+			sf::Color::White, sf::Color::Black,
+			mDuration
+			);
+		// Set finish callback
+		anim->setFinishedFunc(std::bind(&ImageAction::onAnimComplete, this));
+
+		// Add animation
+		ui.addAnimation(anim);
+	}
+
+	else
+	{
+		mImageBox->setVisible(false);
+		mIsComplete = true;
+	}
+}
+
+// ============================================================================
+
+void ImageAction::onAnimComplete()
+{
+	NovelScene* scene = static_cast<NovelScene*>(mScene);
+	UI& ui = scene->getUI();
+
+	if (mMode == Show)
+		// Remove temporary element
+		ui.remove<ImageBox>(mImageBox->getName() + ".TEMP");
+	else
+		// Hide the image
+		mImageBox->setVisible(false);
+
+	mIsComplete = true;
 }
 
 // ============================================================================

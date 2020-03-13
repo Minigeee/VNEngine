@@ -46,7 +46,7 @@ void Scene1::onInit()
 	m.think("This is a pretty cool picture...");
 	m.show("thing", Transition::Fade, 0.8f);
 	dr.say("Mwahahahahaha!!!!!!!!!!!! I am here to destroy you!");
-	m.show("thing2", Transition::Fade, 0.8f);
+	m.hide(Transition::FadeToBlack);
 }
 
 // ============================================================================

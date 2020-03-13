@@ -353,7 +353,10 @@ private:
 	/// </summary>
 	void hide();
 
-	void animComplete();
+	/// <summary>
+	/// Called when an animation completes
+	/// </summary>
+	void onAnimComplete();
 
 private:
 	/// <summary>

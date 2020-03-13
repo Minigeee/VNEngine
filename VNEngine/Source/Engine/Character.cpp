@@ -107,4 +107,16 @@ void Character::show(const sf::String& image, Transition effect, float duration)
 	mScene->addAction(action);
 }
 
+void Character::hide(Transition effect, float duration)
+{
+	if (!mScene) return;
+
+	ImageAction* action = mScene->alloc<ImageAction>();
+	action->setMode(ImageAction::Hide);
+	action->setTransition(effect);
+	action->setDuration(duration);
+	action->setImageBox(mImageBox);
+	mScene->addAction(action);
+}
+
 // ============================================================================

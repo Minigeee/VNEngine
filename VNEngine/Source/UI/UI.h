@@ -63,6 +63,26 @@ public:
 	T* get(const sf::String& name) const { return Resource<T>::get(name); }
 
 	/// <summary>
+	/// Remove a UI element
+	/// </summary>
+	template <typename T>
+	void remove(const sf::String& name)
+	{
+		T* element = Resource<T>::get(name);
+
+		if (element)
+		{
+			// Remove from tree
+			if (element->mParent)
+				element->mParent->removeChild(element);
+			element->removeAllChildren();
+
+			// Remove from resource pool
+			Resource<T>::free(name);
+		}
+	}
+
+	/// <summary>
 	/// Add UI element to the root element
 	/// </summary>
 	/// <param name="element">UI element to add</param>
