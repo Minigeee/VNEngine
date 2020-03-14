@@ -245,7 +245,8 @@ void DialogueAction::setTextStyle(Uint32 style)
 
 BackgroundAction::BackgroundAction() :
 	mTexture		(0),
-	mTransition		(Transition::None)
+	mTransition		(Transition::None),
+	mDuration		(1.0f)
 {
 
 }
@@ -253,38 +254,6 @@ BackgroundAction::BackgroundAction() :
 BackgroundAction::~BackgroundAction()
 {
 
-}
-
-// ============================================================================
-
-void BackgroundAction::run()
-{
-	NovelScene* scene = static_cast<NovelScene*>(mScene);
-	ImageBox* bg = scene->getBackground();
-
-	/* TODO : Implement background transitions */
-	if (mTransition == Transition::Fade)
-	{
-
-	}
-
-	else if (mTransition == Transition::FadeToBlack)
-	{
-
-	}
-
-	else if (mTransition == Transition::FadeFromBlack)
-	{
-
-	}
-
-	else
-	{
-		// Set the texture
-		bg->setTexture(mTexture);
-
-		mIsComplete = true;
-	}
 }
 
 // ============================================================================
@@ -302,6 +271,93 @@ void BackgroundAction::setTransition(Transition effect)
 void BackgroundAction::setDuration(float duration)
 {
 	mDuration = duration;
+}
+
+// ============================================================================
+
+void BackgroundAction::run()
+{
+	NovelScene* scene = static_cast<NovelScene*>(mScene);
+	ImageBox* bg = scene->getBackground();
+	UI& ui = scene->getUI();
+
+	/* TODO : Implement background transitions */
+	if (mTransition == Transition::Fade)
+	{
+		// Create a copy of this image
+		ImageBox* box = ui.copy<ImageBox>(bg->getName() + ".TEMP", bg->getName());
+		ui.addToRoot(box);
+		box->setZIndex(bg->getZIndex());
+
+		// Set the new texture
+		bg->setTexture(mTexture);
+
+		// Create animation
+		ColorAnimation* anim = scene->alloc<ColorAnimation>(
+			std::bind(&ImageBox::setColor, bg, std::placeholders::_1),
+			sf::Color(255, 255, 255, 0), sf::Color::White,
+			mDuration
+			);
+		// Set finish callback
+		anim->setFinishedFunc(std::bind(&BackgroundAction::onAnimComplete, this));
+
+		// Add animation
+		ui.addAnimation(anim);
+	}
+
+	else if (mTransition == Transition::FadeToBlack)
+	{
+		// Create animation
+		ColorAnimation* anim = scene->alloc<ColorAnimation>(
+			std::bind(&ImageBox::setColor, bg, std::placeholders::_1),
+			sf::Color::White, sf::Color::Black,
+			mDuration
+			);
+		// Set finish callback
+		anim->setFinishedFunc(std::bind(&BackgroundAction::onAnimComplete, this));
+
+		// Add animation
+		ui.addAnimation(anim);
+	}
+
+	else if (mTransition == Transition::FadeFromBlack)
+	{
+		bg->setTexture(mTexture);
+
+		// Create animation
+		ColorAnimation* anim = scene->alloc<ColorAnimation>(
+			std::bind(&ImageBox::setColor, bg, std::placeholders::_1),
+			sf::Color::Black, sf::Color::White,
+			mDuration
+			);
+		// Set finish callback
+		anim->setFinishedFunc(std::bind(&BackgroundAction::onAnimComplete, this));
+
+		// Add animation
+		ui.addAnimation(anim);
+	}
+
+	else
+	{
+		// Set the texture
+		bg->setTexture(mTexture);
+
+		mIsComplete = true;
+	}
+}
+
+// ============================================================================
+
+void BackgroundAction::onAnimComplete()
+{
+	NovelScene* scene = static_cast<NovelScene*>(mScene);
+	UI& ui = scene->getUI();
+
+	if (mTransition == Transition::Fade)
+		// Remove temporary element
+		ui.remove<ImageBox>(scene->getBackground()->getName() + ".TEMP");
+
+	mIsComplete = true;
 }
 
 // ============================================================================

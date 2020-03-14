@@ -34,6 +34,8 @@ Scene1::~Scene1()
 
 void Scene1::onInit()
 {
+	mBackground->setColor(sf::Color::Black);
+
 	Character& m = mEngine->getCharacter("Mollusk");
 	Character& bob = mEngine->getCharacter("Uncle Bob");
 	Character& billy = mEngine->getCharacter("Uncle Billy");
@@ -41,12 +43,12 @@ void Scene1::onInit()
 	Character& f = mEngine->getCharacter("Fafa");
 	Character& b = mEngine->getCharacter("Bebe");
 
-	background("your_name");
 	narrate("I am narrator");
+	background("your_name", Transition::FadeFromBlack);
 	m.think("This is a pretty cool picture...");
 	m.show("thing", Transition::Fade, 0.8f);
 	dr.say("Mwahahahahaha!!!!!!!!!!!! I am here to destroy you!");
-	m.hide(Transition::FadeToBlack);
+	background(0, Transition::FadeToBlack);
 }
 
 // ============================================================================

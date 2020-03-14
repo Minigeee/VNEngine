@@ -37,8 +37,9 @@ void ImageBox::setTexture(const sf::Texture* texture)
 {
 	mImage.setTexture(texture);
 
-	// Set size
-	setSize((sf::Vector2f)texture->getSize());
+	if (texture)
+		// Set size if not NULL
+		setSize((sf::Vector2f)texture->getSize());
 }
 
 void ImageBox::setTextureRect(const sf::IntRect& rect, bool resize)

@@ -267,6 +267,12 @@ public:
 
 private:
 	/// <summary>
+	/// Called when animation completes
+	/// </summary>
+	void onAnimComplete();
+
+private:
+	/// <summary>
 	/// Background texture
 	/// </summary>
 	sf::Texture* mTexture;
