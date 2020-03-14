@@ -33,6 +33,12 @@ void Scene::addAction(Action* action)
 	mActions.push_back(action);
 }
 
+void Scene::addAnimation(I_Animation* anim)
+{
+	anim->reset();
+	mAnimations.push_back(anim);
+}
+
 // ============================================================================
 
 void Scene::update(float dt)
@@ -52,6 +58,21 @@ void Scene::update(float dt)
 			if (mActionIndex < mActions.size())
 				// Run action
 				mActions[mActionIndex]->run();
+		}
+	}
+
+	// Update animations
+	for (Uint32 i = 0; i < mAnimations.size(); ++i)
+	{
+		// Update animation
+		I_Animation* anim = mAnimations[i];
+		anim->update(dt);
+
+		// Remove if finished
+		if (anim->isFinished())
+		{
+			mAnimations[i--] = mAnimations.back();
+			mAnimations.pop_back();
 		}
 	}
 }
@@ -274,6 +295,13 @@ void MainMenuScene::render()
 	sf::RenderWindow& target = mEngine->getWindow();
 
 	target.draw(mUI);
+}
+
+// ============================================================================
+
+UI& MainMenuScene::getUI()
+{
+	return mUI;
 }
 
 // ============================================================================

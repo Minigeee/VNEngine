@@ -122,9 +122,6 @@
     <ClInclude Include="Source\UI\Button.h">
       <Filter>Include\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Source\UI\UIAnimation.h">
-      <Filter>Include\UI</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Core\Math.h">
       <Filter>Include\Core</Filter>
     </ClInclude>
@@ -162,6 +159,9 @@
       <Filter>Include\Core</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Action.h">
+      <Filter>Include\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\Animation.h">
       <Filter>Include\Engine</Filter>
     </ClInclude>
   </ItemGroup>

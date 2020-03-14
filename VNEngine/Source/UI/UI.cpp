@@ -61,12 +61,6 @@ void UI::setDefaultFont(sf::Font* font)
 	mDefaultFont = font;
 }
 
-void UI::addAnimation(I_UIAnimation* anim)
-{
-	anim->reset();
-	mAnimations.push_back(anim);
-}
-
 sf::Font* UI::getDefaultFont()
 {
 	if (!mDefaultFont)
@@ -407,21 +401,6 @@ void UI::update(float dt)
 	const sf::Vector2f& viewSize = mEngine->getWindow().getView().getSize();
 	if (mRootElement->getSize() != viewSize)
 		mRootElement->setSize(viewSize);
-
-	// Update UI animations
-	for (Uint32 i = 0; i < mAnimations.size(); ++i)
-	{
-		// Update animation
-		I_UIAnimation* anim = mAnimations[i];
-		anim->update(dt);
-
-		// Remove if finished
-		if (anim->isFinished())
-		{
-			mAnimations[i--] = mAnimations.back();
-			mAnimations.pop_back();
-		}
-	}
 
 	updateElement(mRootElement, dt);
 }

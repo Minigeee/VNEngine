@@ -2,6 +2,7 @@
 #define SCENE_H
 
 #include <Engine/Action.h>
+#include <Engine/Animation.h>
 
 #include <UI/UI.h>
 #include <UI/UIContainer.h>
@@ -71,6 +72,11 @@ public:
 	/// <param name="action">Action</param>
 	void addAction(Action* action);
 
+	/// <summary>
+	/// Add an animation
+	/// </summary>
+	void addAnimation(I_Animation* anim);
+
 
 	/// <summary>
 	/// Allocate an object from the scene's managed memory
@@ -120,6 +126,11 @@ protected:
 	/// Index of current action
 	/// </summary>
 	int mActionIndex;
+
+	/// <summary>
+	/// List of animations
+	/// </summary>
+	std::vector<I_Animation*> mAnimations;
 };
 
 // ============================================================================
@@ -208,6 +219,12 @@ public:
 	/// Render UI and sprites
 	/// </summary>
 	void render() override;
+
+	/// <summary>
+	/// Get the main menu's UI system
+	/// </summary>
+	/// <returns>UI system</returns>
+	UI& getUI();
 
 protected:
 	/// <summary>

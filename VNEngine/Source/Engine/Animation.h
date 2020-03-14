@@ -41,17 +41,17 @@ inline float interpPolynomial(float _1, float _2, float factor, float a = 2.0f)
 /// <summary>
 /// Base animation class
 /// </summary>
-class I_UIAnimation
+class I_Animation
 {
 public:
-	I_UIAnimation() :
+	I_Animation() :
 		mTime		(0.0f),
 		mDuration	(1.0f),
 		mDelay		(0.0f),
 		mRepeat		(false)
 	{ }
 
-	virtual ~I_UIAnimation() { }
+	virtual ~I_Animation() { }
 
 	/// <summary>
 	/// Update animation
@@ -196,7 +196,7 @@ protected:
 // ============================================================================
 
 template <typename T>
-class UIAnimation : public I_UIAnimation
+class Animation : public I_Animation
 {
 public:
 	/// <summary>
@@ -205,10 +205,10 @@ public:
 	typedef std::function<void(const T&)> PropSetter;
 
 public:
-	UIAnimation() { }
-	virtual ~UIAnimation() { }
+	Animation() { }
+	virtual ~Animation() { }
 
-	UIAnimation(const PropSetter& setter, const T& s, const T& e) :
+	Animation(const PropSetter& setter, const T& s, const T& e) :
 		mSetter		(setter),
 		mStart		(s),
 		mEnd		(e)
@@ -277,7 +277,7 @@ protected:
 /// Animation for float properties in UIElements (i.e. rotation).
 /// This animation applies linear transformation
 /// </summary>
-class FloatAnimation : public UIAnimation<float>
+class FloatAnimation : public Animation<float>
 {
 public:
 	FloatAnimation() { }
@@ -290,7 +290,7 @@ public:
 	/// <param name="e">Ending value of the property you want to animate</param>
 	/// <param name="duration">Duration of animation</param>
 	FloatAnimation(const PropSetter& setter, float s, float e, float duration) :
-		UIAnimation		(setter, s, e),
+		Animation		(setter, s, e),
 		mPowFactor		(1.0f)
 	{
 		mDuration = duration;
@@ -303,7 +303,7 @@ public:
 	void update(float dt) override
 	{
 		// Update time
-		UIAnimation<float>::update(dt);
+		Animation<float>::update(dt);
 
 		if (mTime >= 0.0f)
 		{
@@ -342,7 +342,7 @@ protected:
 /// Animation for Vector2f properties in UIElements (i.e. position, scale).
 /// This animation applies linear transformation
 /// </summary>
-class Vec2Animation : public UIAnimation<sf::Vector2f>
+class Vec2Animation : public Animation<sf::Vector2f>
 {
 public:
 	Vec2Animation() { }
@@ -355,7 +355,7 @@ public:
 	/// <param name="e">Ending value of the property you want to animate</param>
 	/// <param name="duration">Duration of animation</param>
 	Vec2Animation(const PropSetter& setter, const sf::Vector2f& s, const sf::Vector2f& e, float duration) :
-		UIAnimation		(setter, s, e),
+		Animation		(setter, s, e),
 		mPowFactor		(1.0f)
 	{
 		mDuration = duration;
@@ -368,7 +368,7 @@ public:
 	void update(float dt) override
 	{
 		// Update time
-		UIAnimation<sf::Vector2f>::update(dt);
+		Animation<sf::Vector2f>::update(dt);
 
 		if (mTime >= 0.0f)
 		{
@@ -409,7 +409,7 @@ protected:
 /// Animation for color properties in UIElements.
 /// This animation applies linear transformation
 /// </summary>
-class ColorAnimation : public UIAnimation<sf::Color>
+class ColorAnimation : public Animation<sf::Color>
 {
 public:
 	ColorAnimation() { }
@@ -422,7 +422,7 @@ public:
 	/// <param name="e">Ending value of the property you want to animate</param>
 	/// <param name="duration">Duration of animation</param>
 	ColorAnimation(const PropSetter& setter, const sf::Color& s, const sf::Color& e, float duration) :
-		UIAnimation		(setter, s, e),
+		Animation		(setter, s, e),
 		mPowFactor		(1.0f)
 	{
 		mDuration = duration;
@@ -435,7 +435,7 @@ public:
 	void update(float dt) override
 	{
 		// Update time
-		UIAnimation<sf::Color>::update(dt);
+		Animation<sf::Color>::update(dt);
 
 
 		if (mTime >= 0.0f)

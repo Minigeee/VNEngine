@@ -373,7 +373,7 @@ void BackgroundAction::run()
 		anim->setFinishedFunc(std::bind(&BackgroundAction::onAnimComplete, this));
 
 		// Add animation
-		ui.addAnimation(anim);
+		scene->addAnimation(anim);
 	}
 
 	else if (mTransition == Transition::FadeToBlack)
@@ -388,7 +388,7 @@ void BackgroundAction::run()
 		anim->setFinishedFunc(std::bind(&BackgroundAction::onAnimComplete, this));
 
 		// Add animation
-		ui.addAnimation(anim);
+		scene->addAnimation(anim);
 	}
 
 	else if (mTransition == Transition::FadeFromBlack)
@@ -405,7 +405,7 @@ void BackgroundAction::run()
 		anim->setFinishedFunc(std::bind(&BackgroundAction::onAnimComplete, this));
 
 		// Add animation
-		ui.addAnimation(anim);
+		scene->addAnimation(anim);
 	}
 
 	else
@@ -523,7 +523,7 @@ void ImageAction::show()
 		anim->setFinishedFunc(std::bind(&ImageAction::onAnimComplete, this));
 
 		// Add animation
-		ui.addAnimation(anim);
+		scene->addAnimation(anim);
 	}
 
 	else if (mTransition == Transition::FadeToBlack)
@@ -540,7 +540,7 @@ void ImageAction::show()
 		anim->setFinishedFunc(std::bind(&ImageAction::onAnimComplete, this));
 
 		// Add animation
-		ui.addAnimation(anim);
+		scene->addAnimation(anim);
 	}
 
 	else if (mTransition == Transition::FadeFromBlack)
@@ -558,7 +558,7 @@ void ImageAction::show()
 		anim->setFinishedFunc(std::bind(&ImageAction::onAnimComplete, this));
 
 		// Add animation
-		ui.addAnimation(anim);
+		scene->addAnimation(anim);
 	}
 
 	else
@@ -573,7 +573,6 @@ void ImageAction::show()
 void ImageAction::hide()
 {
 	NovelScene* scene = static_cast<NovelScene*>(mScene);
-	UI& ui = scene->getUI();
 
 	if (mTransition == Transition::Fade)
 	{
@@ -587,7 +586,7 @@ void ImageAction::hide()
 		anim->setFinishedFunc(std::bind(&ImageAction::onAnimComplete, this));
 
 		// Add animation
-		ui.addAnimation(anim);
+		scene->addAnimation(anim);
 	}
 
 	else if (mTransition == Transition::FadeToBlack)
@@ -602,7 +601,7 @@ void ImageAction::hide()
 		anim->setFinishedFunc(std::bind(&ImageAction::onAnimComplete, this));
 
 		// Add animation
-		ui.addAnimation(anim);
+		scene->addAnimation(anim);
 	}
 
 	else
@@ -700,8 +699,6 @@ void TransformAction::run()
 	{
 		using namespace std::placeholders;
 
-		UI& ui = static_cast<NovelScene*>(mScene)->getUI();
-
 		if (mNewTransforms & (1 << 0))
 		{
 			// Animate position
@@ -711,7 +708,7 @@ void TransformAction::run()
 				mDuration
 				);
 			posAnim->setFinishedFunc(std::bind(&TransformAction::onAnimComplete, this));
-			ui.addAnimation(posAnim);
+			mScene->addAnimation(posAnim);
 		}
 
 		if (mNewTransforms & (1 << 1))
@@ -723,7 +720,7 @@ void TransformAction::run()
 				mDuration
 				);
 			rotAnim->setFinishedFunc(std::bind(&TransformAction::onAnimComplete, this));
-			ui.addAnimation(rotAnim);
+			mScene->addAnimation(rotAnim);
 		}
 
 		if (mNewTransforms & (1 << 2))
@@ -735,7 +732,7 @@ void TransformAction::run()
 				mDuration
 				);
 			sizeAnim->setFinishedFunc(std::bind(&TransformAction::onAnimComplete, this));
-			ui.addAnimation(sizeAnim);
+			mScene->addAnimation(sizeAnim);
 		}
 	}
 }
@@ -806,7 +803,6 @@ void MusicAction::run()
 	{
 		if (mTransition == Transition::Fade)
 		{
-			UI& ui = static_cast<NovelScene*>(mScene)->getUI();
 			bool isPlaying = mMusic->getStatus() == sf::SoundSource::Playing;
 
 			mMusic->setLoop(mIsLooped);
@@ -818,8 +814,7 @@ void MusicAction::run()
 				originalVolume, mVolume,
 				mDuration
 				);
-			/* Should probably make animations more accessible than just to the UI... */
-			ui.addAnimation(anim);
+			mScene->addAnimation(anim);
 
 			// If music wasn't playing before, then start it
 			if (!isPlaying)
@@ -848,7 +843,7 @@ void MusicAction::run()
 				);
 			anim->setFinishedFunc(std::bind(&MusicAction::onAnimComplete, this));
 
-			static_cast<NovelScene*>(mScene)->getUI().addAnimation(anim);
+			mScene->addAnimation(anim);
 		}
 		else
 		{
