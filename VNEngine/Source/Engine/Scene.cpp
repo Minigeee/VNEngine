@@ -42,16 +42,16 @@ void Scene::update(float dt)
 		if (mActionIndex >= 0 && mActionIndex < mActions.size())
 			mActions[mActionIndex]->update(dt);
 
-		if (mActionIndex < 0)
+		// If the current action is completed or the index is negative
+		if (mActionIndex < 0 || (mActionIndex < mActions.size() && mActions[mActionIndex]->isComplete()))
 		{
-			mActions[0]->run();
-			mActionIndex = 0;
-		}
-		else if (mActionIndex < mActions.size() - 1)
-		{
-			if (mActions[mActionIndex]->isComplete())
-				// Once previous action completes, start next one
-				mActions[++mActionIndex]->run();
+			// Skip actions until we find one with conditions met
+			while (++mActionIndex < mActions.size() && !mActions[mActionIndex]->isConditionMet())
+				mActions[mActionIndex]->setComplete(true);
+
+			if (mActionIndex < mActions.size())
+				// Run action
+				mActions[mActionIndex]->run();
 		}
 	}
 }
@@ -355,7 +355,7 @@ void NovelScene::handleEvent(const sf::Event& e)
 {
 	bool handled = mUI.handleEvent(e);
 
-	if (mActionIndex >= 0 && !handled)
+	if (mActionIndex >= 0 && mActionIndex < mActions.size() && !handled)
 		mActions[mActionIndex]->handleEvent(e);
 }
 
@@ -408,7 +408,31 @@ TextBox* NovelScene::getNameText() const
 	return mNameText;
 }
 
+std::stack<ActionGroup*>& NovelScene::getActionGroups()
+{
+	return mActionGroups;
+}
+
 // ============================================================================
+
+void NovelScene::startGroup(bool parallel, const std::function<bool()>& condition)
+{
+	ActionGroup* action = alloc<ActionGroup>();
+	action->setParallel(parallel);
+	action->setCondition(condition);
+
+	// Add to top of stack
+	mActionGroups.push(action);
+
+	// Add action to list
+	addAction(mActionGroups.top());
+}
+
+void NovelScene::endGroup()
+{
+	// Pop
+	mActionGroups.pop();
+}
 
 void NovelScene::narrate(const sf::String& dialogue)
 {
@@ -416,7 +440,11 @@ void NovelScene::narrate(const sf::String& dialogue)
 	action->setName("");
 	action->setDialogue(dialogue);
 	action->setTextStyle(sf::Text::Regular);
-	addAction(action);
+
+	if (mActionGroups.empty())
+		addAction(action);
+	else
+		mActionGroups.top()->addAction(action);
 }
 
 void NovelScene::background(sf::Texture* texture, Transition effect, float duration)
@@ -425,7 +453,11 @@ void NovelScene::background(sf::Texture* texture, Transition effect, float durat
 	action->setTexture(texture);
 	action->setTransition(effect);
 	action->setDuration(duration);
-	addAction(action);
+
+	if (mActionGroups.empty())
+		addAction(action);
+	else
+		mActionGroups.top()->addAction(action);
 }
 
 void NovelScene::background(const sf::String& bgName, Transition effect, float duration)
@@ -434,7 +466,11 @@ void NovelScene::background(const sf::String& bgName, Transition effect, float d
 	action->setTexture(Resource<sf::Texture>::get(bgName));
 	action->setTransition(effect);
 	action->setDuration(duration);
-	addAction(action);
+
+	if (mActionGroups.empty())
+		addAction(action);
+	else
+		mActionGroups.top()->addAction(action);
 }
 
 // ============================================================================

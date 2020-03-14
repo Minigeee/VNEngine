@@ -80,7 +80,12 @@ void Character::say(const sf::String& dialogue)
 	action->setName(mName);
 	action->setDialogue(gQuotationSymbol + dialogue + gQuotationSymbol);
 	action->setTextStyle(sf::Text::Regular);
-	mScene->addAction(action);
+
+	std::stack<ActionGroup*>& groups = static_cast<NovelScene*>(mScene)->getActionGroups();
+	if (groups.empty())
+		mScene->addAction(action);
+	else
+		groups.top()->addAction(action);
 }
 
 void Character::think(const sf::String& dialogue)
@@ -91,7 +96,12 @@ void Character::think(const sf::String& dialogue)
 	action->setName(mName);
 	action->setDialogue(dialogue);
 	action->setTextStyle(sf::Text::Italic);
-	mScene->addAction(action);
+
+	std::stack<ActionGroup*>& groups = static_cast<NovelScene*>(mScene)->getActionGroups();
+	if (groups.empty())
+		mScene->addAction(action);
+	else
+		groups.top()->addAction(action);
 }
 
 void Character::show(const sf::String& image, Transition effect, float duration)
@@ -104,7 +114,12 @@ void Character::show(const sf::String& image, Transition effect, float duration)
 	action->setTransition(effect);
 	action->setDuration(duration);
 	action->setImageBox(mImageBox);
-	mScene->addAction(action);
+
+	std::stack<ActionGroup*>& groups = static_cast<NovelScene*>(mScene)->getActionGroups();
+	if (groups.empty())
+		mScene->addAction(action);
+	else
+		groups.top()->addAction(action);
 }
 
 void Character::hide(Transition effect, float duration)
@@ -116,7 +131,12 @@ void Character::hide(Transition effect, float duration)
 	action->setTransition(effect);
 	action->setDuration(duration);
 	action->setImageBox(mImageBox);
-	mScene->addAction(action);
+
+	std::stack<ActionGroup*>& groups = static_cast<NovelScene*>(mScene)->getActionGroups();
+	if (groups.empty())
+		mScene->addAction(action);
+	else
+		groups.top()->addAction(action);
 }
 
 // ============================================================================

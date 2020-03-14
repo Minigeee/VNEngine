@@ -38,8 +38,9 @@ void Setup::onInit()
 	mEngine->addCharacter(Character("Fafa"));
 	mEngine->addCharacter(Character("Bebe"));
 
-	mEngine->getCharacter("Mollusk").addImage("thing");
-	mEngine->getCharacter("Mollusk").addImage("thing2");
+	Character& dr = mEngine->getCharacter("Dr. Evil Webkie");
+	dr.addImage("thing");
+	dr.addImage("thing2");
 
 	// Default variable values
 	if (!mEngine->variableExists("test"))

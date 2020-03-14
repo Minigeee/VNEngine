@@ -41,7 +41,7 @@ bool Action::isComplete() const
 	return mIsComplete;
 }
 
-bool Action::conditionMet() const
+bool Action::isConditionMet() const
 {
 	return !mCondition || (mCondition && mCondition());
 }
@@ -61,7 +61,9 @@ void Action::handleEvent(const sf::Event& e)
 // ============================================================================
 // ============================================================================
 
-ActionGroup::ActionGroup()
+ActionGroup::ActionGroup() :
+	mActionIndex		(-1),
+	mIsParallel			(false)
 {
 
 }
@@ -75,18 +77,87 @@ ActionGroup::~ActionGroup()
 
 void ActionGroup::run()
 {
-	if (!conditionMet()) return;
+	if (mIsParallel)
+	{
+		// Run all actions
+		for (Uint32 i = 0; i < mActions.size(); ++i)
+			mActions[i]->run();
+	}
 
-	// Run all actions
-	for (Uint32 i = 0; i < mActions.size(); ++i)
-		mActions[i]->run();
+	// Complete if there are no actions to execute
+	if (!mActions.size()) mIsComplete = true;
+}
+
+void ActionGroup::update(float dt)
+{
+	if (mIsParallel)
+	{
+		bool complete = true;
+
+		// Check for completion and send updates
+		for (Uint32 i = 0; i < mActions.size(); ++i)
+		{
+			bool actionComplete = mActions[i]->isComplete();
+
+			if (!actionComplete)
+				// Update if not complete
+				mActions[i]->update(dt);
+
+			// Completion flag
+			complete &= actionComplete;
+		}
+
+		mIsComplete = complete;
+	}
+	else
+	{
+		if (mActionIndex >= 0 && mActionIndex < mActions.size())
+			mActions[mActionIndex]->update(dt);
+
+		// If the current action is completed or the index is negative
+		if (mActionIndex < 0 || (mActionIndex < mActions.size() && mActions[mActionIndex]->isComplete()))
+		{
+			// Skip actions until we find one with conditions met
+			while (++mActionIndex < mActions.size() && !mActions[mActionIndex]->isConditionMet())
+				mActions[mActionIndex]->setComplete(true);
+
+			if (mActionIndex < mActions.size())
+				// Run action
+				mActions[mActionIndex]->run();
+		}
+		else if (mActions[mActionIndex]->isComplete())
+			// Complete the group once all actions have run
+			mIsComplete = true;
+	}
+}
+
+void ActionGroup::handleEvent(const sf::Event& e)
+{
+	if (mIsParallel)
+	{
+		// Pass event to all actions
+		for (Uint32 i = 0; i < mActions.size(); ++i)
+			mActions[i]->handleEvent(e);
+	}
+	else
+	{
+		// Pass event to current action
+		if (mActionIndex >= 0 && mActionIndex < mActions.size())
+			mActions[mActionIndex]->handleEvent(e);
+	}
 }
 
 // ============================================================================
 
 void ActionGroup::addAction(Action* action)
 {
+	action->setScene(mScene);
 	mActions.push_back(action);
+}
+
+void ActionGroup::setParallel(bool parallel)
+{
+	mIsParallel = parallel;
 }
 
 // ============================================================================

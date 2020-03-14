@@ -11,6 +11,7 @@
 
 #include <SFML/Window.hpp>
 
+#include <stack>
 #include <unordered_map>
 #include <typeinfo>
 #include <typeindex>
@@ -366,6 +367,27 @@ public:
 	TextBox* getNameText() const;
 
 	/// <summary>
+	/// Get stack of action groups
+	/// </summary>
+	/// <returns>Stack of action groups</returns>
+	std::stack<ActionGroup*>& getActionGroups();
+
+	/// <summary>
+	/// Start an action group. Any actions that are created by the convenince functions
+	/// will automatically added to the top action group until it is ended.
+	/// The groups are handled using a stack.
+	/// </summary>
+	void startGroup(bool parallel = false, const std::function<bool()>& condition = std::function<bool()>());
+
+	/// <summary>
+	/// End the last action group (that was started using startGroup).
+	/// After this, any actions created by the convenience functions will be added to
+	/// the previous action group, if it exists.
+	/// If none exists, they aren't added to any action group.
+	/// </summary>
+	void endGroup();
+
+	/// <summary>
 	/// Convenience function that adds dialogue action for narration.
 	/// The dialogue action will be nameless, and dialogue will not autmatically add qutation symbols
 	/// </summary>
@@ -431,6 +453,11 @@ protected:
 	/// Dialogue text
 	/// </summary>
 	TextBox* mDialogueText;
+
+	/// <summary>
+	/// Stack of action groups
+	/// </summary>
+	std::stack<ActionGroup*> mActionGroups;
 };
 
 // ============================================================================

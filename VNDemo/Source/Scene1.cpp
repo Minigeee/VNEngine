@@ -46,9 +46,13 @@ void Scene1::onInit()
 	narrate("I am narrator");
 	background("your_name", Transition::FadeFromBlack);
 	m.think("This is a pretty cool picture...");
-	m.show("thing", Transition::Fade, 0.8f);
+	dr.show("thing", Transition::Fade, 0.8f);
 	dr.say("Mwahahahahaha!!!!!!!!!!!! I am here to destroy you!");
+
+	startGroup(true);
 	background(0, Transition::FadeToBlack);
+	dr.hide(Transition::FadeToBlack);
+	endGroup();
 }
 
 // ============================================================================

@@ -102,12 +102,11 @@ public:
 	/// <returns>State of completion</returns>
 	bool isComplete() const;
 
-protected:
 	/// <summary>
-	/// Shorthand for checking if run conditions are met
+	/// Check if run conditions are met
 	/// </summary>
 	/// <returns>Condition met</returns>
-	bool conditionMet() const;
+	bool isConditionMet() const;
 
 protected:
 	/// <summary>
@@ -140,16 +139,47 @@ public:
 	void run() override;
 
 	/// <summary>
+	/// Update actions inside the group
+	/// </summary>
+	/// <param name="dt">Elapsed time</param>
+	void update(float dt) override;
+
+	/// <summary>
+	/// Pass events to actions inside group
+	/// </summary>
+	/// <param name="e">Event</param>
+	void handleEvent(const sf::Event& e) override;
+
+	/// <summary>
 	/// Add an action as a child of this group
 	/// </summary>
 	/// <param name="action">Pointer to action</param>
 	void addAction(Action* action);
+
+	/// <summary>
+	/// Set the parallel execution option for the action group.
+	/// If parallel is set to true, all actions inside the group will run without waiting for
+	/// the previous action to complete (they will all run in parallel).
+	/// If parallel is set to false, all actions will run sequentially
+	/// </summary>
+	/// <param name="parallel">Parallel option</param>
+	void setParallel(bool parallel);
 
 private:
 	/// <summary>
 	/// Children action
 	/// </summary>
 	std::vector<Action*> mActions;
+
+	/// <summary>
+	/// Index of the current action in execution
+	/// </summary>
+	int mActionIndex;
+
+	/// <summary>
+	/// Should the actions run in parallel
+	/// </summary>
+	bool mIsParallel;
 };
 
 // ============================================================================
