@@ -423,6 +423,87 @@ private:
 
 // ============================================================================
 
+class TransformAction : public Action
+{
+public:
+	TransformAction();
+	~TransformAction();
+
+	/// <summary>
+	/// Do image transforms
+	/// </summary>
+	void run() override;
+
+	/// <summary>
+	/// Set the image box to apply the transformations to
+	/// </summary>
+	/// <param name="box">Image box</param>
+	void setImageBox(ImageBox* box);
+
+	/// <summary>
+	/// Set the new position to apply
+	/// </summary>
+	/// <param name="p">New position</param>
+	void setPosition(const sf::Vector2f& p);
+
+	/// <summary>
+	/// Set the new rotation to apply
+	/// </summary>
+	/// <param name="r">New rotation</param>
+	void setRotation(float r);
+
+	/// <summary>
+	/// Set the new scale to apply
+	/// </summary>
+	/// <param name="s">New scale</param>
+	void setScale(float s);
+
+	/// <summary>
+	/// Set the duration required to transition from the original transform to the new transform
+	/// </summary>
+	/// <param name="duration">Duration in seconds</param>
+	void setDuration(float duration);
+
+private:
+	/// <summary>
+	/// Called when animation completes
+	/// </summary>
+	void onAnimComplete();
+
+private:
+	/// <summary>
+	/// Image box to apply transformations to
+	/// </summary>
+	ImageBox* mImageBox;
+
+	/// <summary>
+	/// New position
+	/// </summary>
+	sf::Vector2f mPosition;
+
+	/// <summary>
+	/// New rotation
+	/// </summary>
+	float mRotation;
+
+	/// <summary>
+	/// New scale
+	/// </summary>
+	float mScale;
+
+	/// <summary>
+	/// Duration of transition
+	/// </summary>
+	float mDuration;
+
+	/// <summary>
+	/// Bitmap indicating which transforms have been changed
+	/// </summary>
+	Uint8 mNewTransforms;
+};
+
+// ============================================================================
+
 }
 
 #endif

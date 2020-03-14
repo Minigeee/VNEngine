@@ -48,6 +48,10 @@ void Scene1::onInit()
 	m.think("This is a pretty cool picture...");
 	dr.show("thing", Transition::Fade, 0.8f);
 	dr.say("Mwahahahahaha!!!!!!!!!!!! I am here to destroy you!");
+	dr.move(sf::Vector2f(600.0f, 200.0f), 1.0f);
+	dr.rotate(100.0f, 1.0f);
+	dr.scale(0.5f, 1.0f);
+	dr.show("thing2", Transition::Fade, 0.4);
 
 	startGroup(true);
 	background(0, Transition::FadeToBlack);

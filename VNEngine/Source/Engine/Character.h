@@ -74,6 +74,12 @@ public:
 	sf::Texture* getImage(const sf::String& label) const;
 
 	/// <summary>
+	/// Get the image box that is used to display image boxes
+	/// </summary>
+	/// <returns></returns>
+	ImageBox* getImageBox() const;
+
+	/// <summary>
 	/// Convenience function to add a dialogue action for character.
 	/// This will automatically enclose the dialogue message with quotation symbols
 	/// </summary>
@@ -102,6 +108,43 @@ public:
 	/// <param name="effect">Transition effect</param>
 	/// <param name="duration">Duration of the transition effect</param>
 	void hide(Transition effect = Transition::None, float duration = 1.0f);
+
+	/// <summary>
+	/// Transform the character image
+	/// </summary>
+	/// <param name="pos">New position</param>
+	/// <param name="rot">New rotation</param>
+	/// <param name="scale">New scale</param>
+	/// <param name="duration">Duration of transition in seconds</param>
+	void transform(const sf::Vector2f& pos, float rot, float scale, float duration = 0.0f);
+
+	/// <summary>
+	/// Move the character image to a new position
+	/// </summary>
+	/// <param name="pos">New position</param>
+	/// <param name="duration">Duration of transition in seconds</param>
+	void move(const sf::Vector2f& pos, float duration = 0.0f);
+
+	/// <summary>
+	/// Rotate the character image
+	/// </summary>
+	/// <param name="rot">New rotation</param>
+	/// <param name="duration">Duration of transition in seconds</param>
+	void rotate(float rot, float duration = 0.0f);
+
+	/// <summary>
+	/// Scale the character image
+	/// </summary>
+	/// <param name="scale">New scale</param>
+	/// <param name="duration">Duration of transition in seconds</param>
+	void scale(float scale, float duration = 0.0f);
+
+private:
+	/// <summary>
+	/// Add an action to the actions list or the top action group
+	/// </summary>
+	/// <param name="action">Action to add</param>
+	void addAction(Action* action);
 
 private:
 	/// <summary>

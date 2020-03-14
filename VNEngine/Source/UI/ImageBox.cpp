@@ -33,11 +33,11 @@ const sf::RectangleShape& ImageBox::getBody() const
 
 // ============================================================================
 
-void ImageBox::setTexture(const sf::Texture* texture)
+void ImageBox::setTexture(const sf::Texture* texture, bool changeSize)
 {
 	mImage.setTexture(texture);
 
-	if (texture)
+	if (changeSize && texture)
 		// Set size if not NULL
 		setSize((sf::Vector2f)texture->getSize());
 }

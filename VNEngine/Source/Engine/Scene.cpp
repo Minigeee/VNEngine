@@ -378,6 +378,16 @@ void NovelScene::onUpdate(float dt)
 
 // ============================================================================
 
+void NovelScene::addAction(Action* action)
+{
+	if (mActionGroups.empty())
+		Scene::addAction(action);
+	else
+		mActionGroups.top()->addAction(action);
+}
+
+// ============================================================================
+
 UI& NovelScene::getUI()
 {
 	return mUI;
@@ -425,7 +435,7 @@ void NovelScene::startGroup(bool parallel, const std::function<bool()>& conditio
 	mActionGroups.push(action);
 
 	// Add action to list
-	addAction(mActionGroups.top());
+	Scene::addAction(mActionGroups.top());
 }
 
 void NovelScene::endGroup()
@@ -440,11 +450,7 @@ void NovelScene::narrate(const sf::String& dialogue)
 	action->setName("");
 	action->setDialogue(dialogue);
 	action->setTextStyle(sf::Text::Regular);
-
-	if (mActionGroups.empty())
-		addAction(action);
-	else
-		mActionGroups.top()->addAction(action);
+	addAction(action);
 }
 
 void NovelScene::background(sf::Texture* texture, Transition effect, float duration)
@@ -453,11 +459,7 @@ void NovelScene::background(sf::Texture* texture, Transition effect, float durat
 	action->setTexture(texture);
 	action->setTransition(effect);
 	action->setDuration(duration);
-
-	if (mActionGroups.empty())
-		addAction(action);
-	else
-		mActionGroups.top()->addAction(action);
+	addAction(action);
 }
 
 void NovelScene::background(const sf::String& bgName, Transition effect, float duration)
@@ -466,11 +468,7 @@ void NovelScene::background(const sf::String& bgName, Transition effect, float d
 	action->setTexture(Resource<sf::Texture>::get(bgName));
 	action->setTransition(effect);
 	action->setDuration(duration);
-
-	if (mActionGroups.empty())
-		addAction(action);
-	else
-		mActionGroups.top()->addAction(action);
+	addAction(action);
 }
 
 // ============================================================================

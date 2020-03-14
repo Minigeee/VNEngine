@@ -32,10 +32,12 @@ public:
 
 	/// <summary>
 	/// Set the texture to display.
-	/// This will change the size of the element to be the size of the texture
+	/// This will change the size of the element to be the size of the texture,
+	/// unless changeSize is set to false.
 	/// </summary>
 	/// <param name="texture">Texture to display</param>
-	void setTexture(const sf::Texture* texture);
+	/// <param name="changeSize">If set to false, the size of the box will not be changed from its current size</param>
+	void setTexture(const sf::Texture* texture, bool changeSize = true);
 
 	/// <summary>
 	/// Set the portion of the texture to display.

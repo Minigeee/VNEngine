@@ -72,6 +72,15 @@ sf::Texture* Character::getImage(const sf::String& label) const
 
 // ============================================================================
 
+void Character::addAction(Action* action)
+{
+	NovelScene* scene = 0;
+	if (scene = dynamic_cast<NovelScene*>(mScene))
+		scene->addAction(action);
+	else
+		mScene->addAction(action);
+}
+
 void Character::say(const sf::String& dialogue)
 {
 	if (!mScene) return;
@@ -80,12 +89,7 @@ void Character::say(const sf::String& dialogue)
 	action->setName(mName);
 	action->setDialogue(gQuotationSymbol + dialogue + gQuotationSymbol);
 	action->setTextStyle(sf::Text::Regular);
-
-	std::stack<ActionGroup*>& groups = static_cast<NovelScene*>(mScene)->getActionGroups();
-	if (groups.empty())
-		mScene->addAction(action);
-	else
-		groups.top()->addAction(action);
+	addAction(action);
 }
 
 void Character::think(const sf::String& dialogue)
@@ -96,12 +100,7 @@ void Character::think(const sf::String& dialogue)
 	action->setName(mName);
 	action->setDialogue(dialogue);
 	action->setTextStyle(sf::Text::Italic);
-
-	std::stack<ActionGroup*>& groups = static_cast<NovelScene*>(mScene)->getActionGroups();
-	if (groups.empty())
-		mScene->addAction(action);
-	else
-		groups.top()->addAction(action);
+	addAction(action);
 }
 
 void Character::show(const sf::String& image, Transition effect, float duration)
@@ -114,12 +113,7 @@ void Character::show(const sf::String& image, Transition effect, float duration)
 	action->setTransition(effect);
 	action->setDuration(duration);
 	action->setImageBox(mImageBox);
-
-	std::stack<ActionGroup*>& groups = static_cast<NovelScene*>(mScene)->getActionGroups();
-	if (groups.empty())
-		mScene->addAction(action);
-	else
-		groups.top()->addAction(action);
+	addAction(action);
 }
 
 void Character::hide(Transition effect, float duration)
@@ -131,12 +125,53 @@ void Character::hide(Transition effect, float duration)
 	action->setTransition(effect);
 	action->setDuration(duration);
 	action->setImageBox(mImageBox);
+	addAction(action);
+}
 
-	std::stack<ActionGroup*>& groups = static_cast<NovelScene*>(mScene)->getActionGroups();
-	if (groups.empty())
-		mScene->addAction(action);
-	else
-		groups.top()->addAction(action);
+void Character::transform(const sf::Vector2f& p, float r, float s, float duration)
+{
+	if (!mScene) return;
+
+	TransformAction* action = mScene->alloc<TransformAction>();
+	action->setImageBox(mImageBox);
+	action->setPosition(p);
+	action->setRotation(r);
+	action->setScale(s);
+	action->setDuration(duration);
+	addAction(action);
+}
+
+void Character::move(const sf::Vector2f& p, float duration)
+{
+	if (!mScene) return;
+
+	TransformAction* action = mScene->alloc<TransformAction>();
+	action->setImageBox(mImageBox);
+	action->setPosition(p);
+	action->setDuration(duration);
+	addAction(action);
+}
+
+void Character::rotate(float r, float duration)
+{
+	if (!mScene) return;
+
+	TransformAction* action = mScene->alloc<TransformAction>();
+	action->setImageBox(mImageBox);
+	action->setRotation(r);
+	action->setDuration(duration);
+	addAction(action);
+}
+
+void Character::scale(float s, float duration)
+{
+	if (!mScene) return;
+
+	TransformAction* action = mScene->alloc<TransformAction>();
+	action->setImageBox(mImageBox);
+	action->setScale(s);
+	action->setDuration(duration);
+	addAction(action);
 }
 
 // ============================================================================

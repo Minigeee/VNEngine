@@ -331,6 +331,12 @@ public:
 	void render() override;
 
 	/// <summary>
+	/// Add action to the list or the action group that was last created using startGroup
+	/// </summary>
+	/// <param name="action">Action to add</param>
+	void addAction(Action* action);
+
+	/// <summary>
 	/// Get the scene's UI system
 	/// </summary>
 	/// <returns>UI system</returns>

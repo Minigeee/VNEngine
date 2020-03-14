@@ -501,7 +501,8 @@ void ImageAction::show()
 		mImageBox->setVisible(true);
 
 		// If transition from image to image, then create a temporary copy to blend between images
-		if (mImageBox->isVisible() && mImageBox->getTexture())
+		bool imgVisible = mImageBox->isVisible() && mImageBox->getTexture();
+		if (imgVisible)
 		{
 			// Create a copy of this image
 			ImageBox* box = ui.copy<ImageBox>(mImageBox->getName() + ".TEMP", mImageBox->getName());
@@ -510,7 +511,7 @@ void ImageAction::show()
 		}
 
 		// Set the new texture
-		mImageBox->setTexture(mTexture);
+		mImageBox->setTexture(mTexture, !imgVisible);
 
 		// Create animation
 		ColorAnimation* anim = scene->alloc<ColorAnimation>(
@@ -625,6 +626,124 @@ void ImageAction::onAnimComplete()
 		// Hide the image
 		mImageBox->setVisible(false);
 
+	mIsComplete = true;
+}
+
+// ============================================================================
+// ============================================================================
+
+TransformAction::TransformAction() :
+	mImageBox		(0),
+	mPosition		(0.0f, 0.0f),
+	mRotation		(0.0f),
+	mScale			(1.0f),
+	mDuration		(0.0f),
+	mNewTransforms	(0)
+{
+
+}
+
+TransformAction::~TransformAction()
+{
+
+}
+
+// ============================================================================
+
+void TransformAction::setImageBox(ImageBox* box)
+{
+	mImageBox = box;
+}
+
+void TransformAction::setPosition(const sf::Vector2f& p)
+{
+	mPosition = p;
+	mNewTransforms |= 1 << 0;
+}
+
+void TransformAction::setRotation(float r)
+{
+	mRotation = r;
+	mNewTransforms |= 1 << 1;
+}
+
+void TransformAction::setScale(float s)
+{
+	mScale = s;
+	mNewTransforms |= 1 << 2;
+}
+
+void TransformAction::setDuration(float duration)
+{
+	mDuration = duration;
+}
+
+// ============================================================================
+
+void TransformAction::run()
+{
+	if (mDuration <= 0.0f)
+	{
+		// Instantly move to new transform
+		if (mNewTransforms & (1 << 0))
+			mImageBox->setPosition(mPosition);
+
+		if (mNewTransforms & (1 << 1))
+			mImageBox->setRotation(mRotation);
+
+		if (mNewTransforms & (1 << 2))
+			mImageBox->setSize(mImageBox->getSize() * mScale);
+
+		mIsComplete = true;
+	}
+	else
+	{
+		using namespace std::placeholders;
+
+		UI& ui = static_cast<NovelScene*>(mScene)->getUI();
+
+		if (mNewTransforms & (1 << 0))
+		{
+			// Animate position
+			Vec2Animation* posAnim = mScene->alloc<Vec2Animation>(
+				std::bind(static_cast<void(ImageBox::*)(const sf::Vector2f&)>(&ImageBox::setPosition), mImageBox, _1),
+				mImageBox->getRelPosition(), mPosition,
+				mDuration
+				);
+			posAnim->setFinishedFunc(std::bind(&TransformAction::onAnimComplete, this));
+			ui.addAnimation(posAnim);
+		}
+
+		if (mNewTransforms & (1 << 1))
+		{
+			// Animate rotation
+			FloatAnimation* rotAnim = mScene->alloc<FloatAnimation>(
+				std::bind(&ImageBox::setRotation, mImageBox, _1),
+				mImageBox->getRelRotation(), mRotation,
+				mDuration
+				);
+			rotAnim->setFinishedFunc(std::bind(&TransformAction::onAnimComplete, this));
+			ui.addAnimation(rotAnim);
+		}
+
+		if (mNewTransforms & (1 << 2))
+		{
+			// Animate size
+			Vec2Animation* sizeAnim = mScene->alloc<Vec2Animation>(
+				std::bind(static_cast<void(ImageBox::*)(const sf::Vector2f&)>(&ImageBox::setSize), mImageBox, _1),
+				mImageBox->getSize(), mImageBox->getSize()* mScale,
+				mDuration
+				);
+			sizeAnim->setFinishedFunc(std::bind(&TransformAction::onAnimComplete, this));
+			ui.addAnimation(sizeAnim);
+		}
+	}
+}
+
+// ============================================================================
+
+void TransformAction::onAnimComplete()
+{
 	mIsComplete = true;
 }
 
