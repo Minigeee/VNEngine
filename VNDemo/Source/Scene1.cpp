@@ -43,6 +43,7 @@ void Scene1::onInit()
 	Character& f = mEngine->getCharacter("Fafa");
 	Character& b = mEngine->getCharacter("Bebe");
 
+	start("yuri");
 	narrate("I am narrator");
 	background("your_name", Transition::FadeFromBlack);
 	m.think("This is a pretty cool picture...");
@@ -56,6 +57,7 @@ void Scene1::onInit()
 	startGroup(true);
 	background(0, Transition::FadeToBlack);
 	dr.hide(Transition::FadeToBlack);
+	stop("yuri", Transition::Fade, 1.0f);
 	endGroup();
 }
 

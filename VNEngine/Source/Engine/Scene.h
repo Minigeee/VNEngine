@@ -418,6 +418,23 @@ public:
 	/// <param name="duration">Duration of transition effect in seconds</param>
 	void background(const sf::String& bgName, Transition effect = Transition::None, float duration = 1.0f);
 
+	/// <summary>
+	/// Start music, or change the currently playing music volume
+	/// </summary>
+	/// <param name="music">The resource name of the music</param>
+	/// <param name="volume">Volume of music (from 0 - 100)</param>
+	/// <param name="effect">Transition effect (None or Fade)</param>
+	/// <param name="duration">Duration of the transition in seconds</param>
+	void start(const sf::String& music, float volume = 100.0f, Transition effect = Transition::None, float duration = 1.0f);
+
+	/// <summary>
+	/// Stop music
+	/// </summary>
+	/// <param name="muusic">The resource name of the music</param>
+	/// <param name="effect">Transition effect for stopping music (None or Fade)</param>
+	/// <param name="duration">Duration of the transition in seconds</param>
+	void stop(const sf::String& muusic, Transition effect = Transition::None, float duration = 1.0f);
+
 protected:
 	/// <summary>
 	/// This is where the actions list should be populated

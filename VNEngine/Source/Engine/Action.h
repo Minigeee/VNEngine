@@ -5,6 +5,7 @@
 
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 #include <functional>
 #include <vector>
@@ -500,6 +501,110 @@ private:
 	/// Bitmap indicating which transforms have been changed
 	/// </summary>
 	Uint8 mNewTransforms;
+};
+
+// ============================================================================
+
+class MusicAction : public Action
+{
+public:
+	enum Mode
+	{
+		/// <summary>
+		/// Start music
+		/// </summary>
+		Start,
+
+		/// <summary>
+		/// Stop music
+		/// </summary>
+		Stop
+	};
+
+public:
+	MusicAction();
+	~MusicAction();
+
+	/// <summary>
+	/// Start music
+	/// </summary>
+	void run() override;
+
+	/// <summary>
+	/// Set the music to start / stop
+	/// </summary>
+	/// <param name="music">Music</param>
+	void setMusic(sf::Music* music);
+
+	/// <summary>
+	/// Set music action mode to either start or stop the music
+	/// </summary>
+	/// <param name="mode">Action mode (Start or Stop)</param>
+	void setMode(Mode mode);
+
+	/// <summary>
+	/// Volume to start music. This should be a value between
+	/// 0 (mute) and 100 (full, default).
+	/// </summary>
+	/// <param name="volume">Volume 0 - 100</param>
+	void setVolume(float volume);
+
+	/// <summary>
+	/// Set whether the music should loop or not.
+	/// The music will loop by default.
+	/// </summary>
+	/// <param name="looped">Should the music loop?</param>
+	void setLooped(bool looped);
+
+	/// <summary>
+	/// Set the transition effect when starting or stopping the music.
+	/// The only options available are None and Fade.
+	/// </summary>
+	/// <param name="effect">Transition effect</param>
+	void setTransition(Transition effect);
+
+	/// <summary>
+	/// Set the duration of the music transition in seconds
+	/// </summary>
+	/// <param name="duration">Duration in seconds</param>
+	void setDuration(float duration);
+
+private:
+	/// <summary>
+	/// Called when stop animation is complete
+	/// </summary>
+	void onAnimComplete();
+
+private:
+	/// <summary>
+	/// Music to play
+	/// </summary>
+	sf::Music* mMusic;
+
+	/// <summary>
+	/// Action mode (start or stop)
+	/// </summary>
+	Mode mMode;
+
+	/// <summary>
+	/// Volume to start or change music to
+	/// </summary>
+	float mVolume;
+
+	/// <summary>
+	/// Whether the music should be looped
+	/// </summary>
+	bool mIsLooped;
+
+	/// <summary>
+	/// The transition effect to use when starting or stopping music
+	/// </summary>
+	Transition mTransition;
+
+	/// <summary>
+	/// Duration of the transition effect in seconds
+	/// </summary>
+	float mDuration;
 };
 
 // ============================================================================

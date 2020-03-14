@@ -471,6 +471,27 @@ void NovelScene::background(const sf::String& bgName, Transition effect, float d
 	addAction(action);
 }
 
+void NovelScene::start(const sf::String& music, float volume, Transition effect, float duration)
+{
+	MusicAction* action = alloc<MusicAction>();
+	action->setMusic(Resource<sf::Music>::get(music));
+	action->setVolume(volume);
+	action->setMode(MusicAction::Start);
+	action->setTransition(effect);
+	action->setDuration(duration);
+	addAction(action);
+}
+
+void NovelScene::stop(const sf::String& music, Transition effect, float duration)
+{
+	MusicAction* action = alloc<MusicAction>();
+	action->setMusic(Resource<sf::Music>::get(music));
+	action->setMode(MusicAction::Stop);
+	action->setTransition(effect);
+	action->setDuration(duration);
+	addAction(action);
+}
+
 // ============================================================================
 
 void NovelScene::render()

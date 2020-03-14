@@ -362,8 +362,9 @@ MigrationBackup/
 extlibs/bin/*/*/*.exe
 extlibs/bin/*/*/*.ilk
 extlibs/bin/*/*/*.tmp
-extlibs/bin/win32/Debug/VNDemo.pdb
+extlibs/bin/*/*/*.pdb
 
 TestAssets/
+Assets/
 
 *.bak

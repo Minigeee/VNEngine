@@ -749,3 +749,126 @@ void TransformAction::onAnimComplete()
 
 // ============================================================================
 // ============================================================================
+
+MusicAction::MusicAction() :
+	mMusic			(0),
+	mMode			(Start),
+	mVolume			(100.0f),
+	mIsLooped		(true),
+	mTransition		(Transition::None),
+	mDuration		(1.0f)
+{
+
+}
+
+MusicAction::~MusicAction()
+{
+
+}
+
+// ============================================================================
+
+void MusicAction::setMusic(sf::Music* music)
+{
+	mMusic = music;
+}
+
+void MusicAction::setMode(Mode mode)
+{
+	mMode = mode;
+}
+
+void MusicAction::setVolume(float volume)
+{
+	mVolume = volume;
+}
+
+void MusicAction::setLooped(bool looped)
+{
+	mIsLooped = looped;
+}
+
+void MusicAction::setTransition(Transition transition)
+{
+	mTransition = transition;
+}
+
+void MusicAction::setDuration(float duration)
+{
+	mDuration = duration;
+}
+
+// ============================================================================
+
+void MusicAction::run()
+{
+	if (mMode == Start)
+	{
+		if (mTransition == Transition::Fade)
+		{
+			UI& ui = static_cast<NovelScene*>(mScene)->getUI();
+			bool isPlaying = mMusic->getStatus() == sf::SoundSource::Playing;
+
+			mMusic->setLoop(mIsLooped);
+
+			// Animate volume
+			float originalVolume = isPlaying ? mMusic->getVolume() : 0.0f;
+			FloatAnimation* anim = mScene->alloc<FloatAnimation>(
+				std::bind(&sf::Music::setVolume, mMusic, std::placeholders::_1),
+				originalVolume, mVolume,
+				mDuration
+				);
+			/* Should probably make animations more accessible than just to the UI... */
+			ui.addAnimation(anim);
+
+			// If music wasn't playing before, then start it
+			if (!isPlaying)
+				mMusic->play();
+		}
+		else
+		{
+			mMusic->setVolume(mVolume);
+			mMusic->setLoop(mIsLooped);
+
+			// If music wasn't playing before, then start it
+			// Otherwise don't do anything
+			if (mMusic->getStatus() != sf::SoundSource::Playing)
+				mMusic->play();
+		}
+	}
+	else
+	{
+		if (mTransition == Transition::Fade)
+		{
+			// Animate volume
+			FloatAnimation* anim = mScene->alloc<FloatAnimation>(
+				std::bind(&sf::Music::setVolume, mMusic, std::placeholders::_1),
+				mMusic->getVolume(), 0.0f,
+				mDuration
+				);
+			anim->setFinishedFunc(std::bind(&MusicAction::onAnimComplete, this));
+
+			static_cast<NovelScene*>(mScene)->getUI().addAnimation(anim);
+		}
+		else
+		{
+			// Instantly stop music
+			mMusic->stop();
+			mIsComplete = true;
+		}
+	}
+
+	// Don't wait for any animations to complete
+	mIsComplete = true;
+}
+
+// ============================================================================
+
+void MusicAction::onAnimComplete()
+{
+	mMusic->stop();
+	mIsComplete = true;
+}
+
+// ============================================================================
+// ============================================================================
