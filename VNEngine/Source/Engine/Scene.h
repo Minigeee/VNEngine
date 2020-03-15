@@ -445,12 +445,43 @@ public:
 	void start(const sf::String& music, float volume = 100.0f, Transition effect = Transition::None, float duration = 1.0f);
 
 	/// <summary>
-	/// Stop music
+	/// Start music, or change the currently playing music volume
 	/// </summary>
-	/// <param name="muusic">The resource name of the music</param>
+	/// <param name="music">Pointer to the music object</param>
+	/// <param name="volume">Volume of music (from 0 - 100)</param>
+	/// <param name="effect">Transition effect (None or Fade)</param>
+	/// <param name="duration">Duration of the transition in seconds</param>
+	void start(sf::Music* music, float volume = 100.0f, Transition effect = Transition::None, float duration = 1.0f);
+
+	/// <summary>
+	/// Stop music action
+	/// </summary>
+	/// <param name="music">The resource name of the music</param>
 	/// <param name="effect">Transition effect for stopping music (None or Fade)</param>
 	/// <param name="duration">Duration of the transition in seconds</param>
-	void stop(const sf::String& muusic, Transition effect = Transition::None, float duration = 1.0f);
+	void stop(const sf::String& music, Transition effect = Transition::None, float duration = 1.0f);
+
+	/// <summary>
+	/// Stop music action
+	/// </summary>
+	/// <param name="music">Pointer to the music object</param>
+	/// <param name="effect">Transition effect for stopping music (None or Fade)</param>
+	/// <param name="duration">Duration of the transition in seconds</param>
+	void stop(sf::Music* music, Transition effect = Transition::None, float duration = 1.0f);
+
+	/// <summary>
+	/// Add a sound action
+	/// </summary>
+	/// <param name="name">Resource name of the sound buffer</param>
+	/// <param name="volume">Volume to play the sound</param>
+	void sound(const sf::String& name, float volume = 100.0f);
+
+	/// <summary>
+	/// Add a sound action
+	/// </summary>
+	/// <param name="buffer">Sound buffer pointer</param>
+	/// <param name="volume">Volume to play the sound</param>
+	void sound(sf::SoundBuffer* buffer, float volume = 100.0f);
 
 protected:
 	/// <summary>

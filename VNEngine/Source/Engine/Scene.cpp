@@ -481,6 +481,11 @@ void NovelScene::narrate(const sf::String& dialogue)
 	addAction(action);
 }
 
+void NovelScene::background(const sf::String& bgName, Transition effect, float duration)
+{
+	background(Resource<sf::Texture>::get(bgName), effect, duration);
+}
+
 void NovelScene::background(sf::Texture* texture, Transition effect, float duration)
 {
 	BackgroundAction* action = alloc<BackgroundAction>();
@@ -490,19 +495,15 @@ void NovelScene::background(sf::Texture* texture, Transition effect, float durat
 	addAction(action);
 }
 
-void NovelScene::background(const sf::String& bgName, Transition effect, float duration)
-{
-	BackgroundAction* action = alloc<BackgroundAction>();
-	action->setTexture(Resource<sf::Texture>::get(bgName));
-	action->setTransition(effect);
-	action->setDuration(duration);
-	addAction(action);
-}
-
 void NovelScene::start(const sf::String& music, float volume, Transition effect, float duration)
 {
+	start(Resource<sf::Music>::get(music), volume, effect, duration);
+}
+
+void NovelScene::start(sf::Music* music, float volume, Transition effect, float duration)
+{
 	MusicAction* action = alloc<MusicAction>();
-	action->setMusic(Resource<sf::Music>::get(music));
+	action->setMusic(music);
 	action->setVolume(volume);
 	action->setMode(MusicAction::Start);
 	action->setTransition(effect);
@@ -512,11 +513,29 @@ void NovelScene::start(const sf::String& music, float volume, Transition effect,
 
 void NovelScene::stop(const sf::String& music, Transition effect, float duration)
 {
+	stop(Resource<sf::Music>::get(music), effect, duration);
+}
+
+void NovelScene::stop(sf::Music* music, Transition effect, float duration)
+{
 	MusicAction* action = alloc<MusicAction>();
-	action->setMusic(Resource<sf::Music>::get(music));
+	action->setMusic(music);
 	action->setMode(MusicAction::Stop);
 	action->setTransition(effect);
 	action->setDuration(duration);
+	addAction(action);
+}
+
+void NovelScene::sound(const sf::String& name, float volume)
+{
+	sound(Resource<sf::SoundBuffer>::get(name), volume);
+}
+
+void NovelScene::sound(sf::SoundBuffer* buffer, float volume)
+{
+	SoundAction* action = alloc<SoundAction>();
+	action->setBuffer(buffer);
+	action->setVolume(volume);
 	addAction(action);
 }
 

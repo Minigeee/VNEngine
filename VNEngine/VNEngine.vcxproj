@@ -145,6 +145,7 @@
     <ClCompile Include="Source\Engine\Engine.cpp" />
     <ClCompile Include="Source\Engine\Resource.cpp" />
     <ClCompile Include="Source\Engine\Scene.cpp" />
+    <ClCompile Include="Source\Engine\SoundMgr.cpp" />
     <ClCompile Include="Source\UI\Button.cpp" />
     <ClCompile Include="Source\UI\ImageBox.cpp" />
     <ClCompile Include="Source\UI\ListContainer.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="Source\Engine\Engine.h" />
     <ClInclude Include="Source\Engine\Resource.h" />
     <ClInclude Include="Source\Engine\Scene.h" />
+    <ClInclude Include="Source\Engine\SoundMgr.h" />
     <ClInclude Include="Source\UI\Button.h" />
     <ClInclude Include="Source\UI\ImageBox.h" />
     <ClInclude Include="Source\UI\ListContainer.h" />

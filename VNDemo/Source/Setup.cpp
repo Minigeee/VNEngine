@@ -30,6 +30,7 @@ void Setup::onInit()
 	Resource<sf::Texture>::addLocation("Textures/Thing.png", "thing");
 	Resource<sf::Texture>::addLocation("Textures/Thing2.png", "thing2");
 	Resource<sf::Music>::addLocation("Music/5_yuri.ogg", "yuri");
+	Resource<sf::SoundBuffer>::addLocation("Music/hover.ogg", "hover");
 
 	// Characters
 	mEngine->addCharacter(Character("Mollusk"));

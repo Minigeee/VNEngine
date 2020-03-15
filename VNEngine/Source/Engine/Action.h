@@ -609,6 +609,44 @@ private:
 
 // ============================================================================
 
+class SoundAction : public Action
+{
+public:
+	SoundAction();
+	~SoundAction();
+
+	/// <summary>
+	/// Play the sound effect
+	/// </summary>
+	void run() override;
+
+	/// <summary>
+	/// Set the sound buffer the sound should use
+	/// </summary>
+	/// <param name="buffer">Sound buffer object</param>
+	void setBuffer(sf::SoundBuffer* buffer);
+
+	/// <summary>
+	/// Set the volume the sound effect should be played at.
+	/// This value should be in the range 0 (mute) to 100 (full, default)
+	/// </summary>
+	/// <param name="volume">Volume (0 - 100)</param>
+	void setVolume(float volume);
+
+private:
+	/// <summary>
+	/// Sound buffer
+	/// </summary>
+	sf::SoundBuffer* mBuffer;
+
+	/// <summary>
+	/// Volume to play sound effect
+	/// </summary>
+	float mVolume;
+};
+
+// ============================================================================
+
 }
 
 #endif

@@ -87,6 +87,9 @@
     <ClCompile Include="Source\Engine\Action.cpp">
       <Filter>Source\Engine</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Engine\SoundMgr.cpp">
+      <Filter>Source\Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Engine\Engine.h">
@@ -162,6 +165,9 @@
       <Filter>Include\Engine</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Animation.h">
+      <Filter>Include\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Engine\SoundMgr.h">
       <Filter>Include\Engine</Filter>
     </ClInclude>
   </ItemGroup>

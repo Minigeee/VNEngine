@@ -1,6 +1,7 @@
 #include <Engine/Action.h>
 
 #include <Engine/Scene.h>
+#include <Engine/SoundMgr.h>
 
 using namespace vne;
 
@@ -862,6 +863,43 @@ void MusicAction::run()
 void MusicAction::onAnimComplete()
 {
 	mMusic->stop();
+	mIsComplete = true;
+}
+
+// ============================================================================
+// ============================================================================
+
+SoundAction::SoundAction() :
+	mBuffer			(0),
+	mVolume			(100.0f)
+{
+
+}
+
+SoundAction::~SoundAction()
+{
+
+}
+
+// ============================================================================
+
+void SoundAction::setBuffer(sf::SoundBuffer* buffer)
+{
+	mBuffer = buffer;
+}
+
+void SoundAction::setVolume(float volume)
+{
+	mVolume = volume;
+}
+
+// ============================================================================
+
+void SoundAction::run()
+{
+	if (!mBuffer) return;
+
+	SoundMgr::playSound(mBuffer, mVolume);
 	mIsComplete = true;
 }
 
