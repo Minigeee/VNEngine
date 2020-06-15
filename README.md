@@ -1,1 +1,1 @@
-Attempt at making an engine for visual novels
+Engine for visual novels
